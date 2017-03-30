@@ -12,3 +12,8 @@ cmake ..
 make
 ```
 
+To run the unit tests:
+
+```shell
+test/octaspire-core-test-runner
+```
