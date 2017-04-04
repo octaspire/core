@@ -1007,6 +1007,21 @@ bool octaspire_container_utf8_string_push_back_ucs_character(
     return true;
 }
 
+bool octaspire_container_utf8_string_pop_back_ucs_character(
+    octaspire_container_utf8_string_t *self)
+{
+    assert(self);
+
+    if (octaspire_container_utf8_string_is_empty(self))
+    {
+        return false;
+    }
+
+    return octaspire_container_utf8_string_remove_character_at(
+        self,
+        octaspire_container_utf8_string_get_length_in_ucs_characters(self) - 1);
+}
+
 bool octaspire_container_utf8_string_insert_string_to(
     octaspire_container_utf8_string_t * const self,
     octaspire_container_utf8_string_t const * const str,

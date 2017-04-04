@@ -2051,9 +2051,38 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_tes
     PASS();
 }
 
+TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
+{
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("abc", allocator);
 
+    ASSERT(str);
+    ASSERT_EQ(3, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("abc", octaspire_container_utf8_string_get_c_string(str));
 
+    ASSERT(octaspire_container_utf8_string_pop_back_ucs_character(str));
+    ASSERT_EQ(2, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("ab", octaspire_container_utf8_string_get_c_string(str));
 
+    ASSERT(octaspire_container_utf8_string_pop_back_ucs_character(str));
+    ASSERT_EQ(1, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("a", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_pop_back_ucs_character(str));
+    ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_utf8_string_pop_back_ucs_character(str));
+        ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+        ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
+    }
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
 
 GREATEST_SUITE(octaspire_container_utf8_string_suite)
 {
@@ -2140,6 +2169,7 @@ second_run:
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_3_of_ade_failure_test);
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_0_of_ade_test);
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_test);
+    RUN_TEST(octaspire_container_utf8_string_pop_back_ucs_character_test);
 
     octaspire_memory_allocator_release(allocator);
     allocator = 0;
