@@ -1,6 +1,8 @@
+[![Build Status](https://travis-ci.org/octaspire/core.svg?branch=master)](https://travis-ci.org/octaspire/core)
+
 Containers and other utility libraries in standard C99
 
-To build on Raspberry Pi:
+To build on Raspberry Pi and Debian system:
 
 ```shell
 sudo apt-get install cmake git
