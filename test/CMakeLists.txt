@@ -39,4 +39,6 @@ if(OCTASPIRE_CORE_COVERAGE)
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} --coverage")
 endif(OCTASPIRE_CORE_COVERAGE)
 
+target_link_libraries(octaspire-core-test-runner octaspire_core)
+
 add_test(octaspire-core-test-runner octaspire-core-test-runner)
