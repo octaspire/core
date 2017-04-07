@@ -598,9 +598,11 @@ TEST octaspire_input_private_is_ucs_character_index_valid_test(void)
     PASS();
 }
 
+static size_t octaspireInputSuiteNumTimesRun = 0;
+
 GREATEST_SUITE(octaspire_input_suite)
 {
-    size_t numTimesRun = 0;
+    octaspireInputSuiteNumTimesRun = 0;
 
     allocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
@@ -636,9 +638,9 @@ second_run:
     octaspire_memory_allocator_release(allocator);
     allocator = 0;
 
-    ++numTimesRun;
+    ++octaspireInputSuiteNumTimesRun;
 
-    if (numTimesRun < 2)
+    if (octaspireInputSuiteNumTimesRun < 2)
     {
         // Second run without region allocator
 

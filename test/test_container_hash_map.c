@@ -441,9 +441,11 @@ TEST octaspire_container_hash_map_new_keys_ostring_t_and_values_ostring_t_test(v
     PASS();
 }
 
+static size_t octaspireContainerHashMapSuiteNumTimesRun = 0;
+
 GREATEST_SUITE(octaspire_container_hash_map_suite)
 {
-    size_t numTimesRun = 0;
+    octaspireContainerHashMapSuiteNumTimesRun = 0;
 
     allocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
@@ -466,9 +468,9 @@ second_run:
     octaspire_memory_allocator_release(allocator);
     allocator = 0;
 
-    ++numTimesRun;
+    ++octaspireContainerHashMapSuiteNumTimesRun;
 
-    if (numTimesRun < 2)
+    if (octaspireContainerHashMapSuiteNumTimesRun < 2)
     {
         // Second run without region allocator
 

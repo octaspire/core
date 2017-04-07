@@ -226,9 +226,11 @@ TEST octaspire_helpers_path_to_buffer_read_failure_test(void)
     PASS();
 }
 
+static size_t octaspireHelpersSuiteNumTimesRun = 0;
+
 GREATEST_SUITE(octaspire_helpers_suite)
 {
-    size_t numTimesRun = 0;
+    octaspireHelpersSuiteNumTimesRun = 0;
 
     allocator       = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
@@ -258,9 +260,9 @@ second_run:
     octaspire_memory_allocator_release(allocator);
     allocator = 0;
 
-    ++numTimesRun;
+    ++octaspireHelpersSuiteNumTimesRun;
 
-    if (numTimesRun < 2)
+    if (octaspireHelpersSuiteNumTimesRun < 2)
     {
         // Second run without region allocator
 

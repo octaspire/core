@@ -2084,9 +2084,11 @@ TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
     PASS();
 }
 
+static size_t octaspireContainerUtf8StringSuiteNumTimesRun = 0;
+
 GREATEST_SUITE(octaspire_container_utf8_string_suite)
 {
-    size_t numTimesRun = 0;
+    octaspireContainerUtf8StringSuiteNumTimesRun = 0;
 
     allocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
@@ -2174,9 +2176,9 @@ second_run:
     octaspire_memory_allocator_release(allocator);
     allocator = 0;
 
-    ++numTimesRun;
+    ++octaspireContainerUtf8StringSuiteNumTimesRun;
 
-    if (numTimesRun < 2)
+    if (octaspireContainerUtf8StringSuiteNumTimesRun < 2)
     {
         // Second run without region allocator
 

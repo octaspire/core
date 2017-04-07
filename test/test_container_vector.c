@@ -1991,9 +1991,11 @@ TEST octaspire_container_vector_clear_called_on_empty_vector_test(void)
     PASS();
 }
 
+static size_t octaspireContainerVectorSuiteNumTimesRun = 0;
+
 GREATEST_SUITE(octaspire_container_vector_suite)
 {
-    size_t numTimesRun = 0;
+    octaspireContainerVectorSuiteNumTimesRun = 0;
 
     allocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
@@ -2076,9 +2078,9 @@ second_run:
     octaspire_memory_allocator_release(allocator);
     allocator = 0;
 
-    ++numTimesRun;
+    ++octaspireContainerVectorSuiteNumTimesRun;
 
-    if (numTimesRun < 2)
+    if (octaspireContainerVectorSuiteNumTimesRun < 2)
     {
         // Second run without region allocator
 

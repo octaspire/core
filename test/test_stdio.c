@@ -137,9 +137,11 @@ TEST octaspire_stdio_fread_rigging_and_failure_test(void)
     PASS();
 }
 
+static size_t octaspireStdioSuiteNumTimesRun = 0;
+
 GREATEST_SUITE(octaspire_stdio_suite)
 {
-    size_t numTimesRun = 0;
+    octaspireStdioSuiteNumTimesRun = 0;
 
     allocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
@@ -156,9 +158,9 @@ second_run:
     octaspire_memory_allocator_release(allocator);
     allocator = 0;
 
-    ++numTimesRun;
+    ++octaspireStdioSuiteNumTimesRun;
 
-    if (numTimesRun < 2)
+    if (octaspireStdioSuiteNumTimesRun < 2)
     {
         // Second run without region allocator
 

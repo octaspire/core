@@ -807,9 +807,11 @@ TEST octaspire_container_pair_clear_test(void)
     PASS();
 }
 
+static size_t octaspireContainerPairSuiteNumTimesRun = 0;
+
 GREATEST_SUITE(octaspire_container_pair_suite)
 {
-    size_t numTimesRun = 0;
+    octaspireContainerPairSuiteNumTimesRun = 0;
 
     allocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
@@ -845,9 +847,9 @@ second_run:
     octaspire_memory_allocator_release(allocator);
     allocator = 0;
 
-    ++numTimesRun;
+    ++octaspireContainerPairSuiteNumTimesRun;
 
-    if (numTimesRun < 2)
+    if (octaspireContainerPairSuiteNumTimesRun < 2)
     {
         // Second run without region allocator
 
