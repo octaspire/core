@@ -25,12 +25,13 @@ set(OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/test/resour
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/octaspire/core/octaspire_core_config.h.in"
     "${CMAKE_BINARY_DIR}/include/octaspire/core/octaspire_core_config.h")
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+        "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel. " FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
 
 project(octaspire_core C)
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
-        "Choode the type of build, options are: Debug Release RelWithDebInfo MinSizeRel. " FORCE)
-endif(NOT CMAKE_BUILD_TYPE)
+message("== Build type is ${CMAKE_BUILD_TYPE}")
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
 file(GLOB EXTERNAL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/external/*.c")
 file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/octaspire/core/*.h")
@@ -53,9 +54,12 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fcolor-diagnostics")
 endif(CMAKE_C_COMPILER_ID MATCHES "Clang")
 
-if(CMAKE_C_COMPILER_ID MATCHES "GNU")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -coverage -fprofile-arcs -ftest-coverage")
-endif(CMAKE_C_COMPILER_ID MATCHES "GNU")
+option(OCTASPIRE_CORE_COVERAGE "OCTASPIRE_CORE_COVERAGE" OFF)
+
+if(OCTASPIRE_CORE_COVERAGE)
+    message("== Code coverage enabled")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} --coverage")
+endif(OCTASPIRE_CORE_COVERAGE)
 
 target_link_libraries(octaspire_core m)
 install(TARGETS octaspire_core DESTINATION lib)
