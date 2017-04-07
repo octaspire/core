@@ -7,9 +7,14 @@ compiler:
 before_script:
     - mkdir build
     - cd build
-    - cmake ..
+    - cmake -DCMAKE_BUILD_TYPE=Debug -DOCTASPIRE_CORE_COVERAGE:BOOL=ON ..
 
 script:
     - make
     - test/octaspire-core-test-runner
+    - cd CMakeFiles/octaspire_core.dir/src
+    - gcov *.c
+
+after_success:
+      - bash <(curl -s https://codecov.io/bash)
 
