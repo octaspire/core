@@ -13,7 +13,8 @@ script:
     - make
     - test/octaspire-core-test-runner
     - cd test/CMakeFiles/octaspire-core-test-runner.dir
-    - gcov *.gcno
+    - gcov octaspire_container_hash_map.c.gcno octaspire_container_vector.c.gcno octaspire_memory.c.gcno octaspire_utf8.c.gcno octaspire_container_pair.c.gcno octaspire_helpers.c.gcno octaspire_region.c.gcno octaspire_container_utf8_string.c.gcno  octaspire_input.c.gcno octaspire_stdio.c.gcno
+
 
 after_success:
       - bash <(curl -s https://codecov.io/bash)
