@@ -49,6 +49,8 @@ size_t octaspire_helpers_character_digit_to_number(uint32_t const c);
 size_t octaspire_helpers_min_size_t(size_t const a, size_t const b);
 size_t octaspire_helpers_max_size_t(size_t const a, size_t const b);
 
+void octaspire_helpers_verify(bool const condition);
+
 #ifdef __cplusplus
 }
 #endif

@@ -55,7 +55,7 @@ static void octaspire_region_block_private_assert_header_values(
     size_t const expectedPaddingBefore,
     size_t const expectedPaddingAfter)
 {
-    assert(index >= 4);
+    octaspire_helpers_verify(index >= 4);
     char const * const ptr = self->buffer + index;
 
     size_t const * const headerInUse         = (size_t*)(ptr - (sizeof(size_t) * 4));
@@ -63,10 +63,10 @@ static void octaspire_region_block_private_assert_header_values(
     size_t const * const headerPaddingBefore = (size_t*)(ptr - (sizeof(size_t) * 2));
     size_t const * const headerPaddingAfter  = (size_t*)(ptr - (sizeof(size_t) * 1));
 
-    assert(expectedInUse         == *headerInUse);
-    assert(expectedUserDataLen   == *headerUserDataLen);
-    assert(expectedPaddingBefore == *headerPaddingBefore);
-    assert(expectedPaddingAfter  == *headerPaddingAfter);
+    octaspire_helpers_verify(expectedInUse         == *headerInUse);
+    octaspire_helpers_verify(expectedUserDataLen   == *headerUserDataLen);
+    octaspire_helpers_verify(expectedPaddingBefore == *headerPaddingBefore);
+    octaspire_helpers_verify(expectedPaddingAfter  == *headerPaddingAfter);
 }
 
 static void octaspire_region_block_private_get_header_values(
@@ -311,12 +311,10 @@ void octaspire_region_block_free(octaspire_region_block_t *self, void *ptr)
 
     size_t       * const headerInUse          = (size_t*)((char*)ptr - (sizeof(size_t) * 4));
     size_t const * const headerUserDataLen    = (size_t*)((char*)ptr - (sizeof(size_t) * 3));
-    //size_t const * const headerPaddingBefore  = (size_t*)((char*)ptr - (sizeof(size_t) * 2));
-    //size_t const * const headerPaddingAfter   = (size_t*)((char*)ptr - (sizeof(size_t) * 1));
 
     // Sanity checks
-    assert(*headerInUse = 1);
-    assert(*headerUserDataLen > 0);
+    octaspire_helpers_verify((*headerInUse) == 1);
+    octaspire_helpers_verify((*headerUserDataLen) > 0);
 
     // Mark as free
     *headerInUse = 0;
