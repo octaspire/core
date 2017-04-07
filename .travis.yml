@@ -12,7 +12,7 @@ before_script:
 script:
     - make
     - test/octaspire-core-test-runner
-    - cd CMakeFiles/octaspire_core.dir/src
+    - cd test/CMakeFiles/octaspire-core-test-runner.dir
     - gcov *.gcno
 
 after_success:
