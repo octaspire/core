@@ -7,9 +7,7 @@ To build on Raspberry Pi and Debian system:
 ```shell
 sudo apt-get install cmake git
 git clone https://gitlab.com/octaspire/core.git
-cd core
-mkdir build
-cd build
+cd core/build
 cmake ..
 make
 ```
