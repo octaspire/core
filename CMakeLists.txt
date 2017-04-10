@@ -76,6 +76,10 @@ add_custom_target(
     vera-core
     COMMAND vera++ --error ${SOURCES} ${HEADERS})
 
+add_custom_target(
+    book-core
+    COMMAND asciidoctor -a source-highlighter=pygments -a max-width=55em --backend=html5 "${CMAKE_CURRENT_SOURCE_DIR}/doc/book/Octaspire_Core_Manual.adoc")
+
 enable_testing()
 include(CTest)
 add_subdirectory(test)
