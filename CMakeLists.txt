@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #******************************************************************************/
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 2.8.12)
 
 set(OCTASPIRE_CORE_CONFIG_VERSION_MAJOR 0)
-set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 1)
+set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 2)
 set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 0)
 
 set(OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/test/resource/")
