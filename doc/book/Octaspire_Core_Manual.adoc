@@ -29,7 +29,7 @@ This documentation is work in progress.
 
 == Building from source
 
-To build Octaspire Core from source in Raspberry Pi or Debian system:
+To build Octaspire Core from source in Raspberry Pi, Debian or Ubuntu (16.04 LTS) system:
 
 :source-highlighter: pygments
 :pygments-style: colorful

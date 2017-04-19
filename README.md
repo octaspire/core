@@ -2,7 +2,7 @@
 
 Containers and other utility libraries in standard C99
 
-To build on Raspberry Pi and Debian system:
+To build on Raspberry Pi, Debian or Ubuntu (16.04 LTS) system:
 
 ```shell
 sudo apt-get install cmake git
