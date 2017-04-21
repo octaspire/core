@@ -12,6 +12,16 @@ cmake ..
 make
 ```
 
+To build on Arch Linux (Arch Linux ARM) system:
+
+```shell
+sudo pacman -S cmake git gcc make
+git clone https://github.com/octaspire/core.git
+cd core/build
+cmake ..
+make
+```
+
 To run the unit tests:
 
 ```shell
