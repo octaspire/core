@@ -675,23 +675,27 @@ The table below lists some of the abbrevations I use:</p>
 <p>TODO</p>
 </div>
 <div class="listingblock">
-<div class="title">strings.c</div>
+<div class="title">string-example.c</div>
 <div class="content">
-<pre class="pygments highlight"><code data-lang="c"><span class="tok-cm">/*****************************************************************************</span>
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cm">/***********************************************************************</span>
 <span class="tok-cm"> * To compile this file from the &#39;examples&#39; directory:</span>
-<span class="tok-cm"> * c99 -I ../../include/ strings.c -lm -L ../../build/ -loctaspire_core -o strings</span>
-<span class="tok-cm"> ****************************************************************************/</span>
-<span class="tok-cp">#include &lt;octaspire/core/octaspire_container_utf8_string.h&gt;</span>
+<span class="tok-cm"> * c99 -Wall -Wextra -pedantic -I ../../include/ string-example.c</span>
+<span class="tok-cm"> *     -lm -L ../../build/ -loctaspire_core -o string-example</span>
+<span class="tok-cm"> **********************************************************************/</span>
 <span class="tok-cp">#include &lt;stdio.h&gt;</span>
+<span class="tok-cp">#include &lt;octaspire/core/octaspire_container_utf8_string.h&gt;</span>
 
 <span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
 <span class="tok-p">{</span>
-    <span class="tok-kt">octaspire_memory_allocator_t</span> <span class="tok-o">*</span><span class="tok-n">allocator</span> <span class="tok-o">=</span> <span class="tok-n">octaspire_memory_allocator_new</span><span class="tok-p">(</span><span class="tok-mi">0</span><span class="tok-p">);</span>
+    <span class="tok-kt">octaspire_memory_allocator_t</span> <span class="tok-o">*</span><span class="tok-n">allocator</span> <span class="tok-o">=</span>
+        <span class="tok-n">octaspire_memory_allocator_new</span><span class="tok-p">(</span><span class="tok-mi">0</span><span class="tok-p">);</span>
 
     <span class="tok-kt">octaspire_container_utf8_string_t</span> <span class="tok-o">*</span><span class="tok-n">myStr</span> <span class="tok-o">=</span>
         <span class="tok-n">octaspire_container_utf8_string_new</span><span class="tok-p">(</span><span class="tok-s">&quot;Hello world!&quot;</span><span class="tok-p">,</span> <span class="tok-n">allocator</span><span class="tok-p">);</span>
 
-    <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;String is </span><span class="tok-se">\&quot;</span><span class="tok-s">%s</span><span class="tok-se">\&quot;\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span> <span class="tok-n">octaspire_container_utf8_string_get_c_string</span><span class="tok-p">(</span><span class="tok-n">myStr</span><span class="tok-p">));</span>
+    <span class="tok-n">printf</span><span class="tok-p">(</span>
+        <span class="tok-s">&quot;String is </span><span class="tok-se">\&quot;</span><span class="tok-s">%s</span><span class="tok-se">\&quot;\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span>
+        <span class="tok-n">octaspire_container_utf8_string_get_c_string</span><span class="tok-p">(</span><span class="tok-n">myStr</span><span class="tok-p">));</span>
 
     <span class="tok-n">octaspire_container_utf8_string_release</span><span class="tok-p">(</span><span class="tok-n">myStr</span><span class="tok-p">);</span>
     <span class="tok-n">myStr</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span>
@@ -708,6 +712,65 @@ The table below lists some of the abbrevations I use:</p>
 <h3 id="_vector">Vector</h3>
 <div class="paragraph">
 <p>TODO</p>
+</div>
+<div class="listingblock">
+<div class="title">vector-example.c</div>
+<div class="content">
+<pre class="pygments highlight"><code data-lang="c"><span class="tok-cm">/***********************************************************************</span>
+<span class="tok-cm"> * To compile this file from the &#39;examples&#39; directory:</span>
+<span class="tok-cm"> * c99 -Wall -Wextra -pedantic -I ../../include/ vector-example.c</span>
+<span class="tok-cm"> *     -lm -L ../../build/ -loctaspire_core -o vector-example</span>
+<span class="tok-cm"> **********************************************************************/</span>
+<span class="tok-cp">#include &lt;stdio.h&gt;</span>
+<span class="tok-cp">#include &lt;octaspire/core/octaspire_container_utf8_string.h&gt;</span>
+<span class="tok-cp">#include &lt;octaspire/core/octaspire_container_vector.h&gt;</span>
+
+<span class="tok-kt">int</span> <span class="tok-nf">main</span><span class="tok-p">(</span><span class="tok-kt">void</span><span class="tok-p">)</span>
+<span class="tok-p">{</span>
+    <span class="tok-kt">octaspire_memory_allocator_t</span> <span class="tok-o">*</span><span class="tok-n">allocator</span> <span class="tok-o">=</span>
+        <span class="tok-n">octaspire_memory_allocator_new</span><span class="tok-p">(</span><span class="tok-mi">0</span><span class="tok-p">);</span>
+
+    <span class="tok-kt">octaspire_container_vector_t</span> <span class="tok-o">*</span><span class="tok-n">v</span> <span class="tok-o">=</span> <span class="tok-n">octaspire_container_vector_new</span><span class="tok-p">(</span>
+        <span class="tok-k">sizeof</span><span class="tok-p">(</span><span class="tok-kt">octaspire_container_utf8_string_t</span><span class="tok-o">*</span><span class="tok-p">),</span>
+        <span class="tok-nb">true</span><span class="tok-p">,</span>
+        <span class="tok-p">(</span><span class="tok-kt">octaspire_container_vector_element_callback_t</span><span class="tok-p">)</span>
+            <span class="tok-n">octaspire_container_utf8_string_release</span><span class="tok-p">,</span>
+        <span class="tok-n">allocator</span><span class="tok-p">);</span>
+
+    <span class="tok-k">for</span> <span class="tok-p">(</span><span class="tok-kt">size_t</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-mi">10</span><span class="tok-p">;</span> <span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-kt">octaspire_container_utf8_string_t</span> <span class="tok-o">*</span><span class="tok-n">s</span> <span class="tok-o">=</span>
+            <span class="tok-n">octaspire_container_utf8_string_new_format</span><span class="tok-p">(</span>
+                <span class="tok-n">allocator</span><span class="tok-p">,</span>
+                <span class="tok-s">&quot;Hello %zu world!&quot;</span><span class="tok-p">,</span>
+                <span class="tok-n">i</span><span class="tok-p">);</span>
+
+        <span class="tok-k">if</span> <span class="tok-p">(</span><span class="tok-o">!</span><span class="tok-n">octaspire_container_vector_push_back_element</span><span class="tok-p">(</span><span class="tok-n">v</span><span class="tok-p">,</span> <span class="tok-o">&amp;</span><span class="tok-n">s</span><span class="tok-p">))</span>
+        <span class="tok-p">{</span>
+            <span class="tok-n">printf</span><span class="tok-p">(</span><span class="tok-s">&quot;Cannot insert string to vector</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">);</span>
+        <span class="tok-p">}</span>
+    <span class="tok-p">}</span>
+
+    <span class="tok-k">for</span> <span class="tok-p">(</span><span class="tok-kt">size_t</span> <span class="tok-n">i</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span> <span class="tok-n">i</span> <span class="tok-o">&lt;</span> <span class="tok-n">octaspire_container_vector_get_length</span><span class="tok-p">(</span><span class="tok-n">v</span><span class="tok-p">);</span> <span class="tok-o">++</span><span class="tok-n">i</span><span class="tok-p">)</span>
+    <span class="tok-p">{</span>
+        <span class="tok-kt">octaspire_container_utf8_string_t</span> <span class="tok-k">const</span> <span class="tok-o">*</span> <span class="tok-k">const</span> <span class="tok-n">s</span> <span class="tok-o">=</span>
+            <span class="tok-n">octaspire_container_vector_get_element_at_const</span><span class="tok-p">(</span><span class="tok-n">v</span><span class="tok-p">,</span> <span class="tok-n">i</span><span class="tok-p">);</span>
+
+        <span class="tok-n">printf</span><span class="tok-p">(</span>
+            <span class="tok-s">&quot;String %zu. is: %s</span><span class="tok-se">\n</span><span class="tok-s">&quot;</span><span class="tok-p">,</span>
+            <span class="tok-n">i</span><span class="tok-p">,</span>
+            <span class="tok-n">octaspire_container_utf8_string_get_c_string</span><span class="tok-p">(</span><span class="tok-n">s</span><span class="tok-p">));</span>
+    <span class="tok-p">}</span>
+
+    <span class="tok-n">octaspire_container_vector_release</span><span class="tok-p">(</span><span class="tok-n">v</span><span class="tok-p">);</span>
+    <span class="tok-n">v</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span>
+
+    <span class="tok-n">octaspire_memory_allocator_release</span><span class="tok-p">(</span><span class="tok-n">allocator</span><span class="tok-p">);</span>
+    <span class="tok-n">allocator</span> <span class="tok-o">=</span> <span class="tok-mi">0</span><span class="tok-p">;</span>
+
+    <span class="tok-k">return</span> <span class="tok-mi">0</span><span class="tok-p">;</span>
+<span class="tok-p">}</span></code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -739,7 +802,7 @@ The table below lists some of the abbrevations I use:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-04-21 20:58:08 EEST
+Last updated 2017-04-23 00:57:27 EEST
 </div>
 </div>
 </body>

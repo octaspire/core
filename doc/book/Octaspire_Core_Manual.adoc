@@ -116,14 +116,23 @@ TODO
 :pygments-style: colorful
 :pygments-linenums-mode: inline
 [source,c]
-.strings.c
+.string-example.c
 ----
-include::../examples/strings.c[]
+include::../examples/string-example.c[]
 ----
 
 === Vector
 
 TODO
+
+:source-highlighter: pygments
+:pygments-style: colorful
+:pygments-linenums-mode: inline
+[source,c]
+.vector-example.c
+----
+include::../examples/vector-example.c[]
+----
 
 === Pair
 
