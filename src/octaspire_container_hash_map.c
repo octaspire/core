@@ -29,12 +29,13 @@ struct octaspire_container_hash_map_element_t
 {
     uint32_t                      hash;
     size_t                        keySizeInOctets;
-    bool                          keyIsPointer;
     void                         *key;
     size_t                        valueSizeInOctets;
-    bool                          valueIsPointer;
     octaspire_container_vector_t *values;
     octaspire_memory_allocator_t *allocator;
+    bool                          keyIsPointer;
+    bool                          valueIsPointer;
+    char                          padding[2];
 };
 
 octaspire_container_hash_map_element_t *octaspire_container_hash_map_element_new(
@@ -152,9 +153,7 @@ void *octaspire_container_hash_map_element_get_value(
 struct octaspire_container_hash_map_t
 {
     size_t                                                   keySizeInOctets;
-    bool                                                     keyIsPointer;
     size_t                                                   valueSizeInOctets;
-    bool                                                     valueIsPointer;
     octaspire_memory_allocator_t                            *allocator;
     octaspire_container_vector_t                            *buckets;
     octaspire_container_hash_map_key_compare_function_t      keyCompareFunction;
@@ -163,6 +162,9 @@ struct octaspire_container_hash_map_t
     octaspire_container_hash_map_element_callback_function_t valueReleaseCallback;
     size_t                                                   numBucketsInUse;
     size_t                                                   numElements;
+    bool                                                     keyIsPointer;
+    bool                                                     valueIsPointer;
+    char                                                     padding[2];
 };
 
 static size_t const OCTASPIRE_CONTAINER_HASH_MAP_SMALLEST_SIZE   = 128;
@@ -262,8 +264,7 @@ static bool octaspire_container_hash_map_private_rehash(
 static float octaspire_container_hash_map_private_get_load_factor(
     octaspire_container_hash_map_t const * const self)
 {
-    return (float)self->numBucketsInUse /
-        (float)octaspire_container_vector_get_length(self->buckets);
+    return (float)self->numBucketsInUse / octaspire_container_vector_get_length(self->buckets);
 }
 
 static void octaspire_container_hash_map_private_release_given_buckets(
@@ -292,11 +293,11 @@ static void octaspire_container_hash_map_private_release_given_buckets(
 
             if (self->valueReleaseCallback)
             {
-                for (size_t i = 0; i < octaspire_container_vector_get_length(element->values); ++i)
+                for (size_t k = 0; k < octaspire_container_vector_get_length(element->values); ++k)
                 {
                     //self->valueReleaseCallback(*(void**)element->value);
                     self->valueReleaseCallback(
-                        octaspire_container_vector_get_element_at(element->values, i));
+                        octaspire_container_vector_get_element_at(element->values, k));
                 }
             }
 
@@ -467,15 +468,15 @@ bool octaspire_container_hash_map_remove(
 
         void const * key2 = octaspire_container_hash_map_element_get_key(element);
 
-        if (self->keyCompareFunction(element->keyIsPointer ? *(void**)key : key, key2))
+        if (self->keyCompareFunction(element->keyIsPointer ? *(void const * const *)key : key, key2))
         {
             if (self->valueReleaseCallback)
             {
-                for (size_t i = 0; i < octaspire_container_vector_get_length(element->values); ++i)
+                for (size_t j = 0; j < octaspire_container_vector_get_length(element->values); ++j)
                 {
                     //self->valueReleaseCallback(*(void**)element->value);
                     self->valueReleaseCallback(
-                        octaspire_container_vector_get_element_at(element->values, i));
+                        octaspire_container_vector_get_element_at(element->values, j));
                 }
             }
 
@@ -600,7 +601,7 @@ bool octaspire_container_hash_map_put(
             ++(self->numBucketsInUse);
         }
 
-        octaspire_container_hash_map_element_t *element = octaspire_container_hash_map_element_new(
+        element = octaspire_container_hash_map_element_new(
             hash,
             self->keySizeInOctets,
             self->keyIsPointer,
@@ -655,7 +656,7 @@ octaspire_container_hash_map_element_t const * octaspire_container_hash_map_get_
 
         void const * const key2 = octaspire_container_hash_map_element_get_key(element);
 
-        if (self->keyCompareFunction(element->keyIsPointer ? *(void**)key : key, key2))
+        if (self->keyCompareFunction(element->keyIsPointer ? *(void const * const *)key : key, key2))
         {
             return element;
         }
@@ -674,7 +675,7 @@ octaspire_container_hash_map_element_t const * octaspire_container_hash_map_get_
 
         void const * const key2 = octaspire_container_hash_map_element_get_key(element);
 
-        if (self->keyCompareFunction(element->keyIsPointer ? *(void**)key : key, key2))
+        if (self->keyCompareFunction(element->keyIsPointer ? *(void const * const *)key : key, key2))
         {
             return element;
         }
@@ -706,7 +707,7 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get(
 
         void const * key2 = octaspire_container_hash_map_element_get_key(element);
 
-        if (self->keyCompareFunction(element->keyIsPointer ? *(void**)key : key, key2))
+        if (self->keyCompareFunction(element->keyIsPointer ? *(void const * const *)key : key, key2))
         {
             return element;
         }
@@ -725,7 +726,7 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get(
 
         void const * key2 = octaspire_container_hash_map_element_get_key(element);
 
-        if (self->keyCompareFunction(element->keyIsPointer ? *(void**)key : key, key2))
+        if (self->keyCompareFunction(element->keyIsPointer ? *(void const * const *)key : key, key2))
         {
             return element;
         }

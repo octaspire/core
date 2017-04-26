@@ -7,7 +7,18 @@
 // compile and run any of them on any platform, but your performance with the
 // non-native version will be less than optimal.
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// This file is modified version, not the original. It is modified by
+// www.octaspire.com
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 #include "murmur3.h"
+
+#ifdef OCTASPIRE_CLANG_PRAGMAS_ENABLED
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wcast-align"
+#endif
 
 //-----------------------------------------------------------------------------
 // Platform-specific functions and macros
@@ -17,6 +28,7 @@
 #else
 #define FORCE_INLINE inline
 #endif
+
 
 static FORCE_INLINE uint32_t rotl32 ( uint32_t x, int8_t r )
 {
@@ -310,6 +322,10 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
   ((uint64_t*)out)[0] = h1;
   ((uint64_t*)out)[1] = h2;
 }
+
+#ifdef OCTASPIRE_CLANG_PRAGMAS_ENABLED
+#pragma clang diagnostic pop
+#endif
 
 //-----------------------------------------------------------------------------
 

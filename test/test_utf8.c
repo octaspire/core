@@ -829,7 +829,7 @@ TEST octaspire_utf8_encode_and_then_decode_a_short_string_test(void)
         0x233B4
     };
 
-    int      expectedNumOctets[11] =
+    size_t expectedNumOctets[11] =
     {
         1,
         3,
@@ -862,7 +862,7 @@ TEST octaspire_utf8_encode_and_then_decode_a_short_string_test(void)
                 &numoctets));
 
         ASSERT_EQ(expectedResults[i],   result);
-        ASSERT_EQ(expectedNumOctets[i], numoctets);
+        ASSERT_EQ(((int)expectedNumOctets[i]), numoctets);
     }
 
     PASS();

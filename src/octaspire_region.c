@@ -30,6 +30,35 @@ typedef struct octaspire_region_block_t
 }
 octaspire_region_block_t;
 
+// Prototypes for private functions /////////////////////////////////////////
+static size_t octaspire_region_block_private_get_number_of_octets_available(
+    octaspire_region_block_t const * const self);
+
+static bool octaspire_region_block_private_is_valid_index(
+    octaspire_region_block_t const * const self,
+    size_t const index);
+
+static octaspire_region_block_t *octaspire_region_block_new(size_t const minBlockSizeInOctets);
+
+static bool octaspire_region_block_is_full_of_freed(octaspire_region_block_t const * const self);
+
+static ptrdiff_t octaspire_region_block_private_calculate_alignment_padding_for_size(
+    octaspire_region_block_t const * const self,
+    size_t const startIndex,
+    size_t const size);
+
+static void *octaspire_region_block_malloc(octaspire_region_block_t *self, size_t const size);
+
+static void octaspire_region_private_add_new_head(octaspire_region_t *self, size_t const minSize);
+
+static void octaspire_region_block_measure_wasted(
+    octaspire_region_block_t const * const self,
+    double *wastedOnPadding,
+    double *wastedOnFreed);
+
+static void *octaspire_region_block_realloc(octaspire_region_block_t *self, void *ptr, size_t const size);
+/////////////////////////////////////////////////////////////////////////////
+
 static bool octaspire_region_block_is_pointer_inside(
     octaspire_region_block_t const * const self,
     void *ptr)
@@ -47,6 +76,7 @@ static bool octaspire_region_block_is_pointer_inside(
     return true;
 }
 
+/*
 static void octaspire_region_block_private_assert_header_values(
     octaspire_region_block_t *self,
     size_t const index,
@@ -58,16 +88,17 @@ static void octaspire_region_block_private_assert_header_values(
     octaspire_helpers_verify(index >= 4);
     char const * const ptr = self->buffer + index;
 
-    size_t const * const headerInUse         = (size_t*)(ptr - (sizeof(size_t) * 4));
-    size_t const * const headerUserDataLen   = (size_t*)(ptr - (sizeof(size_t) * 3));
-    size_t const * const headerPaddingBefore = (size_t*)(ptr - (sizeof(size_t) * 2));
-    size_t const * const headerPaddingAfter  = (size_t*)(ptr - (sizeof(size_t) * 1));
+    size_t const * const headerInUse         = (size_t const * const)(ptr - (sizeof(size_t) * 4));
+    size_t const * const headerUserDataLen   = (size_t const * const)(ptr - (sizeof(size_t) * 3));
+    size_t const * const headerPaddingBefore = (size_t const * const)(ptr - (sizeof(size_t) * 2));
+    size_t const * const headerPaddingAfter  = (size_t const * const)(ptr - (sizeof(size_t) * 1));
 
     octaspire_helpers_verify(expectedInUse         == *headerInUse);
     octaspire_helpers_verify(expectedUserDataLen   == *headerUserDataLen);
     octaspire_helpers_verify(expectedPaddingBefore == *headerPaddingBefore);
     octaspire_helpers_verify(expectedPaddingAfter  == *headerPaddingAfter);
 }
+*/
 
 static void octaspire_region_block_private_get_header_values(
     octaspire_region_block_t const * const self,
@@ -81,10 +112,10 @@ static void octaspire_region_block_private_get_header_values(
     char const * const ptr = self->buffer + index;
     size_t const sizeOfSizet = sizeof(size_t);
 
-    *inUse         = *(size_t*)(ptr - (sizeOfSizet * 4));
-    *userDataLen   = *(size_t*)(ptr - (sizeOfSizet * 3));
-    *paddingBefore = *(size_t*)(ptr - (sizeOfSizet * 2));
-    *paddingAfter  = *(size_t*)(ptr -  sizeOfSizet     );
+    memcpy(inUse,         (ptr - (sizeOfSizet * 4)), sizeof(size_t));
+    memcpy(userDataLen,   (ptr - (sizeOfSizet * 3)), sizeof(size_t));
+    memcpy(paddingBefore, (ptr - (sizeOfSizet * 2)), sizeof(size_t));
+    memcpy(paddingAfter,  (ptr -  sizeOfSizet     ), sizeof(size_t));
 }
 
 size_t octaspire_region_block_private_get_number_of_octets_available(
@@ -197,7 +228,7 @@ ptrdiff_t octaspire_region_block_private_calculate_alignment_padding_for_size(
         //if ((size_t)buf % 16 == 0)
         if ((size_t)buf % 8 == 0)
         {
-            return result;
+            return (ptrdiff_t)result;
         }
 
         ++result;
@@ -233,7 +264,7 @@ void *octaspire_region_block_malloc(octaspire_region_block_t *self, size_t const
         return 0;
     }
 
-    if (octaspire_region_block_private_get_number_of_octets_available(self) < (paddingBefore + size + paddingAfter))
+    if (octaspire_region_block_private_get_number_of_octets_available(self) < ((size_t)paddingBefore + size + (size_t)paddingAfter))
     {
         return 0;
     }
@@ -243,8 +274,8 @@ void *octaspire_region_block_malloc(octaspire_region_block_t *self, size_t const
     size_t header[] = {
         1,             // inUse = yes
         size,          // userDataLen
-        paddingBefore, // amountOfPaddingInTheBeginning
-        paddingAfter   // amountOfPaddingInTheEnd
+        (size_t)paddingBefore, // amountOfPaddingInTheBeginning
+        (size_t)paddingAfter   // amountOfPaddingInTheEnd
     };
 
     for (size_t i = 0; i < (sizeof(header) / sizeof(header[0])); ++i)
@@ -261,11 +292,12 @@ void *octaspire_region_block_malloc(octaspire_region_block_t *self, size_t const
     }
 
     void *result = buf + self->sizeOfHeader;
-    if (result != memset(result, 0, paddingBefore + size + paddingAfter))
+    if (result != memset(result, 0, (size_t)paddingBefore + size + (size_t)paddingAfter))
     {
         return 0;
     }
 
+    /*
     octaspire_region_block_private_assert_header_values(
         self,
         self->firstFreeIndex + self->sizeOfHeader,
@@ -273,8 +305,9 @@ void *octaspire_region_block_malloc(octaspire_region_block_t *self, size_t const
         header[1],
         header[2],
         header[3]);
+    */
 
-    self->firstFreeIndex += (self->sizeOfHeader + paddingBefore + size + paddingAfter);
+    self->firstFreeIndex += (self->sizeOfHeader + (size_t)paddingBefore + size + (size_t)paddingAfter);
 
     return result;
 }
@@ -283,7 +316,9 @@ void octaspire_region_block_free(octaspire_region_block_t *self, void *ptr);
 
 void *octaspire_region_block_realloc(octaspire_region_block_t *self, void *ptr, size_t const size)
 {
-    size_t const * const headerUserDataLen = (size_t*)((char*)ptr - (sizeof(size_t) * 3));
+    //size_t const * const headerUserDataLen = (size_t*)((char*)ptr - (sizeof(size_t) * 3));
+    size_t headerUserDataLen = 0;
+    memcpy(&headerUserDataLen, ((char*)ptr - (sizeof(size_t) * 3)), sizeof(size_t));
 
     octaspire_region_block_free(self, ptr);
 
@@ -295,7 +330,7 @@ void *octaspire_region_block_realloc(octaspire_region_block_t *self, void *ptr, 
         return 0;
     }
 
-    size_t const octetsToCopy = octaspire_helpers_min_size_t(*headerUserDataLen, size);
+    size_t const octetsToCopy = octaspire_helpers_min_size_t(headerUserDataLen, size);
 
     if (newSlot != memcpy(newSlot, ptr, octetsToCopy))
     {
@@ -309,15 +344,21 @@ void octaspire_region_block_free(octaspire_region_block_t *self, void *ptr)
 {
     OCTASPIRE_HELPERS_UNUSED_PARAMETER(self);
 
-    size_t       * const headerInUse          = (size_t*)((char*)ptr - (sizeof(size_t) * 4));
-    size_t const * const headerUserDataLen    = (size_t*)((char*)ptr - (sizeof(size_t) * 3));
+    //size_t       * const headerInUse          = (size_t*)((char*)ptr - (sizeof(size_t) * 4));
+    //size_t const * const headerUserDataLen    = (size_t*)((char*)ptr - (sizeof(size_t) * 3));
+    size_t headerInUse = 0;
+    size_t headerUserDataLen = 0;
+
+    memcpy(&headerInUse, ((char*)ptr - (sizeof(size_t) * 4)), sizeof(size_t));
+    memcpy(&headerUserDataLen, ((char*)ptr - (sizeof(size_t) * 3)), sizeof(size_t));
 
     // Sanity checks
-    octaspire_helpers_verify((*headerInUse) == 1);
-    octaspire_helpers_verify((*headerUserDataLen) > 0);
+    octaspire_helpers_verify(headerInUse == 1);
+    octaspire_helpers_verify(headerUserDataLen > 0);
 
     // Mark as free
-    *headerInUse = 0;
+    headerInUse = 0;
+    memcpy(((char*)ptr - (sizeof(size_t) * 4)), &headerInUse, sizeof(size_t));
 }
 
 void octaspire_region_block_measure_wasted(
@@ -379,7 +420,7 @@ static void octaspire_region_block_print(octaspire_region_block_t const * const 
 
     printf(
         "block %p (used %g%% wasted on padding of used %g%% wasted on freed (payload + padding) %g%%)\n",
-        (void*)self,
+        (void const * const)self,
         used,
         wastedOnPadding,
         wastedOnFreed);

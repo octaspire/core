@@ -61,11 +61,14 @@ TEST octaspire_region_block_malloc_test(void)
     void *ptr = regionBlock->buffer + (sizeof(size_t) * 4);
     for (size_t i = 0; i < 100; ++i)
     {
-        size_t const * const headerInUse       = (size_t*)((char*)ptr - (sizeof(size_t) * 4));
-        size_t const * const headerUserDataLen = (size_t*)((char*)ptr - (sizeof(size_t) * 3));
+        size_t headerInUse = 0;
+        memcpy(&headerInUse, ((char*)ptr - (sizeof(size_t) * 4)), sizeof(size_t));
 
-        ASSERT_EQ(1,              *headerInUse);
-        ASSERT_EQ(sizeof(size_t), *headerUserDataLen);
+        size_t headerUserDataLen = 0;
+        memcpy(&headerUserDataLen, ((char*)ptr - (sizeof(size_t) * 3)), sizeof(size_t));
+
+        ASSERT_EQ(1,              headerInUse);
+        ASSERT_EQ(sizeof(size_t), headerUserDataLen);
     }
 
     for (size_t i = 0; i < nelems; ++i)

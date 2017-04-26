@@ -115,8 +115,8 @@ TEST octaspire_container_pair_new_uint32_t_and_double_test(void)
     ASSERT(p->first);
     ASSERT(p->second);
 
-    ASSERT_EQ(0, *(uint32_t*)p->first);
-    ASSERT_EQ(0, *(double*)p->second);
+    ASSERT_IN_RANGE(0, *(uint32_t*)p->first, 0.000001);
+    ASSERT_IN_RANGE(0, *(double*)p->second,  0.000001);
 
     ASSERT_EQ(sizeof(uint32_t), p->firstSize);
     ASSERT_EQ(sizeof(double),   p->secondSize);

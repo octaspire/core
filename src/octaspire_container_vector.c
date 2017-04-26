@@ -33,6 +33,7 @@ struct octaspire_container_vector_t
     octaspire_container_vector_element_callback_t elementReleaseCallback;
     octaspire_memory_allocator_t *allocator;
     bool    elementIsPointer;
+    char    padding[3];
 };
 
 static size_t const OCTASPIRE_CONTAINER_VECTOR_INITIAL_SIZE = 1;
@@ -57,7 +58,7 @@ static bool octaspire_container_vector_private_grow(
     octaspire_container_vector_t *self,
     float const factor)
 {
-    size_t const newNumAllocated = (size_t)((double)self->numAllocated * fmax(2, factor));
+    size_t const newNumAllocated = (size_t)(self->numAllocated * fmaxf(2, factor));
 
     void *newElements = octaspire_memory_allocator_realloc(
         self->allocator,
@@ -379,7 +380,14 @@ bool octaspire_container_vector_insert_element_before_the_element_at_index(
 
     if (index < 0)
     {
-        realIndexToUse = octaspire_container_vector_get_length(self) + index;
+        ptrdiff_t const tmpIdx = (ptrdiff_t)octaspire_container_vector_get_length(self) + index;
+
+        if (tmpIdx < 0)
+        {
+            abort();
+        }
+
+        realIndexToUse = (size_t)tmpIdx;
     }
     else
     {
@@ -388,7 +396,7 @@ bool octaspire_container_vector_insert_element_before_the_element_at_index(
             return false;
         }
 
-        realIndexToUse = index;
+        realIndexToUse = (size_t)index;
     }
 
     assert(realIndexToUse < octaspire_container_vector_get_length(self));

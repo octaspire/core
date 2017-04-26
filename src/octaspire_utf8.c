@@ -233,7 +233,6 @@ octaspire_utf8_encode_status_t octaspire_utf8_encode_character(uint32_t const ch
         {
             return OCTASPIRE_UTF8_ENCODE_STATUS_ILLEGAL_CHARACTER_NUMBER;
         }
-        break;
     }
 
     for (size_t i = 0; i < 8; ++i)

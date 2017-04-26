@@ -36,6 +36,26 @@ struct octaspire_container_utf8_string_t
 
 static char const octaspire_container_utf8_string_private_null_octet = '\0';
 
+
+// Prototypes for private functions /////////////////////////////////////////
+static bool octaspire_container_utf8_string_private_check_substring_match_at(
+    octaspire_container_utf8_string_t const * const self,
+    size_t const startFromIndex,
+    octaspire_container_utf8_string_t const * const substring);
+
+static size_t octaspire_container_utf8_string_private_ucs_character_index_to_octets_index(
+    octaspire_container_utf8_string_t const * const self,
+    size_t const index);
+
+static bool octaspire_container_utf8_string_private_is_string_at_index(
+    octaspire_container_utf8_string_t const * const self,
+    size_t const selfIndex,
+    octaspire_container_utf8_string_t const * const str,
+    size_t const strFirstIndex,
+    size_t const strLastIndex);
+//////////////////////////////////////////////////////////////////////////////
+
+
 octaspire_container_utf8_string_t *octaspire_container_utf8_string_new(
     char const * const str,
     octaspire_memory_allocator_t *allocator)
@@ -231,7 +251,6 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_vformat(
             errorStatus = OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_ENCODING_ERROR;
             // TODO XXX what octet index to put here? Negative index, or just unused on this error type?
             errorAtOctet = 0;
-            abort();
             break;
         }
 
@@ -246,11 +265,19 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_vformat(
             va_copy(copyOfVarArgs, arguments);
         }
 
+#ifdef OCTASPIRE_CLANG_PRAGMAS_ENABLED
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
         n = vsnprintf(
             buffer,
             buflen,
             fmt,
             copyOfVarArgs);
+
+#ifdef OCTASPIRE_CLANG_PRAGMAS_ENABLED
+#pragma clang diagnostic pop
+#endif
 
         va_end(copyOfVarArgs);
 
@@ -277,7 +304,6 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_vformat(
                 //free(buffer);
                 octaspire_memory_allocator_free(allocator, buffer);
                 buffer = 0;
-                abort();
                 return 0;
             }
         }
@@ -299,7 +325,6 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_vformat(
                 //free(buffer);
                 octaspire_memory_allocator_free(allocator, buffer);
                 buffer = 0;
-                abort();
                 return 0;
             }
         }
@@ -604,7 +629,7 @@ bool octaspire_container_utf8_string_concatenate_c_string(
         for (int i = 0; i < numOctets; ++i)
         {
             //if (!octaspire_container_vector_push_back_element(self->octets, str + index + i))
-            if (!octaspire_container_vector_insert_element_before_the_element_at_index(self->octets, str + index + i, octaspire_container_vector_get_length(self->octets) - 1))
+            if (!octaspire_container_vector_insert_element_before_the_element_at_index(self->octets, str + index + i, (ptrdiff_t)(octaspire_container_vector_get_length(self->octets) - 1)))
             {
                 result = false;
             }
@@ -696,7 +721,7 @@ ptrdiff_t octaspire_container_utf8_string_find_first_substring(
     {
         if (octaspire_container_utf8_string_private_check_substring_match_at(self, i, substring))
         {
-            return i;
+            return (ptrdiff_t)i;
         }
     }
 
@@ -779,9 +804,9 @@ size_t octaspire_container_utf8_string_remove_characters_at(
 
     size_t result = 0;
 
-    for (ptrdiff_t i = numCharacters - 1; i >= 0; --i)
+    for (ptrdiff_t i = (ptrdiff_t)numCharacters - 1; i >= 0; --i)
     {
-        if (octaspire_container_utf8_string_remove_character_at(self, startFromIndex + i))
+        if (octaspire_container_utf8_string_remove_character_at(self, startFromIndex + (size_t)i))
         {
             ++result;
         }
@@ -814,7 +839,7 @@ size_t octaspire_container_utf8_string_remove_all_substrings(
             return result;
         }
 
-        if (octaspire_container_utf8_string_remove_characters_at(self, substringIndex, substringLength))
+        if (octaspire_container_utf8_string_remove_characters_at(self, (size_t)substringIndex, substringLength))
         {
             ++result;
         }
@@ -991,9 +1016,8 @@ bool octaspire_container_utf8_string_push_back_ucs_character(
     {
         if (!octaspire_container_vector_insert_element_before_the_element_at_index(
                 self->octets,
-                //encoded.octets + 3 - encoded.numoctets + i,
                 encoded.octets + 4 - encoded.numoctets + i,
-                octaspire_container_vector_get_length(self->octets) - 1))
+                -1))
         {
             return false;
         }
@@ -1031,9 +1055,9 @@ bool octaspire_container_utf8_string_insert_string_to(
 
     if (indexToPutFirstCharacter < 0)
     {
-        realIndexToUse =
-            octaspire_container_utf8_string_get_length_in_ucs_characters(self) +
-            indexToPutFirstCharacter;
+        realIndexToUse = (size_t)
+            ((ptrdiff_t)octaspire_container_utf8_string_get_length_in_ucs_characters(self) +
+            indexToPutFirstCharacter);
 
         if (realIndexToUse >= octaspire_container_utf8_string_get_length_in_ucs_characters(self))
         {
@@ -1048,7 +1072,7 @@ bool octaspire_container_utf8_string_insert_string_to(
             return false;
         }
 
-        realIndexToUse = indexToPutFirstCharacter;
+        realIndexToUse = (size_t)indexToPutFirstCharacter;
     }
 
     size_t index = realIndexToUse;
@@ -1057,7 +1081,7 @@ bool octaspire_container_utf8_string_insert_string_to(
 
     for (size_t i = 0; i < octaspire_container_utf8_string_get_length_in_octets(str); ++i)
     {
-        if (!octaspire_container_vector_insert_element_before_the_element_at_index(self->octets, &(strAsCstr[i]), index))
+        if (!octaspire_container_vector_insert_element_before_the_element_at_index(self->octets, &(strAsCstr[i]), (ptrdiff_t)index))
         {
             return false;
         }
@@ -1070,7 +1094,7 @@ bool octaspire_container_utf8_string_insert_string_to(
     for (size_t i = 0; i < octaspire_container_utf8_string_get_length_in_ucs_characters(str); ++i)
     {
         uint32_t const c = octaspire_container_utf8_string_get_ucs_character_at_index(str, i);
-        if (!octaspire_container_vector_insert_element_before_the_element_at_index(self->ucsCharacters, &c, index))
+        if (!octaspire_container_vector_insert_element_before_the_element_at_index(self->ucsCharacters, &c, (ptrdiff_t)index))
         {
             return false;
         }

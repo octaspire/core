@@ -30,6 +30,14 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES "GNU")
 endif(CMAKE_C_COMPILER_ID MATCHES "Clang" OR CMAKE_C_COMPILER_ID MATCHES "GNU")
 
 if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        target_compile_definitions(octaspire-core-test-runner PRIVATE OCTASPIRE_CLANG_PRAGMAS_ENABLED=1)
+        message("== Enabling clang pragmas for octaspire-core-test-runner")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything")
+        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Weverything")
+    endif(CMAKE_BUILD_TYPE MATCHES "Debug")
+
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcolor-diagnostics")
     #set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fcolor-diagnostics -fsanitize=undefined,address")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fcolor-diagnostics")
@@ -39,6 +47,11 @@ if(OCTASPIRE_CORE_COVERAGE)
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} --coverage")
 endif(OCTASPIRE_CORE_COVERAGE)
 
-target_link_libraries(octaspire-core-test-runner octaspire_core)
+if(NOT WIN32)
+    target_compile_definitions(octaspire-core-test-runner PRIVATE GREATEST_ENABLE_ANSI_COLORS=1)
+    message("== Enabled ANSI colors for octaspire-core-test-runner")
+endif(NOT WIN32)
+
+target_link_libraries(octaspire-core-test-runner octaspire-core)
 
 add_test(octaspire-core-test-runner octaspire-core-test-runner)

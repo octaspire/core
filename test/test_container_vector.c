@@ -1130,7 +1130,37 @@ TEST octaspire_container_vector_get_element_size_in_octets_when_element_size_is_
     PASS();
 }
 
+TEST octaspire_container_vector_insert_element_before_the_element_at_index_minus_one_test(void)
+{
+    octaspire_container_vector_t *vec =
+        octaspire_container_vector_new(sizeof(size_t), false, 0, allocator);
 
+    size_t value = 2;
+
+    octaspire_container_vector_push_front_element(vec, &value);
+
+    value = 1;
+
+    ASSERT(octaspire_container_vector_insert_element_before_the_element_at_index(vec, &value, -1));
+
+    ASSERT_EQ(2,  octaspire_container_vector_get_length(vec));
+    ASSERT_EQ(1, *(size_t*)octaspire_container_vector_get_element_at(vec, 0));
+    ASSERT_EQ(2, *(size_t*)octaspire_container_vector_get_element_at(vec, 1));
+
+    value = 9;
+
+    ASSERT(octaspire_container_vector_insert_element_before_the_element_at_index(vec, &value, -1));
+
+    ASSERT_EQ(3,  octaspire_container_vector_get_length(vec));
+    ASSERT_EQ(1, *(size_t*)octaspire_container_vector_get_element_at(vec, 0));
+    ASSERT_EQ(9, *(size_t*)octaspire_container_vector_get_element_at(vec, 1));
+    ASSERT_EQ(2, *(size_t*)octaspire_container_vector_get_element_at(vec, 2));
+
+    octaspire_container_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
 
 TEST octaspire_container_vector_insert_element_before_the_element_at_index_zero_test(void)
 {
@@ -1195,7 +1225,7 @@ TEST octaspire_container_vector_insert_element_before_the_element_at_index_the_e
             octaspire_container_vector_insert_element_before_the_element_at_index(
                 vec,
                 &i,
-                octaspire_container_vector_get_length(vec) - 1));
+                (ptrdiff_t)octaspire_container_vector_get_length(vec) - 1));
 
         ASSERT_EQ(i, *(size_t*)octaspire_container_vector_get_element_at(vec, i));
     }
@@ -2040,6 +2070,7 @@ second_run:
     RUN_TEST(octaspire_container_vector_get_element_size_in_octets_when_element_is_of_type_void_ptr_test);
     RUN_TEST(octaspire_container_vector_get_element_size_in_octets_when_element_size_is_10000_test);
     RUN_TEST(octaspire_container_vector_get_element_size_in_octets_when_element_size_is_illegal_zero_test);
+    RUN_TEST(octaspire_container_vector_insert_element_before_the_element_at_index_minus_one_test);
     RUN_TEST(octaspire_container_vector_insert_element_before_the_element_at_index_zero_test);
     RUN_TEST(octaspire_container_vector_insert_element_before_the_element_at_index_called_on_empty_vector_test);
     RUN_TEST(octaspire_container_vector_insert_element_before_the_element_at_index_the_end_test);

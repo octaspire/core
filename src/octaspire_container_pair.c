@@ -24,12 +24,13 @@ struct octaspire_container_pair_t
     void   *first;
     void   *second;
     size_t firstSize;
-    bool   firstIsPointer;
     size_t secondSize;
-    bool   secondIsPointer;
     octaspire_container_pair_element_callback_t firstReleaseCallback;
     octaspire_container_pair_element_callback_t secondReleaseCallback;
     octaspire_memory_allocator_t *allocator;
+    bool   firstIsPointer;
+    bool   secondIsPointer;
+    char   padding[2];
 };
 
 size_t octaspire_container_pair_t_get_sizeof(void)
