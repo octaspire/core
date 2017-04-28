@@ -46,6 +46,7 @@ typedef struct octaspire_utf8_character_t
 {
     size_t        numoctets;
     unsigned char octets[4];
+    char          padding[4];
 }
 octaspire_utf8_character_t;
 
