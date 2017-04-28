@@ -30,7 +30,7 @@ struct octaspire_container_pair_t
     octaspire_memory_allocator_t *allocator;
     bool   firstIsPointer;
     bool   secondIsPointer;
-    char   padding[2];
+    char   padding[6];
 };
 
 size_t octaspire_container_pair_t_get_sizeof(void)
