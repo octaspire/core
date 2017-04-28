@@ -39,7 +39,7 @@ static uint32_t                           octaspire_utf8_private_high_order_bits
 static void                               octaspire_utf8_private_set_bit          (uint32_t *bitset, size_t const index, bool const on);
 static void                               octaspire_utf8_private_set_bit_of_char  (unsigned char *bitset, size_t const index, bool const on);
 static bool                               octaspire_utf8_private_get_bit          (uint32_t const bitset, size_t const index);
-static bool                               octaspire_utf8_private_get_bit_of_uint8 (uint8_t const bitset, size_t const index);
+static bool                               octaspire_utf8_private_get_bit_of_uint8 (char const bitset, size_t const index);
 
 static int                                octaspire_utf8_private_octets_in_next   (char const * const text, size_t const textLengthInOctets);
 static int                                octaspire_utf8_private_octets_in_next_from_buffer   (char const * const buffer, size_t const lengthInOctets, size_t const currentIndex);
@@ -131,10 +131,10 @@ static bool octaspire_utf8_private_get_bit(uint32_t const bitset, size_t const i
     return (bitset >> index) & 1;
 }
 
-static bool octaspire_utf8_private_get_bit_of_uint8(uint8_t const bitset, size_t const index)
+static bool octaspire_utf8_private_get_bit_of_uint8(char const bitset, size_t const index)
 {
     assert(index < 8);
-    return (bitset >> index) & 1;
+    return (((uint8_t)bitset) >> index) & 1;
 }
 
 octaspire_utf8_encode_status_t octaspire_utf8_encode_character(uint32_t const character, octaspire_utf8_character_t *result)
