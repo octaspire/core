@@ -27,12 +27,12 @@ limitations under the License.
 
 struct octaspire_container_hash_map_element_t
 {
-    uint32_t                      hash;
     size_t                        keySizeInOctets;
     void                         *key;
     size_t                        valueSizeInOctets;
     octaspire_container_vector_t *values;
     octaspire_memory_allocator_t *allocator;
+    uint32_t                      hash;
     bool                          keyIsPointer;
     bool                          valueIsPointer;
     char                          padding[2];
