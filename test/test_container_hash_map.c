@@ -120,7 +120,8 @@ static bool octaspire_container_hash_map_new_test_key_compare_function_for_size_
 static uint32_t octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys(
     void const * const key)
 {
-    return *(size_t const * const)key;
+    size_t const value = *(size_t const * const)key;
+    return (uint32_t)value;
 }
 
 TEST octaspire_container_hash_map_private_rehash_allocation_failure_on_first_allocation_test(void)
@@ -228,7 +229,7 @@ TEST octaspire_container_hash_map_new_keys_uint32_t_and_values_size_t_test(void)
 
     for (size_t i = 0; i < numElements; ++i)
     {
-        uint32_t hash = i;
+        uint32_t hash = (uint32_t)i;
 
         octaspire_container_hash_map_put(hashMap, hash, &i, &i);
     }
@@ -238,7 +239,7 @@ TEST octaspire_container_hash_map_new_keys_uint32_t_and_values_size_t_test(void)
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_hash_map_element_t *element =
-            octaspire_container_hash_map_get(hashMap, i, &i);
+            octaspire_container_hash_map_get(hashMap, (uint32_t)i, &i);
 
         ASSERT_EQ(i,   octaspire_container_hash_map_element_get_hash(element));
         ASSERT_EQ(i,   *(size_t*)octaspire_container_hash_map_element_get_key(element));

@@ -1517,12 +1517,12 @@ TEST octaspire_container_vector_push_back_char_test(void)
     {
         ASSERT(octaspire_container_vector_push_back_char(vec, i));
         ASSERT_EQ((size_t)i + 1, octaspire_container_vector_get_length(vec));
-        ASSERT_EQ((char)i, *(char*)octaspire_container_vector_get_element_at(vec, i));
+        ASSERT_EQ((char)i, *(char*)octaspire_container_vector_get_element_at(vec, (size_t)i));
     }
 
     for (char i = 0; i < len; ++i)
     {
-        ASSERT_EQ((char)i, *(char*)octaspire_container_vector_get_element_at(vec, i));
+        ASSERT_EQ((char)i, *(char*)octaspire_container_vector_get_element_at(vec, (size_t)i));
     }
 
     octaspire_container_vector_release(vec);
