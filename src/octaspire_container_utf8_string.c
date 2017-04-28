@@ -29,9 +29,9 @@ struct octaspire_container_utf8_string_t
 {
     octaspire_container_vector_t                   *octets;
     octaspire_container_vector_t                   *ucsCharacters;
-    octaspire_container_utf8_string_error_status_t  errorStatus;
-    size_t                                          errorAtOctet;
     octaspire_memory_allocator_t                   *allocator;
+    size_t                                          errorAtOctet;
+    octaspire_container_utf8_string_error_status_t  errorStatus;
 };
 
 static char const octaspire_container_utf8_string_private_null_octet = '\0';
