@@ -1511,16 +1511,16 @@ TEST octaspire_container_vector_push_back_char_test(void)
     octaspire_container_vector_t *vec =
         octaspire_container_vector_new(sizeof(char), false, 0, allocator);
 
-    unsigned char const len = 128;
+    char const len = 127;
 
-    for (unsigned char i = 0; i < len; ++i)
+    for (char i = 0; i < len; ++i)
     {
         ASSERT(octaspire_container_vector_push_back_char(vec, i));
         ASSERT_EQ((size_t)i + 1, octaspire_container_vector_get_length(vec));
         ASSERT_EQ((char)i, *(char*)octaspire_container_vector_get_element_at(vec, i));
     }
 
-    for (unsigned char i = 0; i < len; ++i)
+    for (char i = 0; i < len; ++i)
     {
         ASSERT_EQ((char)i, *(char*)octaspire_container_vector_get_element_at(vec, i));
     }
@@ -1536,9 +1536,9 @@ TEST octaspire_container_vector_push_back_char_to_vector_containing_floats_test(
     octaspire_container_vector_t *vec =
         octaspire_container_vector_new(sizeof(float), false, 0, allocator);
 
-    unsigned char const len = 128;
+    char const len = 127;
 
-    for (unsigned char i = 0; i < len; ++i)
+    for (char i = 0; i < len; ++i)
     {
         ASSERT_FALSE(octaspire_container_vector_push_back_char(vec, i));
         ASSERT_EQ(0, octaspire_container_vector_get_length(vec));

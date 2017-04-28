@@ -164,7 +164,7 @@ struct octaspire_container_hash_map_t
     size_t                                                   numElements;
     bool                                                     keyIsPointer;
     bool                                                     valueIsPointer;
-    char                                                     padding[2];
+    char                                                     padding[6];
 };
 
 static size_t const OCTASPIRE_CONTAINER_HASH_MAP_SMALLEST_SIZE   = 128;
