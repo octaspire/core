@@ -33,7 +33,7 @@ struct octaspire_container_vector_t
     octaspire_container_vector_element_callback_t elementReleaseCallback;
     octaspire_memory_allocator_t *allocator;
     bool    elementIsPointer;
-    char    padding[3];
+    char    padding[7];
 };
 
 static size_t const OCTASPIRE_CONTAINER_VECTOR_INITIAL_SIZE = 1;
