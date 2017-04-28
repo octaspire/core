@@ -27,6 +27,7 @@ struct octaspire_stdio_t
     size_t   numberOfFutureReadsToBeRigged;
     size_t   bitIndex;
     uint32_t bitQueue;
+    char     padding[4];
 };
 
 octaspire_stdio_t *octaspire_stdio_new(octaspire_memory_allocator_t *allocator)
