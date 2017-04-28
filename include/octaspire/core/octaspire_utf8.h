@@ -44,8 +44,8 @@ octaspire_utf8_encode_status_t;
 
 typedef struct octaspire_utf8_character_t
 {
-    unsigned char octets[4];
     size_t        numoctets;
+    unsigned char octets[4];
 }
 octaspire_utf8_character_t;
 
