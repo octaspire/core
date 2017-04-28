@@ -75,7 +75,7 @@ TEST octaspire_stdio_fread_test(void)
     ASSERT(f);
 
     char octet = 0;
-    char *expected = "0123456789qwertyuiop";
+    char const * const expected = "0123456789qwertyuiop";
 
     for (size_t i = 0; i < strlen(expected); ++i)
     {
@@ -103,7 +103,7 @@ TEST octaspire_stdio_fread_rigging_and_failure_test(void)
     ASSERT(f);
 
     char octet = 0;
-    char *expected = "0123456789qwertyuiop";
+    char const * const expected = "0123456789qwertyuiop";
 
     // 0101 0101 0101 0101 0101
     //    5    5    5    5    5
