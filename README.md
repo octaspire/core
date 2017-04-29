@@ -27,8 +27,8 @@ To build on Haiku (Version Walter (Revision hrev51127) x86_gcc2):
 
 ```shell
 pkgman install gcc_x86 cmake_x86
-git clone https://github.com/octaspire/dern.git
-cd dern/build
+git clone https://github.com/octaspire/core.git
+cd core/build
 CC=gcc-x86 cmake ..
 make
 ```
@@ -43,6 +43,6 @@ Homepage for Octaspire Core can be found from here:
 [http://www.octaspire.com/core](http://www.octaspire.com/core)
 
 Other Octaspire projects using Octaspire Core can be seen here:
-[Programming language Octaspire Dern](http://www.octaspire.com/dern) and 
+[Programming language Octaspire Dern](http://www.octaspire.com/dern), 
 [Puzzle game Octaspire Maze](http://www.octaspire.com/maze) and 
-[Puzzle game Octaspire Lightboard](http://www.octaspire.com/lightboard)
+[Puzzle game Octaspire Lightboard](http://www.octaspire.com/lightboard).
