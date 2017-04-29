@@ -520,8 +520,9 @@ It depends only on a C99 compiler and standard library.</p>
 </div>
 <div class="paragraph">
 <p>Octaspire Core is used by some other Octaspire projects like
-<a href="http://www.octaspire.com/dern">Dern</a> and <a href="https://github.com/octaspire/maze">Maze</a>,
-but it should be usable on many different platforms and projects where <strong>region allocator</strong> or
+<a href="http://www.octaspire.com/dern">Dern</a>, <a href="http://www.octaspire.com/maze">Maze</a> and
+<a href="http://www.octaspire.com/lightboard">Lightboard</a>, but it should be usable on many
+different platforms and projects where <strong>region allocator</strong> or
 containers like <strong>vector</strong>, <strong>hash-map</strong>, <strong>pair</strong> or <strong>utf-8 string</strong> are needed.</p>
 </div>
 <div class="paragraph">
@@ -536,8 +537,8 @@ in the source distribution for more information.</p>
 </td>
 <td class="content">
 This library is not yet finished, and is still a work in progress to some extent. Unit tests
-and use in projects like Dern and Maze have helped to catch and fix quite a many bugs already,
-but there are still some features not yet implemented and probably bugs not yet fixed.
+and use in projects like Dern, Maze and Lightboard have helped to catch and fix quite a many bugs
+already, but there are still some features not yet implemented and probably bugs not yet fixed.
 Also, English in not my native language, so please bear with me, when reading this documentation.
 </td>
 </tr>
@@ -581,6 +582,18 @@ make</code></pre>
 git clone https://github.com/octaspire/core.git
 <span class="tok-nb">cd </span>core/build
 cmake ..
+make</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To build on Haiku (Version Walter (Revision hrev51127) x86_gcc2):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash">pkgman install gcc_x86 cmake_x86
+git clone https://github.com/octaspire/core.git
+<span class="tok-nb">cd </span>core/build
+<span class="tok-nv">CC</span><span class="tok-o">=</span>gcc-x86 cmake ..
 make</code></pre>
 </div>
 </div>
@@ -802,7 +815,7 @@ The table below lists some of the abbrevations I use:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-04-23 00:57:27 EEST
+Last updated 2017-04-30 00:35:11 EEST
 </div>
 </div>
 </body>

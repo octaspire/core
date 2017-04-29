@@ -10,8 +10,9 @@ Octaspire Core Manual
 It depends only on a C99 compiler and standard library.
 
 Octaspire Core is used by some other Octaspire projects like 
-http://www.octaspire.com/dern[Dern] and https://github.com/octaspire/maze[Maze],
-but it should be usable on many different platforms and projects where *region allocator* or
+http://www.octaspire.com/dern[Dern], http://www.octaspire.com/maze[Maze] and
+http://www.octaspire.com/lightboard[Lightboard], but it should be usable on many
+different platforms and projects where *region allocator* or
 containers like *vector*, *hash-map*, *pair* or *utf-8 string* are needed.
 
 Octaspire Core is licensed under the Apache License, Version 2.0. See file LICENSE
@@ -19,8 +20,8 @@ in the source distribution for more information.
 
 [NOTE]
 This library is not yet finished, and is still a work in progress to some extent. Unit tests
-and use in projects like Dern and Maze have helped to catch and fix quite a many bugs already,
-but there are still some features not yet implemented and probably bugs not yet fixed.
+and use in projects like Dern, Maze and Lightboard have helped to catch and fix quite a many bugs
+already, but there are still some features not yet implemented and probably bugs not yet fixed.
 Also, English in not my native language, so please bear with me, when reading this documentation.
 
 [NOTE]
@@ -54,6 +55,20 @@ sudo pacman -S cmake git gcc make
 git clone https://github.com/octaspire/core.git
 cd core/build
 cmake ..
+make
+----
+
+To build on Haiku (Version Walter (Revision hrev51127) x86_gcc2):
+
+:source-highlighter: pygments
+:pygments-style: colorful
+:pygments-linenums-mode: inline
+[source,bash]
+----
+pkgman install gcc_x86 cmake_x86
+git clone https://github.com/octaspire/core.git
+cd core/build
+CC=gcc-x86 cmake ..
 make
 ----
 
