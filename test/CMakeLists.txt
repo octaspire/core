@@ -15,6 +15,7 @@
 # limitations under the License.
 #******************************************************************************/
 cmake_minimum_required(VERSION 2.8.12)
+project(octaspire-core-test-runner C)
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/resource" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/")
 file(GLOB SOURCES "*.c")
 include_directories(${OCTASPIRE_CORE_INCLUDE_DIR})
@@ -33,7 +34,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
 
     if(CMAKE_BUILD_TYPE MATCHES "Debug")
         target_compile_definitions(octaspire-core-test-runner PRIVATE OCTASPIRE_CLANG_PRAGMAS_ENABLED=1)
-        message("== Enabling clang pragmas for octaspire-core-test-runner")
+        message("== Enabling clang pragmas for ${PROJECT_NAME}")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything")
         set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Weverything")
     endif(CMAKE_BUILD_TYPE MATCHES "Debug")

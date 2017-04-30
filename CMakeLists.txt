@@ -17,7 +17,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 
 set(OCTASPIRE_CORE_CONFIG_VERSION_MAJOR 0)
-set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 22)
+set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 23)
 set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 0)
 
 set(OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/test/resource/")
@@ -31,7 +31,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 project(octaspire-core C)
-message("== Build type is ${CMAKE_BUILD_TYPE}")
+message("== Build type of ${PROJECT_NAME} is ${CMAKE_BUILD_TYPE}")
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
 file(GLOB EXTERNAL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/external/*.c")
 file(GLOB HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/octaspire/core/*.h")
@@ -52,7 +52,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
 
     if(CMAKE_BUILD_TYPE MATCHES "Debug")
         target_compile_definitions(octaspire-core PRIVATE OCTASPIRE_CLANG_PRAGMAS_ENABLED=1)
-        message("== Enabling clang pragmas for octaspire-core")
+        message("== Enabling clang pragmas for ${PROJECT_NAME}")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything")
         set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Weverything")
     endif(CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -62,12 +62,19 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fcolor-diagnostics")
 endif(CMAKE_C_COMPILER_ID MATCHES "Clang")
 
-option(OCTASPIRE_CORE_COVERAGE "OCTASPIRE_CORE_COVERAGE" OFF)
+option(OCTASPIRE_CORE_COVERAGE  "OCTASPIRE_CORE_COVERAGE" OFF)
+option(OCTASPIRE_CORE_UNIT_TEST "OCTASPIRE_CORE_COVERAGE" ON)
 
 if(OCTASPIRE_CORE_COVERAGE)
-    message("== Code coverage enabled")
+    message("== Code coverage enabled for ${PROJECT_NAME}")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} --coverage")
 endif(OCTASPIRE_CORE_COVERAGE)
+
+if(OCTASPIRE_CORE_UNIT_TEST)
+    message("== Unit testing enabled for ${PROJECT_NAME}")
+else()
+    message("== Unit testing disabled for ${PROJECT_NAME}")
+endif(OCTASPIRE_CORE_UNIT_TEST)
 
 target_link_libraries(octaspire-core m)
 install(TARGETS octaspire-core DESTINATION lib)
@@ -88,6 +95,10 @@ add_custom_target(
     book-core
     COMMAND asciidoctor -a source-highlighter=pygments -a max-width=55em --backend=html5 "${CMAKE_CURRENT_SOURCE_DIR}/doc/book/Octaspire_Core_Manual.adoc")
 
-enable_testing()
-include(CTest)
-add_subdirectory(test)
+if(NOT TARGET octaspire-core-test-runner AND OCTASPIRE_CORE_UNIT_TEST)
+    message("== Building of unit tests enabled for ${PROJECT_NAME}")
+    enable_testing()
+    include(CTest)
+    add_subdirectory(test)
+endif(NOT TARGET octaspire-core-test-runner AND OCTASPIRE_CORE_UNIT_TEST)
+
