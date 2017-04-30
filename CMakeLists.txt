@@ -15,10 +15,13 @@
 # limitations under the License.
 #******************************************************************************/
 cmake_minimum_required(VERSION 2.8.12)
+project(octaspire-core C)
 
 set(OCTASPIRE_CORE_CONFIG_VERSION_MAJOR 0)
-set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 24)
+set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 25)
 set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 0)
+
+message("== Building ${PROJECT_NAME} ${OCTASPIRE_CORE_CONFIG_VERSION_MAJOR}.${OCTASPIRE_CORE_CONFIG_VERSION_MINOR}.${OCTASPIRE_CORE_CONFIG_VERSION_PATCH}")
 
 set(OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/test/resource/")
 
@@ -30,7 +33,6 @@ if(NOT CMAKE_BUILD_TYPE)
         "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel. " FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-project(octaspire-core C)
 message("== Build type of ${PROJECT_NAME} is ${CMAKE_BUILD_TYPE}")
 file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c")
 file(GLOB EXTERNAL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/external/*.c")
