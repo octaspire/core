@@ -18,6 +18,11 @@ containers like *vector*, *hash-map*, *pair* or *utf-8 string* are needed.
 Octaspire Core is licensed under the Apache License, Version 2.0. See file LICENSE
 in the source distribution for more information.
 
+Octaspire Core uses
+http://semver.org[Semantic Versioning 2.0.0] version numbering scheme.
+As long as the MAJOR version number is zero anything can change at any time,
+even in backwards incompatible manner.
+
 [NOTE]
 This library is not yet finished, and is still a work in progress to some extent. Unit tests
 and use in projects like Dern, Maze and Lightboard have helped to catch and fix quite a many bugs
@@ -29,6 +34,8 @@ This documentation is work in progress.
 
 
 == Building from source
+
+=== Raspberry Pi, Debian and Ubuntu
 
 To build Octaspire Core from source in Raspberry Pi, Debian or Ubuntu (16.04 LTS) system:
 
@@ -44,6 +51,8 @@ cmake ..
 make
 ----
 
+=== Arch Linux
+
 To build on Arch Linux (Arch Linux ARM) system:
 
 :source-highlighter: pygments
@@ -57,6 +66,8 @@ cd core/build
 cmake ..
 make
 ----
+
+=== Haiku
 
 To build on Haiku (Version Walter (Revision hrev51127) x86_gcc2):
 
@@ -72,8 +83,27 @@ CC=gcc-x86 cmake ..
 make
 ----
 
+=== FreeBSD
+To build on FreeBSD (FreeBSD-11.0-RELEASE-arm-armv6-RPI2) system:
+
+:source-highlighter: pygments
+:pygments-style: colorful
+:pygments-linenums-mode: inline
+[source,bash]
+----
+sudo pkg install git cmake
+git clone https://github.com/octaspire/core.git
+cd core/build
+cmake ..
+make
+----
+
+=== Other systems
+
 On different systems the required commands can vary. In any case, You should install
 a *C compiler*, *cmake* and *git*.
+
+=== Running unit tests
 
 This is all there should be to it; when make finishes, everything should be ready.
 
