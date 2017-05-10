@@ -4,6 +4,8 @@ Octaspire Core Manual
 :lang: en
 :toc:
 
+Documentation for Octaspire Core library version 0.27.0
+
 == About
 
 *Octaspire Core* is a container, utf-8 and utility library written in standard *C99*.
@@ -31,6 +33,11 @@ Also, English in not my native language, so please bear with me, when reading th
 
 [NOTE]
 This documentation is work in progress.
+
+Core uses
+http://semver.org[Semantic Versioning 2.0.0] version numbering scheme.
+As long as the MAJOR version number is zero anything can change at any time,
+even in backwards incompatible manner.
 
 
 == Building from source
@@ -93,6 +100,23 @@ To build on FreeBSD (FreeBSD-11.0-RELEASE-arm-armv6-RPI2) system:
 ----
 sudo pkg install git cmake
 git clone https://github.com/octaspire/core.git
+cd core/build
+cmake ..
+make
+----
+
+=== MINIX 3
+To build on MINIX 3 (minix_R3.3.0-588a35b) system:
+
+:source-highlighter: pygments
+:pygments-style: colorful
+:pygments-linenums-mode: inline
+[source,bash]
+----
+su root
+pkgin install cmake clang binutils git-base
+exit
+git clone git://github.com/octaspire/core
 cd core/build
 cmake ..
 make

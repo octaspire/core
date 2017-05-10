@@ -43,6 +43,18 @@ cmake ..
 make
 ```
 
+To build on MINIX 3 (minix_R3.3.0-588a35b) system:
+
+```shell
+su root
+pkgin install cmake clang binutils git-base
+exit
+git clone git://github.com/octaspire/core
+cd core/build
+cmake ..
+make
+```
+
 To run the unit tests:
 
 ```shell

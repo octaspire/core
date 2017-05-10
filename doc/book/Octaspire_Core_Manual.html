@@ -500,6 +500,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_arch_linux">Arch Linux</a></li>
 <li><a href="#_haiku">Haiku</a></li>
 <li><a href="#_freebsd">FreeBSD</a></li>
+<li><a href="#_minix_3">MINIX 3</a></li>
 <li><a href="#_other_systems">Other systems</a></li>
 <li><a href="#_running_unit_tests">Running unit tests</a></li>
 </ul>
@@ -520,6 +521,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Documentation for Octaspire Core library version 0.27.0</p>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="_about">About</h2>
 <div class="sectionbody">
@@ -570,6 +578,12 @@ This documentation is work in progress.
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>Core uses
+<a href="http://semver.org">Semantic Versioning 2.0.0</a> version numbering scheme.
+As long as the MAJOR version number is zero anything can change at any time,
+even in backwards incompatible manner.</p>
 </div>
 </div>
 </div>
@@ -630,6 +644,23 @@ make</code></pre>
 <div class="content">
 <pre class="pygments highlight"><code data-lang="bash">sudo pkg install git cmake
 git clone https://github.com/octaspire/core.git
+<span class="tok-nb">cd </span>core/build
+cmake ..
+make</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_minix_3">MINIX 3</h3>
+<div class="paragraph">
+<p>To build on MINIX 3 (minix_R3.3.0-588a35b) system:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="bash">su root
+pkgin install cmake clang binutils git-base
+<span class="tok-nb">exit</span>
+git clone git://github.com/octaspire/core
 <span class="tok-nb">cd </span>core/build
 cmake ..
 make</code></pre>
@@ -860,7 +891,7 @@ The table below lists some of the abbrevations I use:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-05-09 01:28:13 EEST
+Last updated 2017-05-10 07:59:01 EEST
 </div>
 </div>
 </body>
