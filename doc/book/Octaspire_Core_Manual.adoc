@@ -4,7 +4,7 @@ Octaspire Core Manual
 :lang: en
 :toc:
 
-Documentation for Octaspire Core library version 0.27.0
+Documentation for Octaspire Core library version 0.28.0
 
 == About
 
@@ -179,8 +179,6 @@ TODO
 
 === UTF-8 Strings
 
-TODO
-
 :source-highlighter: pygments
 :pygments-style: colorful
 :pygments-linenums-mode: inline
@@ -191,8 +189,6 @@ include::../examples/string-example.c[]
 ----
 
 === Vector
-
-TODO
 
 :source-highlighter: pygments
 :pygments-style: colorful
@@ -209,7 +205,14 @@ TODO
 
 === Hash map
 
-TODO
+:source-highlighter: pygments
+:pygments-style: colorful
+:pygments-linenums-mode: inline
+[source,c]
+.hash-map-example.c
+----
+include::../examples/hash-map-example.c[]
+----
 
 === Input streams from memory and files
 

@@ -442,6 +442,66 @@ TEST octaspire_container_hash_map_new_keys_ostring_t_and_values_ostring_t_test(v
     PASS();
 }
 
+TEST octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys_test(void)
+{
+    octaspire_container_hash_map_t *hashMap =
+        octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys(
+            sizeof(octaspire_container_utf8_string_t *),
+            true,
+            (octaspire_container_hash_map_element_callback_function_t)
+                octaspire_container_utf8_string_release,
+            allocator);
+
+    size_t const numElements = 32;
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new_format(
+            allocator,
+            "%zu",
+            i);
+
+        uint32_t const hash = octaspire_container_utf8_string_get_hash(str);
+
+        octaspire_container_utf8_string_t *cpyStr = octaspire_container_utf8_string_new_copy(str, allocator);
+        ASSERT(octaspire_container_utf8_string_is_equal(str, cpyStr));
+        octaspire_container_hash_map_put(hashMap, hash, &cpyStr, &str);
+
+        ASSERT_EQ(i+1, octaspire_container_hash_map_get_number_of_elements(hashMap));
+    }
+
+    ASSERT_EQ(numElements, octaspire_container_hash_map_get_number_of_elements(hashMap));
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new_format(
+            allocator,
+            "%zu",
+            i);
+
+        uint32_t hash = octaspire_container_utf8_string_get_hash(str);
+
+        octaspire_container_hash_map_element_t *element =
+            octaspire_container_hash_map_get(hashMap, hash, &str);
+
+        ASSERT(element);
+
+        ASSERT_EQ(hash, octaspire_container_hash_map_element_get_hash(element));
+
+        ASSERT(octaspire_container_utf8_string_is_equal(str, (octaspire_container_utf8_string_t*)octaspire_container_hash_map_element_get_key(element)));
+
+        ASSERT(octaspire_container_utf8_string_is_equal(str, (octaspire_container_utf8_string_t*)octaspire_container_hash_map_element_get_value(element)));
+
+        octaspire_container_utf8_string_release(str);
+        str = 0;
+    }
+
+    octaspire_container_hash_map_release(hashMap);
+    hashMap = 0;
+
+    PASS();
+}
+
 static size_t octaspireContainerHashMapSuiteNumTimesRun = 0;
 
 GREATEST_SUITE(octaspire_container_hash_map_suite)
@@ -465,6 +525,7 @@ second_run:
     RUN_TEST(octaspire_container_hash_map_new_allocation_failure_on_first_allocation_test);
     RUN_TEST(octaspire_container_hash_map_new_allocation_failure_on_second_allocation_test);
     RUN_TEST(octaspire_container_hash_map_new_keys_ostring_t_and_values_ostring_t_test);
+    RUN_TEST(octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys_test);
 
     octaspire_memory_allocator_release(allocator);
     allocator = 0;

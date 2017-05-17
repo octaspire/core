@@ -76,6 +76,12 @@ octaspire_container_hash_map_t *octaspire_container_hash_map_new(
     octaspire_container_hash_map_element_callback_function_t valueReleaseCallback,
     octaspire_memory_allocator_t *allocator);
 
+octaspire_container_hash_map_t *octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys(
+    size_t const valueSizeInOctets,
+    bool const valueIsPointer,
+    octaspire_container_hash_map_element_callback_function_t valueReleaseCallback,
+    octaspire_memory_allocator_t *allocator);
+
 void octaspire_container_hash_map_release(octaspire_container_hash_map_t *self);
 
 bool octaspire_container_hash_map_remove(

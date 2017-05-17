@@ -1,7 +1,7 @@
 /***********************************************************************
  * To compile this file from the 'examples' directory:
  * c99 -Wall -Wextra -pedantic -I ../../include/ vector-example.c
- *     -lm -L ../../build/ -loctaspire_core -o vector-example
+ *     -lm -L ../../build/ -loctaspire-core -o vector-example
  **********************************************************************/
 #include <stdio.h>
 #include <octaspire/core/octaspire_container_utf8_string.h>

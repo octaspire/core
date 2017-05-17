@@ -19,6 +19,7 @@ limitations under the License.
 #include <inttypes.h>
 #include <string.h>
 #include <stdlib.h>
+#include "octaspire/core/octaspire_container_utf8_string.h"
 #include "octaspire/core/octaspire_container_vector.h"
 #include "octaspire/core/octaspire_container_pair.h"
 
@@ -418,6 +419,24 @@ octaspire_container_hash_map_t *octaspire_container_hash_map_new(
     }
 
     return self;
+}
+
+octaspire_container_hash_map_t *octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys(
+    size_t const valueSizeInOctets,
+    bool const valueIsPointer,
+    octaspire_container_hash_map_element_callback_function_t valueReleaseCallback,
+    octaspire_memory_allocator_t *allocator)
+{
+    return octaspire_container_hash_map_new(
+        sizeof(octaspire_container_utf8_string_t*),
+        true,
+        valueSizeInOctets,
+        valueIsPointer,
+        (octaspire_container_hash_map_key_compare_function_t)octaspire_container_utf8_string_is_equal,
+        (octaspire_container_hash_map_key_hash_function_t)octaspire_container_utf8_string_get_hash,
+        (octaspire_container_hash_map_element_callback_function_t)octaspire_container_utf8_string_release,
+        valueReleaseCallback,
+        allocator);
 }
 
 void octaspire_container_hash_map_release(octaspire_container_hash_map_t *self)
