@@ -4,7 +4,7 @@ Octaspire Core Manual
 :lang: en
 :toc:
 
-Documentation for Octaspire Core library version 0.28.0
+Documentation for Octaspire Core library version 0.29.0
 
 == About
 
@@ -38,6 +38,10 @@ Core uses
 http://semver.org[Semantic Versioning 2.0.0] version numbering scheme.
 As long as the MAJOR version number is zero anything can change at any time,
 even in backwards incompatible manner.
+
+++++
+<script type="text/javascript" src="https://asciinema.org/a/120956.js" id="asciicast-120956" async></script>
+++++
 
 
 == Building from source

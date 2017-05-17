@@ -18,7 +18,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(octaspire-core C)
 
 set(OCTASPIRE_CORE_CONFIG_VERSION_MAJOR 0)
-set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 28)
+set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 29)
 set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 0)
 
 message("== Building ${PROJECT_NAME} ${OCTASPIRE_CORE_CONFIG_VERSION_MAJOR}.${OCTASPIRE_CORE_CONFIG_VERSION_MINOR}.${OCTASPIRE_CORE_CONFIG_VERSION_PATCH}")
@@ -95,7 +95,7 @@ add_custom_target(
 
 add_custom_target(
     book-core
-    COMMAND asciidoctor -a source-highlighter=pygments -a max-width=55em --backend=html5 "${CMAKE_CURRENT_SOURCE_DIR}/doc/book/Octaspire_Core_Manual.adoc")
+    COMMAND asciidoctor -a source-highlighter=pygments -a max-width=70em --backend=html5 "${CMAKE_CURRENT_SOURCE_DIR}/doc/book/Octaspire_Core_Manual.adoc")
 
 if(NOT TARGET octaspire-core-test-runner AND OCTASPIRE_CORE_UNIT_TEST)
     message("== Building of unit tests enabled for ${PROJECT_NAME}")
