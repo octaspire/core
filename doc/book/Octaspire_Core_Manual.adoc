@@ -4,7 +4,7 @@ Octaspire Core Manual
 :lang: en
 :toc:
 
-Documentation for Octaspire Core library version 0.29.0
+Documentation for Octaspire Core library version 0.30.0
 
 == About
 
@@ -147,6 +147,17 @@ test/octaspire-core-test-runner
 
 [NOTE]
 Man pages are not ready yet.
+
+
+== Using the amalgamated source
+
+*etc*-directory of the source distribution contains amalgamated version
+of the source code. All the headers, implementation files and unit tests
+are concatenated with a script into a single file. This one file
+is all that is needed to use Octaspire Core, and by using compiler
+flags the same file can be compiled into a unit test runner.
+
+TODO
 
 == Quick tour of library features
 

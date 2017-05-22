@@ -24,14 +24,14 @@ limitations under the License.
 #include "octaspire/core/octaspire_helpers.h"
 #include "octaspire/core/octaspire_core_config.h"
 
-static octaspire_memory_allocator_t *allocator = 0;
+static octaspire_memory_allocator_t *octaspireContainerHashMapTestAllocator = 0;
 
 
 
 TEST octaspire_container_hash_map_element_new_allocation_failure_on_first_allocation_test(void)
 {
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 1, 0);
-    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 1, 0);
+    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator));
 
     size_t const value = 0;
     octaspire_container_hash_map_element_t *element = octaspire_container_hash_map_element_new(
@@ -42,10 +42,10 @@ TEST octaspire_container_hash_map_element_new_allocation_failure_on_first_alloca
         sizeof(value),
         false,
         &value,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     ASSERT_FALSE(element);
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 0, 0x00);
 
     octaspire_container_hash_map_element_release(element);
     element = 0;
@@ -55,8 +55,8 @@ TEST octaspire_container_hash_map_element_new_allocation_failure_on_first_alloca
 
 TEST octaspire_container_hash_map_element_new_allocation_failure_on_second_allocation_test(void)
 {
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 2, 0x01);
-    ASSERT_EQ(2, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 2, 0x01);
+    ASSERT_EQ(2, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator));
 
     size_t const value = 0;
     octaspire_container_hash_map_element_t *element = octaspire_container_hash_map_element_new(
@@ -67,10 +67,10 @@ TEST octaspire_container_hash_map_element_new_allocation_failure_on_second_alloc
         sizeof(value),
         false,
         &value,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     ASSERT_FALSE(element);
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 0, 0x00);
 
     octaspire_container_hash_map_element_release(element);
     element = 0;
@@ -80,8 +80,8 @@ TEST octaspire_container_hash_map_element_new_allocation_failure_on_second_alloc
 
 TEST octaspire_container_hash_map_element_new_allocation_failure_on_third_allocation_test(void)
 {
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 3, 0x03);
-    ASSERT_EQ(3, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 3, 0x03);
+    ASSERT_EQ(3, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator));
 
     size_t const value = 0;
     octaspire_container_hash_map_element_t *element = octaspire_container_hash_map_element_new(
@@ -92,10 +92,10 @@ TEST octaspire_container_hash_map_element_new_allocation_failure_on_third_alloca
         sizeof(value),
         false,
         &value,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     ASSERT_FALSE(element);
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 0, 0x00);
 
     octaspire_container_hash_map_element_release(element);
     element = 0;
@@ -135,15 +135,15 @@ TEST octaspire_container_hash_map_private_rehash_allocation_failure_on_first_all
         octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
         0,
         0,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     ASSERT(hashMap);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 1, 0x00);
-    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 1, 0x00);
+    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator));
 
     ASSERT_FALSE(octaspire_container_hash_map_private_rehash(hashMap));
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 0, 0x00);
 
     octaspire_container_hash_map_release(hashMap);
     hashMap = 0;
@@ -161,7 +161,7 @@ TEST octaspire_container_hash_map_private_rehash_allocation_failure_on_second_al
         octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
         0,
         0,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     for (size_t value = 0; value < 5; ++value)
     {
@@ -174,7 +174,7 @@ TEST octaspire_container_hash_map_private_rehash_allocation_failure_on_second_al
 
     // Should have 513 success, and number 514 should be failure
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged_when_larger_than_32(
-        allocator,
+        octaspireContainerHashMapTestAllocator,
         515,
         0xFF, // 0
         0xFF, // 1
@@ -197,11 +197,11 @@ TEST octaspire_container_hash_map_private_rehash_allocation_failure_on_second_al
         0x00, // 18
         0x00);
 
-    ASSERT_EQ(515, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    ASSERT_EQ(515, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator));
 
     ASSERT_FALSE(octaspire_container_hash_map_private_rehash(hashMap));
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 0, 0x00);
 
     octaspire_container_hash_map_release(hashMap);
     hashMap = 0;
@@ -221,7 +221,7 @@ TEST octaspire_container_hash_map_new_keys_uint32_t_and_values_size_t_test(void)
         octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
         0,
         0,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     ASSERT(hashMap);
 
@@ -263,7 +263,7 @@ TEST octaspire_container_hash_map_add_same_key_many_times_test(void)
         octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
         0,
         0,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     ASSERT(hashMap);
 
@@ -305,8 +305,8 @@ TEST octaspire_container_hash_map_add_same_key_many_times_test(void)
 
 TEST octaspire_container_hash_map_new_allocation_failure_on_first_allocation_test(void)
 {
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 1, 0);
-    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 1, 0);
+    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator));
 
     octaspire_container_hash_map_t *hashMap = octaspire_container_hash_map_new(
         sizeof(size_t),
@@ -317,10 +317,10 @@ TEST octaspire_container_hash_map_new_allocation_failure_on_first_allocation_tes
         octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
         0,
         0,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     ASSERT_FALSE(hashMap);
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 0, 0x00);
 
     octaspire_container_hash_map_release(hashMap);
     hashMap = 0;
@@ -330,8 +330,8 @@ TEST octaspire_container_hash_map_new_allocation_failure_on_first_allocation_tes
 
 TEST octaspire_container_hash_map_new_allocation_failure_on_second_allocation_test(void)
 {
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 2, 0x01);
-    ASSERT_EQ(2, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 2, 0x01);
+    ASSERT_EQ(2, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator));
 
     octaspire_container_hash_map_t *hashMap = octaspire_container_hash_map_new(
         sizeof(size_t),
@@ -342,10 +342,10 @@ TEST octaspire_container_hash_map_new_allocation_failure_on_second_allocation_te
         octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
         0,
         0,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     ASSERT_FALSE(hashMap);
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 0, 0x00);
 
     octaspire_container_hash_map_release(hashMap);
     hashMap = 0;
@@ -390,20 +390,20 @@ TEST octaspire_container_hash_map_new_keys_ostring_t_and_values_ostring_t_test(v
         octaspire_container_hash_map_new_test_key_hash_function_for_ostring_t_keys,
         (octaspire_container_hash_map_element_callback_function_t)octaspire_container_utf8_string_release,
         (octaspire_container_hash_map_element_callback_function_t)octaspire_container_utf8_string_release,
-        allocator);
+        octaspireContainerHashMapTestAllocator);
 
     size_t const numElements = 32;
 
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new_format(
-            allocator,
+            octaspireContainerHashMapTestAllocator,
             "%zu",
             i);
 
         uint32_t const hash = octaspire_container_utf8_string_get_hash(str);
 
-        octaspire_container_utf8_string_t *cpyStr = octaspire_container_utf8_string_new_copy(str, allocator);
+        octaspire_container_utf8_string_t *cpyStr = octaspire_container_utf8_string_new_copy(str, octaspireContainerHashMapTestAllocator);
         ASSERT(octaspire_container_utf8_string_is_equal(str, cpyStr));
         octaspire_container_hash_map_put(hashMap, hash, &cpyStr, &str);
 
@@ -415,7 +415,7 @@ TEST octaspire_container_hash_map_new_keys_ostring_t_and_values_ostring_t_test(v
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new_format(
-            allocator,
+            octaspireContainerHashMapTestAllocator,
             "%zu",
             i);
 
@@ -450,20 +450,20 @@ TEST octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys_
             true,
             (octaspire_container_hash_map_element_callback_function_t)
                 octaspire_container_utf8_string_release,
-            allocator);
+            octaspireContainerHashMapTestAllocator);
 
     size_t const numElements = 32;
 
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new_format(
-            allocator,
+            octaspireContainerHashMapTestAllocator,
             "%zu",
             i);
 
         uint32_t const hash = octaspire_container_utf8_string_get_hash(str);
 
-        octaspire_container_utf8_string_t *cpyStr = octaspire_container_utf8_string_new_copy(str, allocator);
+        octaspire_container_utf8_string_t *cpyStr = octaspire_container_utf8_string_new_copy(str, octaspireContainerHashMapTestAllocator);
         ASSERT(octaspire_container_utf8_string_is_equal(str, cpyStr));
         octaspire_container_hash_map_put(hashMap, hash, &cpyStr, &str);
 
@@ -475,7 +475,7 @@ TEST octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys_
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new_format(
-            allocator,
+            octaspireContainerHashMapTestAllocator,
             "%zu",
             i);
 
@@ -508,12 +508,12 @@ GREATEST_SUITE(octaspire_container_hash_map_suite)
 {
     octaspireContainerHashMapSuiteNumTimesRun = 0;
 
-    allocator = octaspire_memory_allocator_new_create_region(
+    octaspireContainerHashMapTestAllocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
 
 second_run:
 
-    assert(allocator);
+    assert(octaspireContainerHashMapTestAllocator);
 
     RUN_TEST(octaspire_container_hash_map_element_new_allocation_failure_on_first_allocation_test);
     RUN_TEST(octaspire_container_hash_map_element_new_allocation_failure_on_second_allocation_test);
@@ -527,16 +527,16 @@ second_run:
     RUN_TEST(octaspire_container_hash_map_new_keys_ostring_t_and_values_ostring_t_test);
     RUN_TEST(octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys_test);
 
-    octaspire_memory_allocator_release(allocator);
-    allocator = 0;
+    octaspire_memory_allocator_release(octaspireContainerHashMapTestAllocator);
+    octaspireContainerHashMapTestAllocator = 0;
 
     ++octaspireContainerHashMapSuiteNumTimesRun;
 
     if (octaspireContainerHashMapSuiteNumTimesRun < 2)
     {
-        // Second run without region allocator
+        // Second run without region octaspireContainerHashMapTestAllocator
 
-        allocator = octaspire_memory_allocator_new(0);
+        octaspireContainerHashMapTestAllocator = octaspire_memory_allocator_new(0);
 
         goto second_run;
     }

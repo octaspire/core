@@ -20,12 +20,12 @@ limitations under the License.
 #include "octaspire/core/octaspire_container_utf8_string.h"
 #include "octaspire/core/octaspire_core_config.h"
 
-static octaspire_memory_allocator_t *allocator = 0;
+static octaspire_memory_allocator_t *octaspireContainerUtf8StringTestAllocator = 0;
 
 TEST octaspire_container_utf8_string_new_called_with_null_argument_test(void)
 {
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(0, allocator);
+        octaspire_container_utf8_string_new(0, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -33,7 +33,7 @@ TEST octaspire_container_utf8_string_new_called_with_null_argument_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -52,7 +52,7 @@ TEST octaspire_container_utf8_string_new_with_simple_ascii_string_test(void)
 {
     char const * const expected = "Hello World!";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(expected, allocator);
+        octaspire_container_utf8_string_new(expected, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -60,7 +60,7 @@ TEST octaspire_container_utf8_string_new_with_simple_ascii_string_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -84,7 +84,7 @@ TEST octaspire_container_utf8_string_new_with_some_multioctet_ucs_characters_tes
 {
     char const * const input = "©Hello World! © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -92,7 +92,7 @@ TEST octaspire_container_utf8_string_new_with_some_multioctet_ucs_characters_tes
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -117,7 +117,7 @@ TEST octaspire_container_utf8_string_new_with_simple_ascii_string_with_error_tes
 {
     char const * const input    = "Hello World\xC0\xB3";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -125,7 +125,7 @@ TEST octaspire_container_utf8_string_new_with_simple_ascii_string_with_error_tes
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, str->errorStatus);
     ASSERT_EQ(11,                                                          str->errorAtOctet);
-    ASSERT_EQ(allocator,                                                   str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                                   str->allocator);
 
     ASSERT(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(11, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -152,7 +152,7 @@ TEST octaspire_container_utf8_string_new_from_buffer_with_some_multioctet_ucs_ch
     char const * const input               = "©Hello World! © ≠𐀀How are you?";
     size_t const       lengthInOctets      = strlen(input);
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, allocator);
+        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -160,7 +160,7 @@ TEST octaspire_container_utf8_string_new_from_buffer_with_some_multioctet_ucs_ch
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -186,13 +186,13 @@ TEST octaspire_container_utf8_string_new_from_buffer_allocation_failure_on_first
     char const * const input               = "©Hello World! © ≠𐀀How are you?";
     size_t const       lengthInOctets      = strlen(input);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 1, 0);
-    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 1, 0);
+    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator));
 
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, allocator);
+        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, octaspireContainerUtf8StringTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(str);
 
@@ -207,13 +207,13 @@ TEST octaspire_container_utf8_string_new_from_buffer_allocation_failure_on_secon
     char const * const input               = "©Hello World! © ≠𐀀How are you?";
     size_t const       lengthInOctets      = strlen(input);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 2, 0x01);
-    ASSERT_EQ(2, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 2, 0x01);
+    ASSERT_EQ(2, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator));
 
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, allocator);
+        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, octaspireContainerUtf8StringTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(str);
 
@@ -228,13 +228,13 @@ TEST octaspire_container_utf8_string_new_from_buffer_allocation_failure_on_third
     char const * const input               = "©Hello World! © ≠𐀀How are you?";
     size_t const       lengthInOctets      = strlen(input);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 3, 0x03);
-    ASSERT_EQ(3, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 3, 0x03);
+    ASSERT_EQ(3, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator));
 
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, allocator);
+        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, octaspireContainerUtf8StringTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(str);
 
@@ -249,13 +249,13 @@ TEST octaspire_container_utf8_string_new_from_buffer_allocation_failure_on_fourt
     char const * const input               = "©Hello World! © ≠𐀀How are you?";
     size_t const       lengthInOctets      = strlen(input);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 4, 0x07);
-    ASSERT_EQ(4, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 4, 0x07);
+    ASSERT_EQ(4, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator));
 
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, allocator);
+        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, octaspireContainerUtf8StringTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(str);
 
@@ -270,13 +270,13 @@ TEST octaspire_container_utf8_string_new_from_buffer_allocation_failure_on_sixth
     char const * const input               = "𐀀𐀀𐀀";
     size_t const       lengthInOctets      = strlen(input);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 6, 0x1F);
-    ASSERT_EQ(6, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 6, 0x1F);
+    ASSERT_EQ(6, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator));
 
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, allocator);
+        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, octaspireContainerUtf8StringTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(str);
 
@@ -291,13 +291,13 @@ TEST octaspire_container_utf8_string_new_from_buffer_allocation_failure_on_sixth
     char const * const input               = "©Hello World! © ≠𐀀How are you?";
     size_t const       lengthInOctets      = strlen(input);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 6, 0x1F);
-    ASSERT_EQ(6, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 6, 0x1F);
+    ASSERT_EQ(6, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator));
 
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, allocator);
+        octaspire_container_utf8_string_new_from_buffer(input, lengthInOctets, octaspireContainerUtf8StringTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(str);
 
@@ -312,7 +312,7 @@ TEST octaspire_container_utf8_string_new_format_with_string_test(void)
     char const * const name  = "Mike";
     char const * const input = "Hello! My name is %s. What's yours?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input, name);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, name);
 
     ASSERT(str);
 
@@ -320,7 +320,7 @@ TEST octaspire_container_utf8_string_new_format_with_string_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -346,7 +346,7 @@ TEST octaspire_container_utf8_string_new_format_with_size_t_test(void)
     size_t const value = 62039;
     char const * const input = "©Hello World! © ≠𐀀How are you? My age is %zu. What's yours?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input, value);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value);
 
     ASSERT(str);
 
@@ -354,7 +354,7 @@ TEST octaspire_container_utf8_string_new_format_with_size_t_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -382,7 +382,7 @@ TEST octaspire_container_utf8_string_new_format_with_doubles_test(void)
     double const value3 = 4.9;
     char const * const input = "The doubles are %g, %g and %g\n";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input, value1, value2, value3);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value1, value2, value3);
 
     ASSERT(str);
 
@@ -390,7 +390,7 @@ TEST octaspire_container_utf8_string_new_format_with_doubles_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -416,7 +416,7 @@ TEST octaspire_container_utf8_string_new_format_with_string_and_size_t_test(void
     char const * const name  = "©Hello";
     char const * const input = "©Hello World! © ≠𐀀How are you? My name is \"%s\" and my age is %zu. What's yours?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input, name, value);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, name, value);
 
     ASSERT(str);
 
@@ -424,7 +424,7 @@ TEST octaspire_container_utf8_string_new_format_with_string_and_size_t_test(void
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -452,7 +452,7 @@ TEST octaspire_container_utf8_string_new_format_with_string_and_size_t_on_otherw
     char const * const name  = "Hello";
     char const * const input = "%s%zu";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input, name, value);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, name, value);
 
     ASSERT(str);
 
@@ -460,7 +460,7 @@ TEST octaspire_container_utf8_string_new_format_with_string_and_size_t_on_otherw
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -485,7 +485,7 @@ TEST octaspire_container_utf8_string_new_format_with_empty_format_string_test(vo
 {
     char const * const input = "";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input);
 
     ASSERT(str);
 
@@ -493,7 +493,7 @@ TEST octaspire_container_utf8_string_new_format_with_empty_format_string_test(vo
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -518,7 +518,7 @@ TEST octaspire_container_utf8_string_new_format_encoding_error_test(void)
     wint_t const value = WEOF;
     char const * const input = "%lc";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input, value);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value);
 
     ASSERT(str);
 
@@ -526,7 +526,7 @@ TEST octaspire_container_utf8_string_new_format_encoding_error_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_ENCODING_ERROR, str->errorStatus);
     ASSERT_EQ(0,                                                           str->errorAtOctet);
-    ASSERT_EQ(allocator,                                                   str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                                   str->allocator);
 
     ASSERT(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_ENCODING_ERROR, octaspire_container_utf8_string_get_error_status(str));
@@ -548,7 +548,7 @@ TEST octaspire_container_utf8_string_new_format_decoding_error_test(void)
     char const * const value = "wo\xFF\xFF\xFF\xFFld";
     char const * const input = "Hello %s";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input, value);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value);
 
     ASSERT(str);
 
@@ -556,7 +556,7 @@ TEST octaspire_container_utf8_string_new_format_decoding_error_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, str->errorStatus);
     ASSERT_EQ(8,                                                           str->errorAtOctet);
-    ASSERT_EQ(allocator,                                                   str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                                   str->allocator);
 
     ASSERT(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, octaspire_container_utf8_string_get_error_status(str));
@@ -588,7 +588,7 @@ TEST octaspire_container_utf8_string_new_format_decoding_error_another_test(void
     char const * const value2 = "wo\xFF\xFF\xFF\xFFld";
     char const * const input = "Hello © %g %s";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(allocator, input, value1, value2);
+        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value1, value2);
 
     ASSERT(str);
 
@@ -596,7 +596,7 @@ TEST octaspire_container_utf8_string_new_format_decoding_error_another_test(void
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, str->errorStatus);
     ASSERT_EQ(17,                                                          str->errorAtOctet);
-    ASSERT_EQ(allocator,                                                   str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                                   str->allocator);
 
     ASSERT(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, octaspire_container_utf8_string_get_error_status(str));
@@ -624,7 +624,7 @@ TEST octaspire_container_utf8_string_new_copy_test(void)
 {
     char const * const input = "©Hello World! © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -632,7 +632,7 @@ TEST octaspire_container_utf8_string_new_copy_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -648,7 +648,7 @@ TEST octaspire_container_utf8_string_new_copy_test(void)
         octaspire_container_utf8_string_get_c_string(str));
 
     octaspire_container_utf8_string_t *cpy =
-        octaspire_container_utf8_string_new_copy(str, allocator);
+        octaspire_container_utf8_string_new_copy(str, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_EQ(
         octaspire_container_utf8_string_get_length_in_octets(str),
@@ -671,7 +671,7 @@ TEST octaspire_container_utf8_string_new_copy_test(void)
     ASSERT_EQ(str->errorStatus,  cpy->errorStatus);
     ASSERT_EQ(str->errorAtOctet, cpy->errorAtOctet);
 
-    ASSERT_EQ(cpy->allocator,     allocator);
+    ASSERT_EQ(cpy->allocator,     octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -686,7 +686,7 @@ TEST octaspire_container_utf8_string_new_copy_failure_test(void)
 {
     char const * const input = "©Hello World! © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -694,7 +694,7 @@ TEST octaspire_container_utf8_string_new_copy_failure_test(void)
     ASSERT(str->ucsCharacters);
     ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_OK, str->errorStatus);
     ASSERT_EQ(0,                                               str->errorAtOctet);
-    ASSERT_EQ(allocator,                                       str->allocator);
+    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                       str->allocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -709,12 +709,12 @@ TEST octaspire_container_utf8_string_new_copy_failure_test(void)
         expected,
         octaspire_container_utf8_string_get_c_string(str));
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 1, 0);
-    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 1, 0);
+    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator));
 
-    ASSERT_FALSE(octaspire_container_utf8_string_new_copy(str, allocator));
+    ASSERT_FALSE(octaspire_container_utf8_string_new_copy(str, octaspireContainerUtf8StringTestAllocator));
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -726,7 +726,7 @@ TEST octaspire_container_utf8_string_get_length_in_ucs_characters_test(void)
 {
     char const * const input = "©Hello World! © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -744,7 +744,7 @@ TEST octaspire_container_utf8_string_get_length_in_ucs_characters_called_with_em
 {
     char const * const input = "";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -761,7 +761,7 @@ TEST octaspire_container_utf8_string_get_length_in_octets_test(void)
 {
     char const * const input = "©Hello World! © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -778,7 +778,7 @@ TEST octaspire_container_utf8_string_get_length_in_octets_called_with_empty_stri
 {
     char const * const input = "";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -795,7 +795,7 @@ TEST octaspire_container_utf8_string_get_ucs_character_at_index_test(void)
 {
     char const * const input = "©Hello World! © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -855,7 +855,7 @@ TEST octaspire_container_utf8_string_get_c_string_test(void)
     char const * const expected = "Hello World! \xc2\xa9";
 
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -878,7 +878,7 @@ TEST octaspire_container_utf8_string_get_c_string_called_with_empty_string_test(
     char const * const input    = "";
 
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -898,7 +898,7 @@ TEST octaspire_container_utf8_string_is_error_false_case_test(void)
 {
     char const * const input    = "Hello World";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
 
@@ -912,7 +912,7 @@ TEST octaspire_container_utf8_string_is_error_true_case_test(void)
 {
     char const * const input    = "Hello World\xC0\xB3";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(octaspire_container_utf8_string_is_error(str));
 
@@ -926,7 +926,7 @@ TEST octaspire_container_utf8_string_get_error_position_in_octets_called_when_ha
 {
     char const * const input    = "Hello World\xC0\xB3";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_EQ(11, octaspire_container_utf8_string_get_error_position_in_octets(str));
 
@@ -940,7 +940,7 @@ TEST octaspire_container_utf8_string_get_error_position_in_octets_called_when_ha
 {
     char const * const input    = "Hello World";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
 
@@ -954,7 +954,7 @@ TEST octaspire_container_utf8_string_reset_error_status_called_when_there_is_err
 {
     char const * const input    = "Hello World\xC0\xB3";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(11, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -974,7 +974,7 @@ TEST octaspire_container_utf8_string_reset_error_status_called_when_there_is_no_
 {
     char const * const input    = "Hello World";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     ASSERT_FALSE(octaspire_container_utf8_string_is_error(str));
     ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
@@ -994,7 +994,7 @@ TEST octaspire_container_utf8_string_concatenate_c_string_called_with_null_and_e
 {
     char const * const input = "©Hello World! © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_concatenate_c_string(str, 0);
     octaspire_container_utf8_string_concatenate_c_string(str, "");
@@ -1025,7 +1025,7 @@ TEST octaspire_container_utf8_string_concatenate_c_string_test(void)
     char const * const input  = "©Hello World!";
     char const * const input2 = " © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_concatenate_c_string(str, input2);
 
@@ -1053,7 +1053,7 @@ TEST octaspire_container_utf8_string_concatenate_c_string_with_decode_error_test
     char const * const input  = "©Hello World!";
     char const * const input2 = " © ≠𐀀How are you?\xC0\xB3";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_concatenate_c_string(str, input2);
 
@@ -1081,13 +1081,13 @@ TEST octaspire_container_utf8_string_concatenate_c_string_allocation_failure_one
     char const * const input  = "©Hello World!";
     char const * const input2 = " © ≠𐀀How are you?";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 1, 0);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 1, 0);
 
     ASSERT_FALSE(octaspire_container_utf8_string_concatenate_c_string(str, input2));
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1100,15 +1100,15 @@ TEST octaspire_container_utf8_string_concatenate_c_string_allocation_failure_two
     char const * const input  = "a";
     char const * const input2 = "bcd";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireContainerUtf8StringTestAllocator,
         2, 0x00000002);
 
     ASSERT_FALSE(octaspire_container_utf8_string_concatenate_c_string(str, input2));
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1121,15 +1121,15 @@ TEST octaspire_container_utf8_string_concatenate_c_string_allocation_failure_thr
     char const * const input  = "a";
     char const * const input2 = "b";
     octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new(input, allocator);
+        octaspire_container_utf8_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireContainerUtf8StringTestAllocator,
         2, 0x00000001);
 
     ASSERT_FALSE(octaspire_container_utf8_string_concatenate_c_string(str, input2));
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1139,7 +1139,7 @@ TEST octaspire_container_utf8_string_concatenate_c_string_allocation_failure_thr
 
 TEST octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test(void)
 {
-    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("", allocator);
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("", octaspireContainerUtf8StringTestAllocator);
     ASSERT_FALSE(octaspire_container_vector_is_empty(str->octets));
 
     ASSERT_EQ(
@@ -1152,7 +1152,7 @@ TEST octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test(void
     str = 0;
 
 
-    str = octaspire_container_utf8_string_new("a", allocator);
+    str = octaspire_container_utf8_string_new("a", octaspireContainerUtf8StringTestAllocator);
     ASSERT_FALSE(octaspire_container_vector_is_empty(str->octets));
 
     ASSERT_EQ(
@@ -1165,7 +1165,7 @@ TEST octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test(void
     str = 0;
 
 
-    str = octaspire_container_utf8_string_new_format(allocator, "");
+    str = octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, "");
     ASSERT_FALSE(octaspire_container_vector_is_empty(str->octets));
 
     ASSERT_EQ(
@@ -1179,7 +1179,7 @@ TEST octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test(void
 
 
     size_t const size = 112;
-    str = octaspire_container_utf8_string_new_format(allocator, "%zu", size);
+    str = octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, "%zu", size);
     ASSERT_FALSE(octaspire_container_vector_is_empty(str->octets));
 
     ASSERT_EQ(
@@ -1200,14 +1200,14 @@ TEST octaspire_container_utf8_string_new_format_numbers_into_vector_test(void)
         sizeof(octaspire_container_utf8_string_t*),
         true,
         (octaspire_container_vector_element_callback_t)octaspire_container_utf8_string_release,
-        allocator);
+        octaspireContainerUtf8StringTestAllocator);
 
     size_t const numElements = 256;
 
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new_format(
-            allocator,
+            octaspireContainerUtf8StringTestAllocator,
             "%zu",
             i);
 
@@ -1233,7 +1233,7 @@ TEST octaspire_container_utf8_string_new_format_number_test(void)
 {
     size_t const i = 2000;
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new_format(
-            allocator,
+            octaspireContainerUtf8StringTestAllocator,
             "%zu",
             i);
 
@@ -1249,10 +1249,10 @@ TEST octaspire_container_utf8_string_find_char_a_from_string_a123a56a89a_using_i
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "a123a56a89a",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *character =
-        octaspire_container_utf8_string_new("a123",allocator);
+        octaspire_container_utf8_string_new("a123",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && character);
 
@@ -1286,10 +1286,10 @@ TEST octaspire_container_utf8_string_find_char_q_from_string_a123a56q89q_using_i
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "a123a56q89q",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *character =
-        octaspire_container_utf8_string_new("aq123",allocator);
+        octaspire_container_utf8_string_new("aq123",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && character);
 
@@ -1321,10 +1321,10 @@ TEST octaspire_container_utf8_string_find_char_c_from_string_a123c56q89q_using_i
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "a123c56q89q",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *character =
-        octaspire_container_utf8_string_new("aqc",allocator);
+        octaspire_container_utf8_string_new("aqc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && character);
 
@@ -1355,10 +1355,10 @@ TEST octaspire_container_utf8_string_find_char_c_from_string_a123y56q89q_using_i
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "a123y56q89q",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *character =
-        octaspire_container_utf8_string_new("aqc",allocator);
+        octaspire_container_utf8_string_new("aqc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && character);
 
@@ -1387,10 +1387,10 @@ TEST octaspire_container_utf8_string_find_string_cat_from_string_cat_dog_cat_zeb
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "cat dog cat zebra car kitten cat",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *lookFor =
-        octaspire_container_utf8_string_new("cat",allocator);
+        octaspire_container_utf8_string_new("cat",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && lookFor);
 
@@ -1424,10 +1424,10 @@ TEST octaspire_container_utf8_string_find_string_cat_from_string_cat_dog_cat_zeb
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "cat dog cat zebra car kitten cat",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *lookFor =
-        octaspire_container_utf8_string_new(">cat<",allocator);
+        octaspire_container_utf8_string_new(">cat<",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && lookFor);
 
@@ -1461,10 +1461,10 @@ TEST octaspire_container_utf8_string_find_string_dog_from_string_dog_cat_zebra_u
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "dog cat zebra",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *lookFor =
-        octaspire_container_utf8_string_new("dog",allocator);
+        octaspire_container_utf8_string_new("dog",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && lookFor);
 
@@ -1496,10 +1496,10 @@ TEST octaspire_container_utf8_string_find_string_dog_from_string_cat_zebra_dog_u
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "cat zebra dog",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *lookFor =
-        octaspire_container_utf8_string_new("dog",allocator);
+        octaspire_container_utf8_string_new("dog",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && lookFor);
 
@@ -1531,10 +1531,10 @@ TEST octaspire_container_utf8_string_find_string_dog_from_string_cat_zebra_kitte
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "cat zebra kitten",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *lookFor =
-        octaspire_container_utf8_string_new("dog",allocator);
+        octaspire_container_utf8_string_new("dog",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && lookFor);
 
@@ -1564,10 +1564,10 @@ TEST octaspire_container_utf8_string_find_string_kitten_from_string_cat_using_in
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "cat",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *lookFor =
-        octaspire_container_utf8_string_new("kitten",allocator);
+        octaspire_container_utf8_string_new("kitten",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && lookFor);
 
@@ -1597,10 +1597,10 @@ TEST octaspire_container_utf8_string_private_check_substring_match_at_middle_tes
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "123kitten456",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *substring =
-        octaspire_container_utf8_string_new("kitten",allocator);
+        octaspire_container_utf8_string_new("kitten",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && substring);
 
@@ -1626,10 +1626,10 @@ TEST octaspire_container_utf8_string_private_check_substring_match_at_the_beginn
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "kitten456",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *substring =
-        octaspire_container_utf8_string_new("kitten",allocator);
+        octaspire_container_utf8_string_new("kitten",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && substring);
 
@@ -1655,10 +1655,10 @@ TEST octaspire_container_utf8_string_private_check_substring_match_at_the_end_te
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "123kitten",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *substring =
-        octaspire_container_utf8_string_new("kitten",allocator);
+        octaspire_container_utf8_string_new("kitten",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && substring);
 
@@ -1684,10 +1684,10 @@ TEST octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "123abc456abc",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *substring =
-        octaspire_container_utf8_string_new("abc",allocator);
+        octaspire_container_utf8_string_new("abc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && substring);
 
@@ -1711,10 +1711,10 @@ TEST octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "123abc456abc",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *substring =
-        octaspire_container_utf8_string_new("abc",allocator);
+        octaspire_container_utf8_string_new("abc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && substring);
 
@@ -1738,10 +1738,10 @@ TEST octaspire_container_utf8_string_find_first_substring_abcd_from_123abc456abc
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "123abc456abc",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *substring =
-        octaspire_container_utf8_string_new("abcd",allocator);
+        octaspire_container_utf8_string_new("abcd",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && substring);
 
@@ -1765,7 +1765,7 @@ TEST octaspire_container_utf8_string_private_ucs_character_index_to_octets_index
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "0123456789",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -1784,7 +1784,7 @@ TEST octaspire_container_utf8_string_remove_character_at_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "0123456789",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -1807,7 +1807,7 @@ TEST octaspire_container_utf8_string_remove_characters_at_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "0123456789",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -1833,10 +1833,10 @@ TEST octaspire_container_utf8_string_remove_all_substrings_kitten_from_string_ki
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
             "kitten cat kitten dog kitten zebra kitten",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *substring =
-        octaspire_container_utf8_string_new("kitten",allocator);
+        octaspire_container_utf8_string_new("kitten",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str && substring);
 
@@ -1859,10 +1859,10 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_1_of_ade_tes
 {
     octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
             "ade",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *strAddition =
-        octaspire_container_utf8_string_new("bc",allocator);
+        octaspire_container_utf8_string_new("bc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
@@ -1887,10 +1887,10 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_minus_1_of_a
 {
     octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
             "ade",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *strAddition =
-        octaspire_container_utf8_string_new("bc",allocator);
+        octaspire_container_utf8_string_new("bc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
@@ -1915,10 +1915,10 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_minus_3_of_a
 {
     octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
             "ade",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *strAddition =
-        octaspire_container_utf8_string_new("bc",allocator);
+        octaspire_container_utf8_string_new("bc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
@@ -1943,10 +1943,10 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_minus_4_of_a
 {
     octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
             "ade",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *strAddition =
-        octaspire_container_utf8_string_new("bc",allocator);
+        octaspire_container_utf8_string_new("bc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
@@ -1971,10 +1971,10 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_3_of_ade_fai
 {
     octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
             "ade",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *strAddition =
-        octaspire_container_utf8_string_new("bc",allocator);
+        octaspire_container_utf8_string_new("bc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
@@ -1999,10 +1999,10 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_0_of_ade_tes
 {
     octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
             "ade",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *strAddition =
-        octaspire_container_utf8_string_new("bc",allocator);
+        octaspire_container_utf8_string_new("bc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
@@ -2027,10 +2027,10 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_tes
 {
     octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
             "ade",
-            allocator);
+            octaspireContainerUtf8StringTestAllocator);
 
     octaspire_container_utf8_string_t *strAddition =
-        octaspire_container_utf8_string_new("bc",allocator);
+        octaspire_container_utf8_string_new("bc",octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
@@ -2053,7 +2053,7 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_tes
 
 TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
 {
-    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("abc", allocator);
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
     ASSERT_EQ(3, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
@@ -2090,12 +2090,12 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
 {
     octaspireContainerUtf8StringSuiteNumTimesRun = 0;
 
-    allocator = octaspire_memory_allocator_new_create_region(
+    octaspireContainerUtf8StringTestAllocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
 
 second_run:
 
-    assert(allocator);
+    assert(octaspireContainerUtf8StringTestAllocator);
 
     RUN_TEST(octaspire_container_utf8_string_new_called_with_null_argument_test);
     RUN_TEST(octaspire_container_utf8_string_new_with_simple_ascii_string_test);
@@ -2173,8 +2173,8 @@ second_run:
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_test);
     RUN_TEST(octaspire_container_utf8_string_pop_back_ucs_character_test);
 
-    octaspire_memory_allocator_release(allocator);
-    allocator = 0;
+    octaspire_memory_allocator_release(octaspireContainerUtf8StringTestAllocator);
+    octaspireContainerUtf8StringTestAllocator = 0;
 
     ++octaspireContainerUtf8StringSuiteNumTimesRun;
 
@@ -2182,7 +2182,7 @@ second_run:
     {
         // Second run without region allocator
 
-        allocator = octaspire_memory_allocator_new(0);
+        octaspireContainerUtf8StringTestAllocator = octaspire_memory_allocator_new(0);
 
         goto second_run;
     }

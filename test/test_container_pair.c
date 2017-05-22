@@ -21,7 +21,7 @@ limitations under the License.
 #include "octaspire/core/octaspire_memory.h"
 #include "octaspire/core/octaspire_core_config.h"
 
-static octaspire_memory_allocator_t *allocator = 0;
+static octaspire_memory_allocator_t *octaspireContainerPairTestAllocator = 0;
 
 TEST octaspire_container_pair_new_short_and_long_test(void)
 {
@@ -32,7 +32,7 @@ TEST octaspire_container_pair_new_short_and_long_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -46,7 +46,7 @@ TEST octaspire_container_pair_new_short_and_long_test(void)
     ASSERT_EQ(sizeof(long),  p->secondSize);
     ASSERT_EQ(0,             p->firstReleaseCallback);
     ASSERT_EQ(0,             p->secondReleaseCallback);
-    ASSERT_EQ(allocator,     p->allocator);
+    ASSERT_EQ(octaspireContainerPairTestAllocator,     p->allocator);
 
     short const expectedFirst  = 11;
     long  const expectedSecond = 12;
@@ -70,7 +70,7 @@ TEST octaspire_container_pair_new_long_and_short_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -84,7 +84,7 @@ TEST octaspire_container_pair_new_long_and_short_test(void)
     ASSERT_EQ(sizeof(short),  p->secondSize);
     ASSERT_EQ(0,             p->firstReleaseCallback);
     ASSERT_EQ(0,             p->secondReleaseCallback);
-    ASSERT_EQ(allocator,     p->allocator);
+    ASSERT_EQ(octaspireContainerPairTestAllocator,     p->allocator);
 
     long  const expectedFirst  = 11;
     short const expectedSecond = 12;
@@ -108,7 +108,7 @@ TEST octaspire_container_pair_new_uint32_t_and_double_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -122,7 +122,7 @@ TEST octaspire_container_pair_new_uint32_t_and_double_test(void)
     ASSERT_EQ(sizeof(double),   p->secondSize);
     ASSERT_EQ(0,                p->firstReleaseCallback);
     ASSERT_EQ(0,                p->secondReleaseCallback);
-    ASSERT_EQ(allocator,        p->allocator);
+    ASSERT_EQ(octaspireContainerPairTestAllocator,        p->allocator);
 
     uint32_t  const expectedFirst  = 11;
     double    const expectedSecond = 12.12;
@@ -140,14 +140,14 @@ TEST octaspire_container_pair_new_uint32_t_and_double_test(void)
 TEST octaspire_container_pair_new_allocation_failure_on_first_allocation_test(void)
 {
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireContainerPairTestAllocator,
         1,
         0);
 
     ASSERT_EQ(
         1,
         octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
-            allocator));
+            octaspireContainerPairTestAllocator));
 
     octaspire_container_pair_t *p = octaspire_container_pair_new(
         sizeof(short),
@@ -156,9 +156,9 @@ TEST octaspire_container_pair_new_allocation_failure_on_first_allocation_test(vo
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerPairTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(p);
 
@@ -171,14 +171,14 @@ TEST octaspire_container_pair_new_allocation_failure_on_first_allocation_test(vo
 TEST octaspire_container_pair_new_allocation_failure_on_second_allocation_test(void)
 {
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireContainerPairTestAllocator,
         2,
         0x01);
 
     ASSERT_EQ(
         2,
         octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
-            allocator));
+            octaspireContainerPairTestAllocator));
 
     octaspire_container_pair_t *p = octaspire_container_pair_new(
         sizeof(short),
@@ -187,9 +187,9 @@ TEST octaspire_container_pair_new_allocation_failure_on_second_allocation_test(v
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerPairTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(p);
 
@@ -202,14 +202,14 @@ TEST octaspire_container_pair_new_allocation_failure_on_second_allocation_test(v
 TEST octaspire_container_pair_new_allocation_failure_on_third_allocation_test(void)
 {
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireContainerPairTestAllocator,
         3,
         0x03);
 
     ASSERT_EQ(
         3,
         octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
-            allocator));
+            octaspireContainerPairTestAllocator));
 
     octaspire_container_pair_t *p = octaspire_container_pair_new(
         sizeof(short),
@@ -218,9 +218,9 @@ TEST octaspire_container_pair_new_allocation_failure_on_third_allocation_test(vo
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerPairTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(p);
 
@@ -239,7 +239,7 @@ TEST octaspire_container_pair_new_shallow_copy_uint32_t_and_double_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(expected);
 
@@ -249,7 +249,7 @@ TEST octaspire_container_pair_new_shallow_copy_uint32_t_and_double_test(void)
 
     octaspire_container_pair_t *p = octaspire_container_pair_new_shallow_copy(
         expected,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -263,7 +263,7 @@ TEST octaspire_container_pair_new_shallow_copy_uint32_t_and_double_test(void)
     ASSERT_EQ(sizeof(double),   p->secondSize);
     ASSERT_EQ(0,                p->firstReleaseCallback);
     ASSERT_EQ(0,                p->secondReleaseCallback);
-    ASSERT_EQ(allocator,        p->allocator);
+    ASSERT_EQ(octaspireContainerPairTestAllocator,        p->allocator);
 
     octaspire_container_pair_release(p);
     p = 0;
@@ -283,7 +283,7 @@ TEST octaspire_container_pair_new_shallow_copy_failure_on_first_allocation_test(
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(expected);
 
@@ -292,20 +292,20 @@ TEST octaspire_container_pair_new_shallow_copy_failure_on_first_allocation_test(
     octaspire_container_pair_set(expected, &expectedFirst, &expectedSecond);
 
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireContainerPairTestAllocator,
         1,
         0);
 
     ASSERT_EQ(
         1,
         octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
-            allocator));
+            octaspireContainerPairTestAllocator));
 
     octaspire_container_pair_t *p = octaspire_container_pair_new_shallow_copy(
         expected,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerPairTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(p);
 
@@ -327,7 +327,7 @@ TEST octaspire_container_pair_new_shallow_copy_failure_on_second_allocation_test
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(expected);
 
@@ -336,20 +336,20 @@ TEST octaspire_container_pair_new_shallow_copy_failure_on_second_allocation_test
     octaspire_container_pair_set(expected, &expectedFirst, &expectedSecond);
 
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireContainerPairTestAllocator,
         2,
         0x1);
 
     ASSERT_EQ(
         2,
         octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
-            allocator));
+            octaspireContainerPairTestAllocator));
 
     octaspire_container_pair_t *p = octaspire_container_pair_new_shallow_copy(
         expected,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerPairTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(p);
 
@@ -371,7 +371,7 @@ TEST octaspire_container_pair_new_shallow_copy_failure_on_third_allocation_test(
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(expected);
 
@@ -380,20 +380,20 @@ TEST octaspire_container_pair_new_shallow_copy_failure_on_third_allocation_test(
     octaspire_container_pair_set(expected, &expectedFirst, &expectedSecond);
 
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireContainerPairTestAllocator,
         3,
         0x3);
 
     ASSERT_EQ(
         3,
         octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
-            allocator));
+            octaspireContainerPairTestAllocator));
 
     octaspire_container_pair_t *p = octaspire_container_pair_new_shallow_copy(
         expected,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 0, 0x00);
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerPairTestAllocator, 0, 0x00);
 
     ASSERT_FALSE(p);
 
@@ -429,7 +429,7 @@ TEST octaspire_container_pair_release_test(void)
 
     octaspire_container_utf8_string_t *second = octaspire_container_utf8_string_new(
         "second element of the pair in octaspire_container_pair_release_test",
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     octaspire_container_pair_t *p = octaspire_container_pair_new(
         sizeof(size_t),
@@ -438,7 +438,7 @@ TEST octaspire_container_pair_release_test(void)
         true,
         octaspire_container_pair_release_test_private_release_callback_for_first,
         octaspire_container_pair_release_test_private_release_callback_for_second,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -469,7 +469,7 @@ TEST octaspire_container_pair_get_first_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -494,7 +494,7 @@ TEST octaspire_container_pair_get_first_const_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -519,7 +519,7 @@ TEST octaspire_container_pair_get_second_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -544,7 +544,7 @@ TEST octaspire_container_pair_get_second_const_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -569,7 +569,7 @@ TEST octaspire_container_pair_get_size_of_first_element_in_octets_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -590,7 +590,7 @@ TEST octaspire_container_pair_get_size_of_second_element_in_octets_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -611,7 +611,7 @@ TEST octaspire_container_pair_set_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -637,7 +637,7 @@ TEST octaspire_container_pair_set_first_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -663,7 +663,7 @@ TEST octaspire_container_pair_set_second_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -689,7 +689,7 @@ TEST octaspire_container_pair_set_first_to_void_pointer_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -715,7 +715,7 @@ TEST octaspire_container_pair_set_first_to_void_pointer_failure_on_element_size_
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -737,7 +737,7 @@ TEST octaspire_container_pair_set_second_to_void_pointer_test(void)
         true,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -763,7 +763,7 @@ TEST octaspire_container_pair_set_second_to_void_pointer_failure_on_element_size
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -785,7 +785,7 @@ TEST octaspire_container_pair_clear_test(void)
         false,
         0,
         0,
-        allocator);
+        octaspireContainerPairTestAllocator);
 
     ASSERT(p);
 
@@ -813,7 +813,7 @@ GREATEST_SUITE(octaspire_container_pair_suite)
 {
     octaspireContainerPairSuiteNumTimesRun = 0;
 
-    allocator = octaspire_memory_allocator_new_create_region(
+    octaspireContainerPairTestAllocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
 
 second_run:
@@ -844,8 +844,8 @@ second_run:
     RUN_TEST(octaspire_container_pair_set_second_to_void_pointer_failure_on_element_size_test);
     RUN_TEST(octaspire_container_pair_clear_test);
 
-    octaspire_memory_allocator_release(allocator);
-    allocator = 0;
+    octaspire_memory_allocator_release(octaspireContainerPairTestAllocator);
+    octaspireContainerPairTestAllocator = 0;
 
     ++octaspireContainerPairSuiteNumTimesRun;
 
@@ -853,7 +853,7 @@ second_run:
     {
         // Second run without region allocator
 
-        allocator = octaspire_memory_allocator_new(0);
+        octaspireContainerPairTestAllocator = octaspire_memory_allocator_new(0);
 
         goto second_run;
     }

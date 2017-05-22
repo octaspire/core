@@ -20,18 +20,18 @@ limitations under the License.
 #include "octaspire/core/octaspire_stdio.h"
 #include "octaspire/core/octaspire_core_config.h"
 
-static octaspire_memory_allocator_t *allocator = 0;
+static octaspire_memory_allocator_t *octaspireStdioTestAllocator = 0;
 
 TEST octaspire_stdio_new_test(void)
 {
-    octaspire_stdio_t *stdio = octaspire_stdio_new(allocator);
+    octaspire_stdio_t *stdio = octaspire_stdio_new(octaspireStdioTestAllocator);
 
     ASSERT(stdio);
 
     ASSERT_EQ(0, stdio->numberOfFutureReadsToBeRigged);
     ASSERT_EQ(0, stdio->bitIndex);
     ASSERT_EQ(0, stdio->bitQueue);
-    ASSERT_EQ(allocator, stdio->allocator);
+    ASSERT_EQ(octaspireStdioTestAllocator, stdio->allocator);
 
     octaspire_stdio_release(stdio);
     stdio = 0;
@@ -42,21 +42,21 @@ TEST octaspire_stdio_new_test(void)
 TEST octaspire_stdio_new_allocation_failure_test(void)
 {
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireStdioTestAllocator,
         1,
         0);
 
     ASSERT_EQ(
         1,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireStdioTestAllocator));
 
-    octaspire_stdio_t *stdio = octaspire_stdio_new(allocator);
+    octaspire_stdio_t *stdio = octaspire_stdio_new(octaspireStdioTestAllocator);
 
     ASSERT_FALSE(stdio);
 
     ASSERT_EQ(
         0,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireStdioTestAllocator));
 
     octaspire_stdio_release(stdio);
     stdio = 0;
@@ -66,7 +66,7 @@ TEST octaspire_stdio_new_allocation_failure_test(void)
 
 TEST octaspire_stdio_fread_test(void)
 {
-    octaspire_stdio_t *stdio = octaspire_stdio_new(allocator);
+    octaspire_stdio_t *stdio = octaspire_stdio_new(octaspireStdioTestAllocator);
 
     ASSERT(stdio);
 
@@ -94,7 +94,7 @@ TEST octaspire_stdio_fread_test(void)
 
 TEST octaspire_stdio_fread_rigging_and_failure_test(void)
 {
-    octaspire_stdio_t *stdio = octaspire_stdio_new(allocator);
+    octaspire_stdio_t *stdio = octaspire_stdio_new(octaspireStdioTestAllocator);
 
     ASSERT(stdio);
 
@@ -143,20 +143,20 @@ GREATEST_SUITE(octaspire_stdio_suite)
 {
     octaspireStdioSuiteNumTimesRun = 0;
 
-    allocator = octaspire_memory_allocator_new_create_region(
+    octaspireStdioTestAllocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
 
 second_run:
 
-    assert(allocator);
+    assert(octaspireStdioTestAllocator);
 
     RUN_TEST(octaspire_stdio_new_test);
     RUN_TEST(octaspire_stdio_new_allocation_failure_test);
     RUN_TEST(octaspire_stdio_fread_test);
     RUN_TEST(octaspire_stdio_fread_rigging_and_failure_test);
 
-    octaspire_memory_allocator_release(allocator);
-    allocator = 0;
+    octaspire_memory_allocator_release(octaspireStdioTestAllocator);
+    octaspireStdioTestAllocator = 0;
 
     ++octaspireStdioSuiteNumTimesRun;
 
@@ -164,7 +164,7 @@ second_run:
     {
         // Second run without region allocator
 
-        allocator      = octaspire_memory_allocator_new(0);
+        octaspireStdioTestAllocator      = octaspire_memory_allocator_new(0);
 
         goto second_run;
     }

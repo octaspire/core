@@ -19,14 +19,14 @@ limitations under the License.
 #include "octaspire/core/octaspire_input.h"
 #include "octaspire/core/octaspire_core_config.h"
 
-static octaspire_memory_allocator_t *allocator = 0;
-static octaspire_stdio_t            *octaspireStdio = 0;
+static octaspire_memory_allocator_t *octaspireInputTestAllocator = 0;
+static octaspire_stdio_t            *octaspireInputTestStdio = 0;
 
 TEST octaspire_input_new_from_c_string_test(void)
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -47,7 +47,7 @@ TEST octaspire_input_new_from_c_string_test(void)
     ASSERT_EQ(0,         input->index);
     ASSERT_EQ(1,         input->line);
     ASSERT_EQ(1,         input->column);
-    ASSERT_EQ(allocator, input->allocator);
+    ASSERT_EQ(octaspireInputTestAllocator, input->allocator);
 
     ASSERT_EQ(6, octaspire_input_get_length_in_ucs_characters(input));
 
@@ -59,7 +59,7 @@ TEST octaspire_input_new_from_c_string_test(void)
 
 TEST octaspire_input_new_from_c_string_called_with_null_string_test(void)
 {
-    octaspire_input_t *input = octaspire_input_new_from_c_string(0, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(0, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -69,7 +69,7 @@ TEST octaspire_input_new_from_c_string_called_with_null_string_test(void)
     ASSERT_EQ(0,         input->index);
     ASSERT_EQ(1,         input->line);
     ASSERT_EQ(1,         input->column);
-    ASSERT_EQ(allocator, input->allocator);
+    ASSERT_EQ(octaspireInputTestAllocator, input->allocator);
 
     ASSERT_EQ(0, octaspire_input_get_length_in_ucs_characters(input));
 
@@ -84,19 +84,19 @@ TEST octaspire_input_new_from_c_string_with_allocation_failure_test(void)
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireInputTestAllocator,
         1,
         0);
 
     ASSERT_EQ(
         1,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireInputTestAllocator));
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT_EQ(
         0,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireInputTestAllocator));
 
     ASSERT_FALSE(input);
 
@@ -126,7 +126,7 @@ TEST octaspire_input_new_from_buffer_test(void)
 
     octaspire_input_t *input = octaspire_input_new_from_buffer(
         buffer, sizeof(buffer) / sizeof(buffer[0]),
-        allocator);
+        octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -147,7 +147,7 @@ TEST octaspire_input_new_from_buffer_test(void)
     ASSERT_EQ(0,         input->index);
     ASSERT_EQ(1,         input->line);
     ASSERT_EQ(1,         input->column);
-    ASSERT_EQ(allocator, input->allocator);
+    ASSERT_EQ(octaspireInputTestAllocator, input->allocator);
 
     ASSERT_EQ(6, octaspire_input_get_length_in_ucs_characters(input));
 
@@ -176,21 +176,21 @@ TEST octaspire_input_new_from_buffer_with_allocation_failure_0x00_test(void)
     };
 
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireInputTestAllocator,
         1,
         0x00);
 
     ASSERT_EQ(
         1,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireInputTestAllocator));
 
     octaspire_input_t *input = octaspire_input_new_from_buffer(
         buffer, sizeof(buffer) / sizeof(buffer[0]),
-        allocator);
+        octaspireInputTestAllocator);
 
     ASSERT_EQ(
         0,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireInputTestAllocator));
 
     ASSERT_FALSE(input);
 
@@ -219,21 +219,21 @@ TEST octaspire_input_new_from_buffer_with_allocation_failure_0x01_test(void)
     };
 
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireInputTestAllocator,
         2,
         0x01);
 
     ASSERT_EQ(
         2,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireInputTestAllocator));
 
     octaspire_input_t *input = octaspire_input_new_from_buffer(
         buffer, sizeof(buffer) / sizeof(buffer[0]),
-        allocator);
+        octaspireInputTestAllocator);
 
     ASSERT_EQ(
         0,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireInputTestAllocator));
 
     ASSERT_FALSE(input);
 
@@ -247,8 +247,8 @@ TEST octaspire_input_new_from_path_test(void)
 {
     octaspire_input_t *input = octaspire_input_new_from_path(
         OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_input_new_from_path_test",
-        allocator,
-        octaspireStdio);
+        octaspireInputTestAllocator,
+        octaspireInputTestStdio);
 
     ASSERT(input);
 
@@ -269,7 +269,7 @@ TEST octaspire_input_new_from_path_test(void)
     ASSERT_EQ(0,         input->index);
     ASSERT_EQ(1,         input->line);
     ASSERT_EQ(1,         input->column);
-    ASSERT_EQ(allocator, input->allocator);
+    ASSERT_EQ(octaspireInputTestAllocator, input->allocator);
 
     ASSERT_EQ(6, octaspire_input_get_length_in_ucs_characters(input));
 
@@ -283,8 +283,8 @@ TEST octaspire_input_new_from_path_failure_on_nonexisting_file_test(void)
 {
     octaspire_input_t *input = octaspire_input_new_from_path(
         OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_input_new_from_path_failure_on_nonexisting_file_test",
-        allocator,
-        octaspireStdio);
+        octaspireInputTestAllocator,
+        octaspireInputTestStdio);
 
     ASSERT_FALSE(input);
 
@@ -297,22 +297,22 @@ TEST octaspire_input_new_from_path_failure_on_nonexisting_file_test(void)
 TEST octaspire_input_new_from_path_allocation_failure_test(void)
 {
     octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-        allocator,
+        octaspireInputTestAllocator,
         1,
         0);
 
     ASSERT_EQ(
         1,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireInputTestAllocator));
 
     octaspire_input_t *input = octaspire_input_new_from_path(
         OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_input_new_from_path_test",
-        allocator,
-        octaspireStdio);
+        octaspireInputTestAllocator,
+        octaspireInputTestStdio);
 
     ASSERT_EQ(
         0,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireInputTestAllocator));
 
     ASSERT_FALSE(input);
 
@@ -326,7 +326,7 @@ TEST octaspire_input_get_length_in_ucs_characters_test(void)
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -342,7 +342,7 @@ TEST octaspire_input_clear_test(void)
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -363,7 +363,7 @@ TEST octaspire_input_clear_test(void)
     ASSERT_EQ(0,         input->index);
     ASSERT_EQ(1,         input->line);
     ASSERT_EQ(1,         input->column);
-    ASSERT_EQ(allocator, input->allocator);
+    ASSERT_EQ(octaspireInputTestAllocator, input->allocator);
 
     ASSERT_EQ(6, octaspire_input_get_length_in_ucs_characters(input));
 
@@ -376,7 +376,7 @@ TEST octaspire_input_clear_test(void)
     ASSERT_EQ(0,         input->index);
     ASSERT_EQ(1,         input->line);
     ASSERT_EQ(1,         input->column);
-    ASSERT_EQ(allocator, input->allocator);
+    ASSERT_EQ(octaspireInputTestAllocator, input->allocator);
 
     ASSERT_EQ(0, octaspire_input_get_length_in_ucs_characters(input));
 
@@ -390,14 +390,14 @@ TEST octaspire_input_rewind_test(void)
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
     ASSERT_EQ(0,         input->index);
     ASSERT_EQ(1,         input->line);
     ASSERT_EQ(1,         input->column);
-    ASSERT_EQ(allocator, input->allocator);
+    ASSERT_EQ(octaspireInputTestAllocator, input->allocator);
 
     ASSERT_EQ(6, octaspire_input_get_length_in_ucs_characters(input));
 
@@ -412,7 +412,7 @@ TEST octaspire_input_rewind_test(void)
     ASSERT_EQ(0,         input->index);
     ASSERT_EQ(1,         input->line);
     ASSERT_EQ(1,         input->column);
-    ASSERT_EQ(allocator, input->allocator);
+    ASSERT_EQ(octaspireInputTestAllocator, input->allocator);
     ASSERT(octaspire_input_is_good(input));
 
     uint32_t expected[] = {0x61, 0x62, 0x63, 0xa9, 0x2260, 0x10000};
@@ -436,7 +436,7 @@ TEST octaspire_input_peek_next_ucs_character_test(void)
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -467,7 +467,7 @@ TEST octaspire_input_pop_next_ucs_character_test(void)
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -499,7 +499,7 @@ TEST octaspire_input_pop_next_ucs_character_current_line_and_column_are_calculat
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80\ndef\nghi";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -547,7 +547,7 @@ TEST octaspire_input_is_good_test(void)
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -575,7 +575,7 @@ TEST octaspire_input_private_is_ucs_character_index_valid_test(void)
 {
     char const * const cstr = "abc\xC2\xA9\xE2\x89\xA0\xF0\x90\x80\x80";
 
-    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, allocator);
+    octaspire_input_t *input = octaspire_input_new_from_c_string(cstr, octaspireInputTestAllocator);
 
     ASSERT(input);
 
@@ -604,15 +604,15 @@ GREATEST_SUITE(octaspire_input_suite)
 {
     octaspireInputSuiteNumTimesRun = 0;
 
-    allocator = octaspire_memory_allocator_new_create_region(
+    octaspireInputTestAllocator = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
 
-    octaspireStdio = octaspire_stdio_new(allocator);
+    octaspireInputTestStdio = octaspire_stdio_new(octaspireInputTestAllocator);
 
 second_run:
 
-    assert(allocator);
-    assert(octaspireStdio);
+    assert(octaspireInputTestAllocator);
+    assert(octaspireInputTestStdio);
 
     RUN_TEST(octaspire_input_new_from_c_string_test);
     RUN_TEST(octaspire_input_new_from_c_string_called_with_null_string_test);
@@ -632,11 +632,11 @@ second_run:
     RUN_TEST(octaspire_input_is_good_test);
     RUN_TEST(octaspire_input_private_is_ucs_character_index_valid_test);
 
-    octaspire_stdio_release(octaspireStdio);
-    octaspireStdio = 0;
+    octaspire_stdio_release(octaspireInputTestStdio);
+    octaspireInputTestStdio = 0;
 
-    octaspire_memory_allocator_release(allocator);
-    allocator = 0;
+    octaspire_memory_allocator_release(octaspireInputTestAllocator);
+    octaspireInputTestAllocator = 0;
 
     ++octaspireInputSuiteNumTimesRun;
 
@@ -644,8 +644,8 @@ second_run:
     {
         // Second run without region allocator
 
-        allocator      = octaspire_memory_allocator_new(0);
-        octaspireStdio = octaspire_stdio_new(allocator);
+        octaspireInputTestAllocator      = octaspire_memory_allocator_new(0);
+        octaspireInputTestStdio = octaspire_stdio_new(octaspireInputTestAllocator);
 
         goto second_run;
     }

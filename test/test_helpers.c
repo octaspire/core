@@ -19,8 +19,8 @@ limitations under the License.
 #include "octaspire/core/octaspire_stdio.h"
 #include "octaspire/core/octaspire_core_config.h"
 
-static octaspire_memory_allocator_t *allocator = 0;
-static octaspire_stdio_t            *octaspireStdio = 0;
+static octaspire_memory_allocator_t *octaspireHelpersTestAllocator = 0;
+static octaspire_stdio_t            *octaspireHelpersTestStdio = 0;
 
 TEST octaspire_helpers_test_bit_when_only_highest_order_bit_is_set_test(void)
 {
@@ -119,8 +119,8 @@ TEST octaspire_helpers_path_to_buffer_test(void)
     char * buffer = octaspire_helpers_path_to_buffer(
         OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_helpers_path_to_buffer_test",
         &octetsAllocated,
-        allocator,
-        octaspireStdio);
+        octaspireHelpersTestAllocator,
+        octaspireHelpersTestStdio);
 
     ASSERT(buffer);
     ASSERT_EQ(2 + 3 + 4, octetsAllocated);
@@ -134,7 +134,7 @@ TEST octaspire_helpers_path_to_buffer_test(void)
 
     ASSERT_MEM_EQ(expected, buffer, octetsAllocated);
 
-    octaspire_memory_allocator_free(allocator, buffer);
+    octaspire_memory_allocator_free(octaspireHelpersTestAllocator, buffer);
     buffer = 0;
 
     PASS();
@@ -147,13 +147,13 @@ TEST octaspire_helpers_path_to_buffer_failure_on_nonexisting_file_test(void)
     char * buffer = octaspire_helpers_path_to_buffer(
         OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_helpers_path_to_buffer_failure_on_nonexisting_file_test",
         &octetsAllocated,
-        allocator,
-        octaspireStdio);
+        octaspireHelpersTestAllocator,
+        octaspireHelpersTestStdio);
 
     ASSERT_FALSE(buffer);
     ASSERT_EQ(0, octetsAllocated);
 
-    octaspire_memory_allocator_free(allocator, buffer);
+    octaspire_memory_allocator_free(octaspireHelpersTestAllocator, buffer);
     buffer = 0;
 
     PASS();
@@ -166,13 +166,13 @@ TEST octaspire_helpers_path_to_buffer_failure_on_empty_file_test(void)
     char * buffer = octaspire_helpers_path_to_buffer(
         OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_helpers_path_to_buffer_failure_on_empty_file_test",
         &octetsAllocated,
-        allocator,
-        octaspireStdio);
+        octaspireHelpersTestAllocator,
+        octaspireHelpersTestStdio);
 
     ASSERT_FALSE(buffer);
     ASSERT_EQ(0, octetsAllocated);
 
-    octaspire_memory_allocator_free(allocator, buffer);
+    octaspire_memory_allocator_free(octaspireHelpersTestAllocator, buffer);
     buffer = 0;
 
     PASS();
@@ -182,21 +182,21 @@ TEST octaspire_helpers_path_to_buffer_allocation_failure_test(void)
 {
     size_t octetsAllocated = 0;
 
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(allocator, 1, 0);
-    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireHelpersTestAllocator, 1, 0);
+    ASSERT_EQ(1, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireHelpersTestAllocator));
 
     char * buffer = octaspire_helpers_path_to_buffer(
         OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_helpers_path_to_buffer_test",
         &octetsAllocated,
-        allocator,
-        octaspireStdio);
+        octaspireHelpersTestAllocator,
+        octaspireHelpersTestStdio);
 
-    ASSERT_EQ(0, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(allocator));
+    ASSERT_EQ(0, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireHelpersTestAllocator));
 
     ASSERT_FALSE(buffer);
     ASSERT_EQ(0, octetsAllocated);
 
-    octaspire_memory_allocator_free(allocator, buffer);
+    octaspire_memory_allocator_free(octaspireHelpersTestAllocator, buffer);
     buffer = 0;
 
     PASS();
@@ -206,21 +206,21 @@ TEST octaspire_helpers_path_to_buffer_read_failure_test(void)
 {
     size_t octetsAllocated = 0;
 
-    octaspire_stdio_set_number_and_type_of_future_reads_to_be_rigged(octaspireStdio, 1, 0);
-    ASSERT_EQ(1, octaspire_stdio_get_number_of_future_reads_to_be_rigged(octaspireStdio));
+    octaspire_stdio_set_number_and_type_of_future_reads_to_be_rigged(octaspireHelpersTestStdio, 1, 0);
+    ASSERT_EQ(1, octaspire_stdio_get_number_of_future_reads_to_be_rigged(octaspireHelpersTestStdio));
 
     char * buffer = octaspire_helpers_path_to_buffer(
         OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_helpers_path_to_buffer_test",
         &octetsAllocated,
-        allocator,
-        octaspireStdio);
+        octaspireHelpersTestAllocator,
+        octaspireHelpersTestStdio);
 
-    ASSERT_EQ(0, octaspire_stdio_get_number_of_future_reads_to_be_rigged(octaspireStdio));
+    ASSERT_EQ(0, octaspire_stdio_get_number_of_future_reads_to_be_rigged(octaspireHelpersTestStdio));
 
     ASSERT_FALSE(buffer);
     ASSERT_EQ(0, octetsAllocated);
 
-    octaspire_memory_allocator_free(allocator, buffer);
+    octaspire_memory_allocator_free(octaspireHelpersTestAllocator, buffer);
     buffer = 0;
 
     PASS();
@@ -232,15 +232,15 @@ GREATEST_SUITE(octaspire_helpers_suite)
 {
     octaspireHelpersSuiteNumTimesRun = 0;
 
-    allocator       = octaspire_memory_allocator_new_create_region(
+    octaspireHelpersTestAllocator       = octaspire_memory_allocator_new_create_region(
         OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
 
-    octaspireStdio  = octaspire_stdio_new(allocator);
+    octaspireHelpersTestStdio  = octaspire_stdio_new(octaspireHelpersTestAllocator);
 
 second_run:
 
-    assert(allocator);
-    assert(octaspireStdio);
+    assert(octaspireHelpersTestAllocator);
+    assert(octaspireHelpersTestStdio);
 
     RUN_TEST(octaspire_helpers_test_bit_when_only_highest_order_bit_is_set_test);
     RUN_TEST(octaspire_helpers_test_bit_when_only_lowest_order_bit_is_set_test);
@@ -254,11 +254,11 @@ second_run:
     RUN_TEST(octaspire_helpers_path_to_buffer_allocation_failure_test);
     RUN_TEST(octaspire_helpers_path_to_buffer_read_failure_test);
 
-    octaspire_stdio_release(octaspireStdio);
-    octaspireStdio = 0;
+    octaspire_stdio_release(octaspireHelpersTestStdio);
+    octaspireHelpersTestStdio = 0;
 
-    octaspire_memory_allocator_release(allocator);
-    allocator = 0;
+    octaspire_memory_allocator_release(octaspireHelpersTestAllocator);
+    octaspireHelpersTestAllocator = 0;
 
     ++octaspireHelpersSuiteNumTimesRun;
 
@@ -266,8 +266,8 @@ second_run:
     {
         // Second run without region allocator
 
-        allocator      = octaspire_memory_allocator_new(0);
-        octaspireStdio = octaspire_stdio_new(allocator);
+        octaspireHelpersTestAllocator      = octaspire_memory_allocator_new(0);
+        octaspireHelpersTestStdio = octaspire_stdio_new(octaspireHelpersTestAllocator);
 
         goto second_run;
     }
