@@ -4,7 +4,7 @@ Octaspire Core Manual
 :lang: en
 :toc:
 
-Documentation for Octaspire Core library version 0.32.0
+Documentation for Octaspire Core library version 0.33.0
 
 == About
 
