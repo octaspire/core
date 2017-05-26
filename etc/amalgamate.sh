@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-FILE=octaspire_core_amalgamated.c
+FILE="$1/octaspire_core_amalgamated.c"
 
 # Remove old file, if created
 rm -rf $FILE

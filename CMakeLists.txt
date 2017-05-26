@@ -18,7 +18,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(octaspire-core C)
 
 set(OCTASPIRE_CORE_CONFIG_VERSION_MAJOR 0)
-set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 31)
+set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 32)
 set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 0)
 
 message("== Building ${PROJECT_NAME} ${OCTASPIRE_CORE_CONFIG_VERSION_MAJOR}.${OCTASPIRE_CORE_CONFIG_VERSION_MINOR}.${OCTASPIRE_CORE_CONFIG_VERSION_PATCH}")
@@ -83,6 +83,7 @@ install(TARGETS octaspire-core DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION "include/octaspire/core")
 install(FILES "${CMAKE_BINARY_DIR}/include/octaspire/core/octaspire_core_config.h" DESTINATION "include/octaspire/core")
 install(FILES ${MANUAL3} DESTINATION "man/man3")
+
 add_custom_target(
     cppcheck-core
     COMMAND cppcheck --std=c99 -I "${CMAKE_CURRENT_SOURCE_DIR}/include"
@@ -92,6 +93,10 @@ add_custom_target(
 add_custom_target(
     vera-core
     COMMAND vera++ --error ${SOURCES} ${HEADERS})
+
+add_custom_target(
+    new-release-core
+    COMMAND "${CMAKE_SOURCE_DIR}/etc/new-release.sh" "${CMAKE_SOURCE_DIR}")
 
 add_custom_target(
     book-core
