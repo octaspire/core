@@ -828,12 +828,12 @@ bool octaspire_container_hash_map_element_iterator_next(
 
     if (self->bucketIndex < octaspire_container_vector_get_length(self->hashMap->buckets))
     {
-        octaspire_container_vector_t * const bucket = (octaspire_container_vector_t*)
+        octaspire_container_vector_t *bucket = (octaspire_container_vector_t*)
             octaspire_container_vector_get_element_at(
                 self->hashMap->buckets,
                 self->bucketIndex);
 
-        size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+        size_t bucketSize = octaspire_container_vector_get_length(bucket);
 
         ++(self->elementInsideBucketIndex);
 
@@ -850,12 +850,12 @@ bool octaspire_container_hash_map_element_iterator_next(
 
             if (self->bucketIndex < octaspire_container_vector_get_length(self->hashMap->buckets))
             {
-                octaspire_container_vector_t * const bucket = (octaspire_container_vector_t*)
+                bucket = (octaspire_container_vector_t*)
                     octaspire_container_vector_get_element_at(
                         self->hashMap->buckets,
                         self->bucketIndex);
 
-                size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+                bucketSize = octaspire_container_vector_get_length(bucket);
 
                 self->elementInsideBucketIndex = 0;
 
