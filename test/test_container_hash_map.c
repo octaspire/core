@@ -522,8 +522,6 @@ TEST octaspire_container_hash_map_element_iterator_test(void)
 
     ASSERT_EQ(hashMap, iterator.hashMap);
     ASSERT_EQ(0,       iterator.element);
-    ASSERT_EQ(0,       iterator.bucketIndex);
-    ASSERT_EQ(0,       iterator.elementInsideBucketIndex);
 
     for (size_t i = 0; i < 100; ++i)
     {

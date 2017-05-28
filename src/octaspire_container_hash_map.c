@@ -800,22 +800,37 @@ octaspire_container_hash_map_element_iterator_init(
     iterator.elementInsideBucketIndex = 0;
     iterator.element = 0;
 
-    if (iterator.bucketIndex < octaspire_container_vector_get_length(self->buckets))
+    while (!(iterator.element))
     {
-        octaspire_container_vector_t * const bucket = (octaspire_container_vector_t*)
-            octaspire_container_vector_get_element_at(
-                self->buckets,
-                iterator.bucketIndex);
-
-        size_t const bucketSize = octaspire_container_vector_get_length(bucket);
-
-        if (iterator.elementInsideBucketIndex < bucketSize)
+        if (iterator.bucketIndex < octaspire_container_vector_get_length(self->buckets))
         {
-            iterator.element = (octaspire_container_hash_map_element_t*)
+            octaspire_container_vector_t * const bucket = (octaspire_container_vector_t*)
+                octaspire_container_vector_get_element_at(
+                    self->buckets,
+                    iterator.bucketIndex);
+
+            size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+
+            for (; iterator.elementInsideBucketIndex < bucketSize; ++(iterator.elementInsideBucketIndex))
+            {
+                iterator.element = (octaspire_container_hash_map_element_t*)
                     octaspire_container_vector_get_element_at(
                         bucket,
                         iterator.elementInsideBucketIndex);
+
+                if (iterator.element)
+                {
+                    break;
+                }
+            }
         }
+        else
+        {
+            break;
+        }
+
+        ++(iterator.bucketIndex);
+        iterator.elementInsideBucketIndex = 0;
     }
 
     return iterator;
@@ -826,52 +841,37 @@ bool octaspire_container_hash_map_element_iterator_next(
 {
     self->element = 0;
 
-    if (self->bucketIndex < octaspire_container_vector_get_length(self->hashMap->buckets))
+    while (!(self->element))
     {
-        octaspire_container_vector_t *bucket = (octaspire_container_vector_t*)
-            octaspire_container_vector_get_element_at(
-                self->hashMap->buckets,
-                self->bucketIndex);
-
-        size_t bucketSize = octaspire_container_vector_get_length(bucket);
-
-        ++(self->elementInsideBucketIndex);
-
-        if (self->elementInsideBucketIndex < bucketSize)
+        if (self->bucketIndex < octaspire_container_vector_get_length(self->hashMap->buckets))
         {
-            self->element = (octaspire_container_hash_map_element_t*)
+            octaspire_container_vector_t * const bucket = (octaspire_container_vector_t*)
+                octaspire_container_vector_get_element_at(
+                    self->hashMap->buckets,
+                    self->bucketIndex);
+
+            size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+
+            for (; self->elementInsideBucketIndex < bucketSize; ++(self->elementInsideBucketIndex))
+            {
+                self->element = (octaspire_container_hash_map_element_t*)
                     octaspire_container_vector_get_element_at(
                         bucket,
                         self->elementInsideBucketIndex);
-        }
-        else
-        {
-            ++(self->bucketIndex);
 
-            if (self->bucketIndex < octaspire_container_vector_get_length(self->hashMap->buckets))
-            {
-                bucket = (octaspire_container_vector_t*)
-                    octaspire_container_vector_get_element_at(
-                        self->hashMap->buckets,
-                        self->bucketIndex);
-
-                bucketSize = octaspire_container_vector_get_length(bucket);
-
-                self->elementInsideBucketIndex = 0;
-
-                if (self->elementInsideBucketIndex < bucketSize)
+                if (self->element)
                 {
-                    self->element = (octaspire_container_hash_map_element_t*)
-                        octaspire_container_vector_get_element_at(
-                            bucket,
-                            self->elementInsideBucketIndex);
-                }
-                else
-                {
-                    self->element = 0;
+                    break;
                 }
             }
         }
+        else
+        {
+            break;
+        }
+
+        ++(self->bucketIndex);
+        self->elementInsideBucketIndex = 0;
     }
 
     return self->element != 0;
