@@ -110,9 +110,9 @@ limitations under the License.
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
 #define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "34"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "2"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "3"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.34.2"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.34.3"
 
 
 
@@ -6299,6 +6299,11 @@ octaspire_container_hash_map_element_iterator_init(
             break;
         }
 
+        if (iterator.element)
+        {
+            return iterator;
+        }
+
         ++(iterator.bucketIndex);
         iterator.elementInsideBucketIndex = 0;
     }
@@ -6310,6 +6315,7 @@ bool octaspire_container_hash_map_element_iterator_next(
     octaspire_container_hash_map_element_iterator_t * const self)
 {
     self->element = 0;
+    ++(self->elementInsideBucketIndex);
 
     while (!(self->element))
     {
@@ -6338,6 +6344,11 @@ bool octaspire_container_hash_map_element_iterator_next(
         else
         {
             break;
+        }
+
+        if (self->element)
+        {
+            return self->element != 0;
         }
 
         ++(self->bucketIndex);

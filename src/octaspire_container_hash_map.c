@@ -829,6 +829,11 @@ octaspire_container_hash_map_element_iterator_init(
             break;
         }
 
+        if (iterator.element)
+        {
+            return iterator;
+        }
+
         ++(iterator.bucketIndex);
         iterator.elementInsideBucketIndex = 0;
     }
@@ -840,6 +845,7 @@ bool octaspire_container_hash_map_element_iterator_next(
     octaspire_container_hash_map_element_iterator_t * const self)
 {
     self->element = 0;
+    ++(self->elementInsideBucketIndex);
 
     while (!(self->element))
     {
@@ -868,6 +874,11 @@ bool octaspire_container_hash_map_element_iterator_next(
         else
         {
             break;
+        }
+
+        if (self->element)
+        {
+            return self->element != 0;
         }
 
         ++(self->bucketIndex);
