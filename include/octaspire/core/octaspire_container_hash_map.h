@@ -119,6 +119,21 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get_at_inde
     octaspire_container_hash_map_t *self,
     size_t const index);
 
+typedef struct octaspire_container_hash_map_element_iterator_t
+{
+    octaspire_container_hash_map_t *hashMap;
+    octaspire_container_hash_map_element_t *element;
+    size_t bucketIndex;
+    size_t elementInsideBucketIndex;
+}
+octaspire_container_hash_map_element_iterator_t;
+
+octaspire_container_hash_map_element_iterator_t octaspire_container_hash_map_element_iterator_init(
+    octaspire_container_hash_map_t * const self);
+
+bool octaspire_container_hash_map_element_iterator_next(
+    octaspire_container_hash_map_element_iterator_t * const self);
+
 #ifdef __cplusplus
 }
 #endif

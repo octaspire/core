@@ -789,3 +789,91 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get_at_inde
     return 0;
 }
 
+octaspire_container_hash_map_element_iterator_t
+octaspire_container_hash_map_element_iterator_init(
+    octaspire_container_hash_map_t * const self)
+{
+    octaspire_container_hash_map_element_iterator_t iterator;
+
+    iterator.hashMap = self;
+    iterator.bucketIndex = 0;
+    iterator.elementInsideBucketIndex = 0;
+    iterator.element = 0;
+
+    if (iterator.bucketIndex < octaspire_container_vector_get_length(self->buckets))
+    {
+        octaspire_container_vector_t * const bucket = (octaspire_container_vector_t*)
+            octaspire_container_vector_get_element_at(
+                self->buckets,
+                iterator.bucketIndex);
+
+        size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+
+        if (iterator.elementInsideBucketIndex < bucketSize)
+        {
+            iterator.element = (octaspire_container_hash_map_element_t*)
+                    octaspire_container_vector_get_element_at(
+                        bucket,
+                        iterator.elementInsideBucketIndex);
+        }
+    }
+
+    return iterator;
+}
+
+bool octaspire_container_hash_map_element_iterator_next(
+    octaspire_container_hash_map_element_iterator_t * const self)
+{
+    self->element = 0;
+
+    if (self->bucketIndex < octaspire_container_vector_get_length(self->hashMap->buckets))
+    {
+        octaspire_container_vector_t * const bucket = (octaspire_container_vector_t*)
+            octaspire_container_vector_get_element_at(
+                self->hashMap->buckets,
+                self->bucketIndex);
+
+        size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+
+        ++(self->elementInsideBucketIndex);
+
+        if (self->elementInsideBucketIndex < bucketSize)
+        {
+            self->element = (octaspire_container_hash_map_element_t*)
+                    octaspire_container_vector_get_element_at(
+                        bucket,
+                        self->elementInsideBucketIndex);
+        }
+        else
+        {
+            ++(self->bucketIndex);
+
+            if (self->bucketIndex < octaspire_container_vector_get_length(self->hashMap->buckets))
+            {
+                octaspire_container_vector_t * const bucket = (octaspire_container_vector_t*)
+                    octaspire_container_vector_get_element_at(
+                        self->hashMap->buckets,
+                        self->bucketIndex);
+
+                size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+
+                self->elementInsideBucketIndex = 0;
+
+                if (self->elementInsideBucketIndex < bucketSize)
+                {
+                    self->element = (octaspire_container_hash_map_element_t*)
+                        octaspire_container_vector_get_element_at(
+                            bucket,
+                            self->elementInsideBucketIndex);
+                }
+                else
+                {
+                    self->element = 0;
+                }
+            }
+        }
+    }
+
+    return self->element != 0;
+}
+
