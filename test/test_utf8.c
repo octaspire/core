@@ -1241,17 +1241,9 @@ TEST octaspire_utf8_decode_character_illegal_octet_sequence_0xF0_0x80_0x80_0xAF_
     PASS();
 }
 
-static size_t octaspireUtf8SuiteNumTimesRun = 0;
-
 GREATEST_SUITE(octaspire_utf8_suite)
 {
-    octaspireUtf8SuiteNumTimesRun = 0;
-
-    octaspireUtf8TestAllocator = octaspire_memory_allocator_new_create_region(
-        OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
-
-second_run:
-
+    octaspireUtf8TestAllocator = octaspire_memory_allocator_new(0);
     assert(octaspireUtf8TestAllocator);
 
     RUN_TEST(octaspire_utf8_private_rangeof_test);
@@ -1329,15 +1321,4 @@ second_run:
 
     octaspire_memory_allocator_release(octaspireUtf8TestAllocator);
     octaspireUtf8TestAllocator = 0;
-
-    ++octaspireUtf8SuiteNumTimesRun;
-
-    if (octaspireUtf8SuiteNumTimesRun < 2)
-    {
-        // Second run without region allocator
-
-        octaspireUtf8TestAllocator = octaspire_memory_allocator_new(0);
-
-        goto second_run;
-    }
 }

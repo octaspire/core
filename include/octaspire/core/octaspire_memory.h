@@ -24,11 +24,27 @@ limitations under the License.
 extern "C" {
 #endif
 
-struct octaspire_region_t;
+typedef void *(*octaspire_memory_allocator_custom_malloc_function_t)(size_t size);
+typedef void  (*octaspire_memory_allocator_custom_free_function_t)(void *ptr);
+typedef void *(*octaspire_memory_allocator_custom_realloc_function_t)(void *ptr, size_t size);
+
+typedef struct octaspire_memory_allocator_config_t
+{
+    octaspire_memory_allocator_custom_malloc_function_t  customMallocFunction;
+    octaspire_memory_allocator_custom_free_function_t    customFreeFunction;
+    octaspire_memory_allocator_custom_realloc_function_t customReallocFunction;
+}
+octaspire_memory_allocator_config_t;
+
+octaspire_memory_allocator_config_t octaspire_memory_allocator_config_default(void);
+
+
+
+
 typedef struct octaspire_memory_allocator_t octaspire_memory_allocator_t;
 
-octaspire_memory_allocator_t *octaspire_memory_allocator_new_create_region(size_t const minBlockSizeInOctets);
-octaspire_memory_allocator_t *octaspire_memory_allocator_new(struct octaspire_region_t *region);
+octaspire_memory_allocator_t *octaspire_memory_allocator_new(
+    octaspire_memory_allocator_config_t const * config);
 
 void octaspire_memory_allocator_release(octaspire_memory_allocator_t *self);
 

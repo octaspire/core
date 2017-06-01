@@ -2084,16 +2084,9 @@ TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
     PASS();
 }
 
-static size_t octaspireContainerUtf8StringSuiteNumTimesRun = 0;
-
 GREATEST_SUITE(octaspire_container_utf8_string_suite)
 {
-    octaspireContainerUtf8StringSuiteNumTimesRun = 0;
-
-    octaspireContainerUtf8StringTestAllocator = octaspire_memory_allocator_new_create_region(
-        OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
-
-second_run:
+    octaspireContainerUtf8StringTestAllocator = octaspire_memory_allocator_new(0);
 
     assert(octaspireContainerUtf8StringTestAllocator);
 
@@ -2175,16 +2168,5 @@ second_run:
 
     octaspire_memory_allocator_release(octaspireContainerUtf8StringTestAllocator);
     octaspireContainerUtf8StringTestAllocator = 0;
-
-    ++octaspireContainerUtf8StringSuiteNumTimesRun;
-
-    if (octaspireContainerUtf8StringSuiteNumTimesRun < 2)
-    {
-        // Second run without region allocator
-
-        octaspireContainerUtf8StringTestAllocator = octaspire_memory_allocator_new(0);
-
-        goto second_run;
-    }
 }
 

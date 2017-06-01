@@ -21,32 +21,41 @@ limitations under the License.
 #include <string.h>
 #include <math.h>
 #include "octaspire/core/octaspire_helpers.h"
-#include "octaspire/core/octaspire_region.h"
 
 #include <stdio.h> // REMOVE
 
 struct octaspire_memory_allocator_t
 {
-    size_t               numberOfFutureAllocationsToBeRigged;
-    size_t               bitIndex;
-    uint32_t             bitQueue[20];
-    octaspire_region_t  *region;
+    size_t                                               numberOfFutureAllocationsToBeRigged;
+    size_t                                               bitIndex;
+    uint32_t                                             bitQueue[20];
+    octaspire_memory_allocator_custom_malloc_function_t  customMallocFunction;
+    octaspire_memory_allocator_custom_free_function_t    customFreeFunction;
+    octaspire_memory_allocator_custom_realloc_function_t customReallocFunction;
 };
 
-octaspire_memory_allocator_t *octaspire_memory_allocator_new_create_region(size_t const minBlockSizeInOctets)
+octaspire_memory_allocator_config_t octaspire_memory_allocator_config_default(void)
 {
-    octaspire_region_t *region = octaspire_region_new(minBlockSizeInOctets);
-
-    if (!region)
+    octaspire_memory_allocator_config_t result =
     {
-        return 0;
-    }
+        .customMallocFunction  = 0,
+        .customFreeFunction    = 0,
+        .customReallocFunction = 0
+    };
 
-    return octaspire_memory_allocator_new(region);
+    return result;
 }
 
-octaspire_memory_allocator_t *octaspire_memory_allocator_new(struct octaspire_region_t *region)
+octaspire_memory_allocator_t *octaspire_memory_allocator_new(
+    octaspire_memory_allocator_config_t const * config)
 {
+    octaspire_memory_allocator_config_t defaultConfig = octaspire_memory_allocator_config_default();
+
+    if (!config)
+    {
+        config = &defaultConfig;
+    }
+
     size_t const size = sizeof(octaspire_memory_allocator_t);
 
     octaspire_memory_allocator_t *self = malloc(size);
@@ -66,7 +75,9 @@ octaspire_memory_allocator_t *octaspire_memory_allocator_new(struct octaspire_re
         abort();
     }
 
-    self->region = region;
+    self->customMallocFunction  = config->customMallocFunction;
+    self->customFreeFunction    = config->customFreeFunction;
+    self->customReallocFunction = config->customReallocFunction;
 
     return self;
 }
@@ -76,12 +87,6 @@ void octaspire_memory_allocator_release(octaspire_memory_allocator_t *self)
     if (!self)
     {
         return;
-    }
-
-    if (self->region)
-    {
-        octaspire_region_release(self->region);
-        self->region = 0;
     }
 
     free(self);
@@ -117,15 +122,15 @@ void *octaspire_memory_allocator_malloc(
 
     assert(size);
 
-    void *result = self->region ? octaspire_region_malloc(self->region, size) : malloc(size);
+    void * const result =
+        self->customMallocFunction ? self->customMallocFunction(size) : malloc(size);
 
     if (!result)
     {
         return result;
     }
 
-    // Region sets memory to zero, so there is no need to do it twice if region is in use.
-    if (!self->region)
+    if (!self->customMallocFunction)
     {
         if (result != memset(result, 0, size))
         {
@@ -153,7 +158,7 @@ void *octaspire_memory_allocator_realloc(
         ++(self->bitIndex);
     }
 
-    return self->region ? octaspire_region_realloc(self->region, ptr, size) : realloc(ptr, size);
+    return self->customReallocFunction ? self->customReallocFunction(ptr, size) : realloc(ptr, size);
 }
 
 void octaspire_memory_allocator_free(
@@ -161,7 +166,8 @@ void octaspire_memory_allocator_free(
     void *ptr)
 {
     assert(self);
-    self->region ? octaspire_region_free(self->region, ptr) : free(ptr);
+
+    self->customFreeFunction ? self->customFreeFunction(ptr) : free(ptr);
 }
 
 void octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(

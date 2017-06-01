@@ -226,18 +226,10 @@ TEST octaspire_helpers_path_to_buffer_read_failure_test(void)
     PASS();
 }
 
-static size_t octaspireHelpersSuiteNumTimesRun = 0;
-
 GREATEST_SUITE(octaspire_helpers_suite)
 {
-    octaspireHelpersSuiteNumTimesRun = 0;
-
-    octaspireHelpersTestAllocator       = octaspire_memory_allocator_new_create_region(
-        OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
-
-    octaspireHelpersTestStdio  = octaspire_stdio_new(octaspireHelpersTestAllocator);
-
-second_run:
+    octaspireHelpersTestAllocator = octaspire_memory_allocator_new(0);
+    octaspireHelpersTestStdio     = octaspire_stdio_new(octaspireHelpersTestAllocator);
 
     assert(octaspireHelpersTestAllocator);
     assert(octaspireHelpersTestStdio);
@@ -259,17 +251,5 @@ second_run:
 
     octaspire_memory_allocator_release(octaspireHelpersTestAllocator);
     octaspireHelpersTestAllocator = 0;
-
-    ++octaspireHelpersSuiteNumTimesRun;
-
-    if (octaspireHelpersSuiteNumTimesRun < 2)
-    {
-        // Second run without region allocator
-
-        octaspireHelpersTestAllocator      = octaspire_memory_allocator_new(0);
-        octaspireHelpersTestStdio = octaspire_stdio_new(octaspireHelpersTestAllocator);
-
-        goto second_run;
-    }
 }
 

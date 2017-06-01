@@ -2021,17 +2021,9 @@ TEST octaspire_container_vector_clear_called_on_empty_vector_test(void)
     PASS();
 }
 
-static size_t octaspireContainerVectorSuiteNumTimesRun = 0;
-
 GREATEST_SUITE(octaspire_container_vector_suite)
 {
-    octaspireContainerVectorSuiteNumTimesRun = 0;
-
-    octaspireContainerVectorTestAllocator = octaspire_memory_allocator_new_create_region(
-        OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
-
-second_run:
-
+    octaspireContainerVectorTestAllocator = octaspire_memory_allocator_new(0);
     assert(octaspireContainerVectorTestAllocator);
 
     RUN_TEST(octaspire_container_vector_private_index_to_pointer_test);
@@ -2108,15 +2100,4 @@ second_run:
 
     octaspire_memory_allocator_release(octaspireContainerVectorTestAllocator);
     octaspireContainerVectorTestAllocator = 0;
-
-    ++octaspireContainerVectorSuiteNumTimesRun;
-
-    if (octaspireContainerVectorSuiteNumTimesRun < 2)
-    {
-        // Second run without region allocator
-
-        octaspireContainerVectorTestAllocator = octaspire_memory_allocator_new(0);
-
-        goto second_run;
-    }
 }

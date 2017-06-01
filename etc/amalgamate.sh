@@ -134,7 +134,6 @@ concat_file "../external/murmur3.h"
 concat_config_file "../build/include/octaspire/core/octaspire_core_config.h"
 concat_file "../include/octaspire/core/octaspire_utf8.h"
 concat_file "../include/octaspire/core/octaspire_memory.h"
-concat_file "../include/octaspire/core/octaspire_region.h"
 concat_file "../include/octaspire/core/octaspire_container_vector.h"
 concat_file "../include/octaspire/core/octaspire_container_utf8_string.h"
 concat_file "../include/octaspire/core/octaspire_container_pair.h"
@@ -200,7 +199,6 @@ EnDoFmEsSaGe
 
 
 concat_file "../external/murmur3.c"
-concat_file "../src/octaspire_region.c"
 concat_file "../src/octaspire_memory.c"
 concat_file "../src/octaspire_helpers.c"
 concat_file "../src/octaspire_utf8.c"
@@ -252,7 +250,6 @@ concat_file_literally "../external/greatest.h"
 concat_file "../test/test_helpers.c"
 concat_file "../test/test_utf8.c"
 concat_file "../test/test_memory.c"
-concat_file "../test/test_region.c"
 concat_file "../test/test_stdio.c"
 concat_file "../test/test_input.c"
 concat_file "../test/test_container_vector.c"
@@ -434,7 +431,6 @@ int main(int argc, char **argv)
     RUN_SUITE(octaspire_helpers_suite);
     RUN_SUITE(octaspire_utf8_suite);
     RUN_SUITE(octaspire_memory_suite);
-    RUN_SUITE(octaspire_region_suite);
     RUN_SUITE(octaspire_stdio_suite);
     RUN_SUITE(octaspire_input_suite);
     RUN_SUITE(octaspire_container_vector_suite);

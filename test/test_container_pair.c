@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
 #include "../src/octaspire_container_pair.c"
+#include <assert.h>
 #include "external/greatest.h"
 #include "octaspire/core/octaspire_container_utf8_string.h"
 #include "octaspire/core/octaspire_helpers.h"
@@ -807,16 +808,10 @@ TEST octaspire_container_pair_clear_test(void)
     PASS();
 }
 
-static size_t octaspireContainerPairSuiteNumTimesRun = 0;
-
 GREATEST_SUITE(octaspire_container_pair_suite)
 {
-    octaspireContainerPairSuiteNumTimesRun = 0;
-
-    octaspireContainerPairTestAllocator = octaspire_memory_allocator_new_create_region(
-        OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
-
-second_run:
+    octaspireContainerPairTestAllocator = octaspire_memory_allocator_new(0);
+    assert(octaspireContainerPairTestAllocator);
 
     RUN_TEST(octaspire_container_pair_new_short_and_long_test);
     RUN_TEST(octaspire_container_pair_new_long_and_short_test);
@@ -846,15 +841,4 @@ second_run:
 
     octaspire_memory_allocator_release(octaspireContainerPairTestAllocator);
     octaspireContainerPairTestAllocator = 0;
-
-    ++octaspireContainerPairSuiteNumTimesRun;
-
-    if (octaspireContainerPairSuiteNumTimesRun < 2)
-    {
-        // Second run without region allocator
-
-        octaspireContainerPairTestAllocator = octaspire_memory_allocator_new(0);
-
-        goto second_run;
-    }
 }

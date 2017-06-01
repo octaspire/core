@@ -270,8 +270,6 @@ TEST octaspire_memory_allocator_setting_and_getting_future_allocations_to_fail_a
     PASS();
 }
 
-
-
 GREATEST_SUITE(octaspire_memory_suite)
 {
     RUN_TEST(octaspire_memory_allocator_new_test);

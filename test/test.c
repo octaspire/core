@@ -19,7 +19,6 @@ limitations under the License.
 extern SUITE(octaspire_helpers_suite);
 extern SUITE(octaspire_utf8_suite);
 extern SUITE(octaspire_memory_suite);
-extern SUITE(octaspire_region_suite);
 extern SUITE(octaspire_stdio_suite);
 extern SUITE(octaspire_input_suite);
 extern SUITE(octaspire_container_vector_suite);
@@ -35,7 +34,6 @@ int main(int argc, char **argv)
     RUN_SUITE(octaspire_helpers_suite);
     RUN_SUITE(octaspire_utf8_suite);
     RUN_SUITE(octaspire_memory_suite);
-    RUN_SUITE(octaspire_region_suite);
     RUN_SUITE(octaspire_stdio_suite);
     RUN_SUITE(octaspire_input_suite);
     RUN_SUITE(octaspire_container_vector_suite);

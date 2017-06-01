@@ -598,18 +598,10 @@ TEST octaspire_input_private_is_ucs_character_index_valid_test(void)
     PASS();
 }
 
-static size_t octaspireInputSuiteNumTimesRun = 0;
-
 GREATEST_SUITE(octaspire_input_suite)
 {
-    octaspireInputSuiteNumTimesRun = 0;
-
-    octaspireInputTestAllocator = octaspire_memory_allocator_new_create_region(
-        OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
-
-    octaspireInputTestStdio = octaspire_stdio_new(octaspireInputTestAllocator);
-
-second_run:
+    octaspireInputTestAllocator = octaspire_memory_allocator_new(0);
+    octaspireInputTestStdio     = octaspire_stdio_new(octaspireInputTestAllocator);
 
     assert(octaspireInputTestAllocator);
     assert(octaspireInputTestStdio);
@@ -637,17 +629,5 @@ second_run:
 
     octaspire_memory_allocator_release(octaspireInputTestAllocator);
     octaspireInputTestAllocator = 0;
-
-    ++octaspireInputSuiteNumTimesRun;
-
-    if (octaspireInputSuiteNumTimesRun < 2)
-    {
-        // Second run without region allocator
-
-        octaspireInputTestAllocator      = octaspire_memory_allocator_new(0);
-        octaspireInputTestStdio = octaspire_stdio_new(octaspireInputTestAllocator);
-
-        goto second_run;
-    }
 }
 

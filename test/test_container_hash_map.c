@@ -567,16 +567,9 @@ TEST octaspire_container_hash_map_element_iterator_test(void)
     PASS();
 }
 
-static size_t octaspireContainerHashMapSuiteNumTimesRun = 0;
-
 GREATEST_SUITE(octaspire_container_hash_map_suite)
 {
-    octaspireContainerHashMapSuiteNumTimesRun = 0;
-
-    octaspireContainerHashMapTestAllocator = octaspire_memory_allocator_new_create_region(
-        OCTASPIRE_CORE_CONFIG_MEMORY_ALLOCATOR_REGION_MIN_BLOCK_SIZE_IN_OCTETS);
-
-second_run:
+    octaspireContainerHashMapTestAllocator = octaspire_memory_allocator_new(0);
 
     assert(octaspireContainerHashMapTestAllocator);
 
@@ -595,15 +588,5 @@ second_run:
 
     octaspire_memory_allocator_release(octaspireContainerHashMapTestAllocator);
     octaspireContainerHashMapTestAllocator = 0;
-
-    ++octaspireContainerHashMapSuiteNumTimesRun;
-
-    if (octaspireContainerHashMapSuiteNumTimesRun < 2)
-    {
-        // Second run without region octaspireContainerHashMapTestAllocator
-
-        octaspireContainerHashMapTestAllocator = octaspire_memory_allocator_new(0);
-
-        goto second_run;
-    }
 }
+

@@ -4,7 +4,7 @@ Octaspire Core Manual
 :lang: en
 :toc:
 
-Documentation for Octaspire Core library version 0.34.3
+Documentation for Octaspire Core library version 0.35.0
 
 == About
 
@@ -14,8 +14,8 @@ It depends only on a C99 compiler and standard library.
 Octaspire Core is used by some other Octaspire projects like 
 http://www.octaspire.com/dern[Dern], http://www.octaspire.com/maze[Maze] and
 http://www.octaspire.com/lightboard[Lightboard], but it should be usable on many
-different platforms and projects where *region allocator* or
-containers like *vector*, *hash-map*, *pair* or *utf-8 string* are needed.
+different platforms and projects where containers like *vector*, *hash-map*,
+*pair* or *utf-8 string* are needed.
 
 Octaspire Core is licensed under the Apache License, Version 2.0. See file LICENSE
 in the source distribution for more information.
@@ -187,10 +187,6 @@ The table below lists some of the abbrevations I use:
 |ochme  | octaspire_container_hash_map_element_
 |===============
 
-
-=== Allocator with and without regions
-
-TODO
 
 === UTF-8 Strings
 
