@@ -109,10 +109,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "36"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "37"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.36.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.37.0"
 
 
 
@@ -604,6 +604,14 @@ bool octaspire_container_utf8_string_is_equal(
     octaspire_container_utf8_string_t const * const other);
 
 bool octaspire_container_utf8_string_is_equal_to_c_string(
+    octaspire_container_utf8_string_t const * const self,
+    char const * const str);
+
+int octaspire_container_utf8_string_compare(
+    octaspire_container_utf8_string_t const * const self,
+    octaspire_container_utf8_string_t const * const other);
+
+int octaspire_container_utf8_string_compare_to_c_string(
     octaspire_container_utf8_string_t const * const self,
     char const * const str);
 
@@ -4016,6 +4024,30 @@ bool octaspire_container_utf8_string_is_equal_to_c_string(
     return memcmp(octaspire_container_vector_get_element_at(self->octets,  0), str, len) == 0;
 }
 
+int octaspire_container_utf8_string_compare(
+    octaspire_container_utf8_string_t const * const self,
+    octaspire_container_utf8_string_t const * const other)
+{
+    assert(self);
+    assert(other);
+    assert(octaspire_container_vector_get_length(self->octets) > 0);
+    assert(octaspire_container_vector_get_length(other->octets) > 0);
+
+    return octaspire_container_utf8_string_compare_to_c_string(
+        self,
+        octaspire_container_utf8_string_get_c_string(other));
+}
+
+int octaspire_container_utf8_string_compare_to_c_string(
+    octaspire_container_utf8_string_t const * const self,
+    char const * const str)
+{
+    assert(self);
+    assert(str);
+    assert(octaspire_container_vector_get_length(self->octets) > 0);
+
+    return strcmp(octaspire_container_utf8_string_get_c_string(self), str);
+}
 
 bool octaspire_container_utf8_string_starts_with(
     octaspire_container_utf8_string_t const * const self,
@@ -14006,6 +14038,174 @@ TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
     PASS();
 }
 
+TEST octaspire_container_utf8_string_compare_with_two_empty_strings_test(void)
+{
+    octaspire_container_utf8_string_t *str1 =
+        octaspire_container_utf8_string_new("", octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 =
+        octaspire_container_utf8_string_new("", octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT_EQ(0, octaspire_container_utf8_string_compare(str1, str2));
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_compare_with_abc_and_empty_string_test(void)
+{
+    octaspire_container_utf8_string_t *str1 =
+        octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 =
+        octaspire_container_utf8_string_new("", octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT(octaspire_container_utf8_string_compare(str1, str2) > 0);
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_compare_with_empty_string_and_abc_test(void)
+{
+    octaspire_container_utf8_string_t *str1 =
+        octaspire_container_utf8_string_new("", octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 =
+        octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT(octaspire_container_utf8_string_compare(str1, str2) < 0);
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_compare_with_string_abc_and_abc_test(void)
+{
+    octaspire_container_utf8_string_t *str1 =
+        octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 =
+        octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT_EQ(0, octaspire_container_utf8_string_compare(str1, str2));
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_compare_with_string_abd_and_abc_test(void)
+{
+    octaspire_container_utf8_string_t *str1 =
+        octaspire_container_utf8_string_new("abd", octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 =
+        octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT(octaspire_container_utf8_string_compare(str1, str2) > 0);
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_compare_with_string_abca_and_abc_test(void)
+{
+    octaspire_container_utf8_string_t *str1 =
+        octaspire_container_utf8_string_new("abca", octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 =
+        octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT(octaspire_container_utf8_string_compare(str1, str2) > 0);
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_compare_with_string_abb_and_abc_test(void)
+{
+    octaspire_container_utf8_string_t *str1 =
+        octaspire_container_utf8_string_new("abb", octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 =
+        octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT(octaspire_container_utf8_string_compare(str1, str2) < 0);
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_compare_with_string_abc_and_abca_test(void)
+{
+    octaspire_container_utf8_string_t *str1 =
+        octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 =
+        octaspire_container_utf8_string_new("abca", octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT(octaspire_container_utf8_string_compare(str1, str2) < 0);
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_container_utf8_string_suite)
 {
     octaspireContainerUtf8StringTestAllocator = octaspire_memory_allocator_new(0);
@@ -14087,6 +14287,15 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_0_of_ade_test);
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_test);
     RUN_TEST(octaspire_container_utf8_string_pop_back_ucs_character_test);
+
+    RUN_TEST(octaspire_container_utf8_string_compare_with_two_empty_strings_test);
+    RUN_TEST(octaspire_container_utf8_string_compare_with_abc_and_empty_string_test);
+    RUN_TEST(octaspire_container_utf8_string_compare_with_empty_string_and_abc_test);
+    RUN_TEST(octaspire_container_utf8_string_compare_with_string_abc_and_abc_test);
+    RUN_TEST(octaspire_container_utf8_string_compare_with_string_abd_and_abc_test);
+    RUN_TEST(octaspire_container_utf8_string_compare_with_string_abca_and_abc_test);
+    RUN_TEST(octaspire_container_utf8_string_compare_with_string_abb_and_abc_test);
+    RUN_TEST(octaspire_container_utf8_string_compare_with_string_abc_and_abca_test);
 
     octaspire_memory_allocator_release(octaspireContainerUtf8StringTestAllocator);
     octaspireContainerUtf8StringTestAllocator = 0;

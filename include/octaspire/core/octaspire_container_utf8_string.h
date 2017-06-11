@@ -137,6 +137,14 @@ bool octaspire_container_utf8_string_is_equal_to_c_string(
     octaspire_container_utf8_string_t const * const self,
     char const * const str);
 
+int octaspire_container_utf8_string_compare(
+    octaspire_container_utf8_string_t const * const self,
+    octaspire_container_utf8_string_t const * const other);
+
+int octaspire_container_utf8_string_compare_to_c_string(
+    octaspire_container_utf8_string_t const * const self,
+    char const * const str);
+
 bool octaspire_container_utf8_string_starts_with(
     octaspire_container_utf8_string_t const * const self,
     octaspire_container_utf8_string_t const * const other);

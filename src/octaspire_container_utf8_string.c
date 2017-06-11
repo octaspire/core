@@ -906,6 +906,30 @@ bool octaspire_container_utf8_string_is_equal_to_c_string(
     return memcmp(octaspire_container_vector_get_element_at(self->octets,  0), str, len) == 0;
 }
 
+int octaspire_container_utf8_string_compare(
+    octaspire_container_utf8_string_t const * const self,
+    octaspire_container_utf8_string_t const * const other)
+{
+    assert(self);
+    assert(other);
+    assert(octaspire_container_vector_get_length(self->octets) > 0);
+    assert(octaspire_container_vector_get_length(other->octets) > 0);
+
+    return octaspire_container_utf8_string_compare_to_c_string(
+        self,
+        octaspire_container_utf8_string_get_c_string(other));
+}
+
+int octaspire_container_utf8_string_compare_to_c_string(
+    octaspire_container_utf8_string_t const * const self,
+    char const * const str)
+{
+    assert(self);
+    assert(str);
+    assert(octaspire_container_vector_get_length(self->octets) > 0);
+
+    return strcmp(octaspire_container_utf8_string_get_c_string(self), str);
+}
 
 bool octaspire_container_utf8_string_starts_with(
     octaspire_container_utf8_string_t const * const self,
