@@ -2,8 +2,7 @@ Octaspire Core is licensed under the Apache License, Version 2.0. This license a
 to everything else, but not the external-directory. For unit testing Octaspire Core
 uses external/greatest.h that is ISC licensed. This file is not the original version,
 but contains modifications by octaspire. These modifications are also ICS licensed.
-For fast hash calculation Octaspire Core uses MurmurHash3 that is placed in
-the public domain. All licenses and public domain waiver are listed here:
+All licenses are listed here:
 
 
 ---------------------------------------------------------------------------------------
@@ -44,13 +43,6 @@ License of external/greatest.h
    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ---------------------------------------------------------------------------------------
 
-
----------------------------------------------------------------------------------------
-Public domain waiwer of external/murmur3.h and external/murmur3.c
----------------------------------------------------------------------------------------
-MurmurHash3 was written by Austin Appleby, and is placed in the public
-domain. The author hereby disclaims copyright to this source code.
----------------------------------------------------------------------------------------
 
 
 ---------------------------------------------------------------------------------------

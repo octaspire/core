@@ -20,7 +20,7 @@ limitations under the License.
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-#include "external/murmur3.h"
+#include "external/jenkins_one_at_a_time.h"
 #include "octaspire/core/octaspire_memory.h"
 #include "octaspire/core/octaspire_utf8.h"
 #include "octaspire/core/octaspire_helpers.h"
@@ -221,18 +221,9 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_vformat(
 
     octaspire_container_utf8_string_reset_error_status(self);
 
-#if 0
-    octaspire_container_vector_t *vec = octaspire_container_vector_new(
-        sizeof(char),
-        false,
-        0,
-        allocator);
-#else
     size_t buflen = 8;
     char *buffer = octaspire_memory_allocator_malloc(allocator, buflen);
-    //char *buffer = malloc(buflen);
     assert(buffer);
-#endif
 
     octaspire_container_vector_t *vec2 = octaspire_container_vector_new(
         sizeof(char),
@@ -997,19 +988,12 @@ uint32_t octaspire_container_utf8_string_get_hash(
 {
     uint32_t hash = 0;
 
-    size_t const realLen = octaspire_container_vector_get_length(self->octets);
-
-    assert(realLen <= INT_MAX);
-
-    int const len = (int)realLen;
+    size_t const len = octaspire_container_vector_get_length(self->octets);
 
     if (!octaspire_container_vector_is_empty(self->octets))
     {
-        MurmurHash3_x86_32(
-            octaspire_container_vector_get_element_at(self->octets,  0),
-            len,
-            OCTASPIRE_HELPERS_MURMUR3_HASH_SEED,
-            &hash);
+        hash = jenkins_one_at_a_time_hash(
+            octaspire_container_vector_get_element_at(self->octets, 0), len);
     }
 
     return hash;

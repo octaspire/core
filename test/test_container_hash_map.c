@@ -151,65 +151,6 @@ TEST octaspire_container_hash_map_private_rehash_allocation_failure_on_first_all
     PASS();
 }
 
-#if 0
-TEST octaspire_container_hash_map_private_rehash_allocation_failure_on_second_allocation_test(void)
-{
-    octaspire_container_hash_map_t *hashMap = octaspire_container_hash_map_new(
-        sizeof(size_t),
-        sizeof(size_t),
-        octaspire_container_hash_map_new_test_key_compare_function_for_size_t_keys,
-        octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
-        0,
-        0,
-        octaspireContainerHashMapTestAllocator);
-
-    for (size_t value = 0; value < 5; ++value)
-    {
-        octaspire_container_hash_map_put(
-            hashMap,
-            0, //octaspire_helpers_calculate_murmur3_hash_for_size_t_argument(value),
-            &value,
-            &value);
-    }
-
-    // Should have 513 success, and number 514 should be failure
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged_when_larger_than_32(
-        octaspireContainerHashMapTestAllocator,
-        515,
-        0xFF, // 0
-        0xFF, // 1
-        0xFF, // 2
-        0xFF, // 3
-        0xFF, // 4
-        0xFF, // 5
-        0xFF, // 6
-        0xFF, // 7
-        0xFF, // 8
-        0xFF, // 9
-        0xFF, // 10
-        0xFF, // 11
-        0xFF, // 12
-        0xFF, // 13
-        0xFF, // 14
-        0xFF, // 15
-        0xFF, // 16  512 success at this point
-        0x03, // 17  +2  success
-        0x00, // 18
-        0x00);
-
-    ASSERT_EQ(515, octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator));
-
-    ASSERT_FALSE(octaspire_container_hash_map_private_rehash(hashMap));
-
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerHashMapTestAllocator, 0, 0x00);
-
-    octaspire_container_hash_map_release(hashMap);
-    hashMap = 0;
-
-    PASS();
-}
-#endif
-
 TEST octaspire_container_hash_map_new_keys_uint32_t_and_values_size_t_test(void)
 {
     octaspire_container_hash_map_t *hashMap = octaspire_container_hash_map_new(
@@ -273,13 +214,13 @@ TEST octaspire_container_hash_map_add_same_key_many_times_test(void)
     {
         ASSERT(octaspire_container_hash_map_put(
             hashMap,
-            octaspire_helpers_calculate_murmur3_hash_for_size_t_argument(key),
+            octaspire_helpers_calculate_hash_for_size_t_argument(key),
             &key,
             &i));
 
         octaspire_container_hash_map_element_t * const element = octaspire_container_hash_map_get(
             hashMap,
-            octaspire_helpers_calculate_murmur3_hash_for_size_t_argument(key),
+            octaspire_helpers_calculate_hash_for_size_t_argument(key),
             &key);
 
         ASSERT(element);
@@ -577,7 +518,6 @@ GREATEST_SUITE(octaspire_container_hash_map_suite)
     RUN_TEST(octaspire_container_hash_map_element_new_allocation_failure_on_second_allocation_test);
     RUN_TEST(octaspire_container_hash_map_element_new_allocation_failure_on_third_allocation_test);
     RUN_TEST(octaspire_container_hash_map_private_rehash_allocation_failure_on_first_allocation_test);
-    //RUN_TEST(octaspire_container_hash_map_private_rehash_allocation_failure_on_second_allocation_test);
     RUN_TEST(octaspire_container_hash_map_new_keys_uint32_t_and_values_size_t_test);
     RUN_TEST(octaspire_container_hash_map_add_same_key_many_times_test);
     RUN_TEST(octaspire_container_hash_map_new_allocation_failure_on_first_allocation_test);

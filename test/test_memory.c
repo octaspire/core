@@ -93,20 +93,6 @@ TEST octaspire_memory_allocator_malloc_test(void)
     PASS();
 }
 
-#if 0
-TEST octaspire_memory_allocator_realloc_failure_test(void)
-{
-    octaspire_memory_allocator_t *allocator = octaspire_memory_allocator_new(0);
-
-    ASSERT_EQ(0, octaspire_memory_allocator_realloc(allocator, 0, SIZE_MAX));
-
-    octaspire_memory_allocator_release(allocator);
-    allocator = 0;
-
-    PASS();
-}
-#endif
-
 TEST octaspire_memory_allocator_free_test(void)
 {
     octaspire_memory_allocator_t *allocator = octaspire_memory_allocator_new(0);
@@ -119,20 +105,6 @@ TEST octaspire_memory_allocator_free_test(void)
 
     PASS();
 }
-
-#if 0
-TEST octaspire_memory_allocator_malloc_failure_test(void)
-{
-    octaspire_memory_allocator_t *allocator = octaspire_memory_allocator_new(0);
-
-    ASSERT_EQ(0, octaspire_memory_allocator_malloc(allocator, SIZE_MAX));
-
-    octaspire_memory_allocator_release(allocator);
-    allocator = 0;
-
-    PASS();
-}
-#endif
 
 TEST octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged_when_larger_than_32_test(void)
 {
@@ -275,9 +247,7 @@ GREATEST_SUITE(octaspire_memory_suite)
     RUN_TEST(octaspire_memory_allocator_new_test);
     //RUN_TEST(octaspire_memory_allocator_new_failure_test);
     RUN_TEST(octaspire_memory_allocator_malloc_test);
-    //RUN_TEST(octaspire_memory_allocator_realloc_failure_test);
     RUN_TEST(octaspire_memory_allocator_free_test);
-    //RUN_TEST(octaspire_memory_allocator_malloc_failure_test);
     RUN_TEST(octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged_when_larger_than_32_test);
     RUN_TEST(octaspire_memory_allocator_setting_and_getting_future_allocations_to_fail_and_using_with_malloc_test);
     RUN_TEST(octaspire_memory_allocator_setting_and_getting_future_allocations_to_fail_and_using_with_realloc_test);

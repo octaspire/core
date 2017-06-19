@@ -507,119 +507,6 @@ TEST octaspire_container_utf8_string_new_format_with_empty_format_string_test(vo
     PASS();
 }
 
-#if 0
-// This test causes valgrind errors on thinkpad. Not on raspberry 2.
-TEST octaspire_container_utf8_string_new_format_encoding_error_test(void)
-{
-    // The idea for the line below (use of WEOF and %lc) to make
-    // vsnprintf (that is used internally by octaspire_container_utf8_string_new_format)
-    // to return negative value (encoding error in C99) is from groups.google.com/forum/m/#!topic/comp.std.c/llvkxXr5wE.I am not sure about the
-    // portability of this test on different platforms.
-    wint_t const value = WEOF;
-    char const * const input = "%lc";
-    octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value);
-
-    ASSERT(str);
-
-    ASSERT(str->octets);
-    ASSERT(str->ucsCharacters);
-    ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_ENCODING_ERROR, str->errorStatus);
-    ASSERT_EQ(0,                                                           str->errorAtOctet);
-    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                                   str->allocator);
-
-    ASSERT(octaspire_container_utf8_string_is_error(str));
-    ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_ENCODING_ERROR, octaspire_container_utf8_string_get_error_status(str));
-    ASSERT_EQ(0, octaspire_container_utf8_string_get_error_position_in_octets(str));
-
-    ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_octets(str));
-    ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
-
-    octaspire_container_utf8_string_release(str);
-    str = 0;
-
-    PASS();
-}
-#endif
-
-#if 0
-TEST octaspire_container_utf8_string_new_format_decoding_error_test(void)
-{
-    char const * const value = "wo\xFF\xFF\xFF\xFFld";
-    char const * const input = "Hello %s";
-    octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value);
-
-    ASSERT(str);
-
-    ASSERT(str->octets);
-    ASSERT(str->ucsCharacters);
-    ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, str->errorStatus);
-    ASSERT_EQ(8,                                                           str->errorAtOctet);
-    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                                   str->allocator);
-
-    ASSERT(octaspire_container_utf8_string_is_error(str));
-    ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, octaspire_container_utf8_string_get_error_status(str));
-    ASSERT_EQ(8, octaspire_container_utf8_string_get_error_position_in_octets(str));
-
-    ASSERT_EQ(8, octaspire_container_utf8_string_get_length_in_octets(str));
-    ASSERT_EQ(8, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
-
-    char const * const expected = 
-        "Hello wo";
-
-    ASSERT_MEM_EQ(
-        expected,
-        octaspire_container_utf8_string_get_c_string(str),
-        octaspire_container_utf8_string_get_length_in_octets(str));
-
-    octaspire_container_utf8_string_release(str);
-    str = 0;
-
-    PASS();
-}
-#endif
-
-
-#if 0
-TEST octaspire_container_utf8_string_new_format_decoding_error_another_test(void)
-{
-    float        const value1 = 42.01f;
-    char const * const value2 = "wo\xFF\xFF\xFF\xFFld";
-    char const * const input = "Hello © %g %s";
-    octaspire_container_utf8_string_t *str =
-        octaspire_container_utf8_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value1, value2);
-
-    ASSERT(str);
-
-    ASSERT(str->octets);
-    ASSERT(str->ucsCharacters);
-    ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, str->errorStatus);
-    ASSERT_EQ(17,                                                          str->errorAtOctet);
-    ASSERT_EQ(octaspireContainerUtf8StringTestAllocator,                                                   str->allocator);
-
-    ASSERT(octaspire_container_utf8_string_is_error(str));
-    ASSERT_EQ(OCTASPIRE_CONTAINER_UTF8_STRING_ERROR_STATUS_DECODING_ERROR, octaspire_container_utf8_string_get_error_status(str));
-    ASSERT_EQ(17, octaspire_container_utf8_string_get_error_position_in_octets(str));
-
-    ASSERT_EQ(17, octaspire_container_utf8_string_get_length_in_octets(str));
-    ASSERT_EQ(16, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
-
-    char const * const expected = 
-        "Hello \xC2\xA9 42.01 wo";
-
-    ASSERT_MEM_EQ(
-        expected,
-        octaspire_container_utf8_string_get_c_string(str),
-        octaspire_container_utf8_string_get_length_in_octets(str));
-
-    octaspire_container_utf8_string_release(str);
-    str = 0;
-
-    PASS();
-}
-#endif
-
 TEST octaspire_container_utf8_string_new_copy_test(void)
 {
     char const * const input = "©Hello World! © ≠𐀀How are you?";
@@ -2278,9 +2165,6 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_new_format_with_string_and_size_t_test);
     RUN_TEST(octaspire_container_utf8_string_new_format_with_string_and_size_t_on_otherwise_empty_format_string_test);
     RUN_TEST(octaspire_container_utf8_string_new_format_with_empty_format_string_test);
-    //RUN_TEST(octaspire_container_utf8_string_new_format_encoding_error_test);
-    //RUN_TEST(octaspire_container_utf8_string_new_format_decoding_error_test);
-    //RUN_TEST(octaspire_container_utf8_string_new_format_decoding_error_another_test);
     RUN_TEST(octaspire_container_utf8_string_new_copy_test);
     RUN_TEST(octaspire_container_utf8_string_new_copy_failure_test);
     RUN_TEST(octaspire_container_utf8_string_get_length_in_ucs_characters_test);

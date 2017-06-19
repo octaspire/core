@@ -130,7 +130,7 @@ cat >> $FILE << EnDoFmEsSaGe
 EnDoFmEsSaGe
 
 
-concat_file "../external/murmur3.h"
+concat_file "../external/jenkins_one_at_a_time.h"
 concat_config_file "../build/include/octaspire/core/octaspire_core_config.h"
 concat_file "../include/octaspire/core/octaspire_utf8.h"
 concat_file "../include/octaspire/core/octaspire_memory.h"
@@ -198,7 +198,7 @@ EnDoFmEsSaGe
 
 
 
-concat_file "../external/murmur3.c"
+concat_file "../external/jenkins_one_at_a_time.c"
 concat_file "../src/octaspire_memory.c"
 concat_file "../src/octaspire_helpers.c"
 concat_file "../src/octaspire_utf8.c"

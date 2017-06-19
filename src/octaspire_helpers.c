@@ -17,7 +17,7 @@ limitations under the License.
 #include "octaspire/core/octaspire_helpers.h"
 #include <assert.h>
 #include <stdio.h>
-#include "external/murmur3.h"
+#include "external/jenkins_one_at_a_time.h"
 
 bool octaspire_helpers_test_bit(uint32_t const bitSet, size_t const index)
 {
@@ -79,39 +79,29 @@ char *octaspire_helpers_path_to_buffer(
     return result;
 }
 
-uint32_t octaspire_helpers_calculate_murmur3_hash_for_size_t_argument(size_t const value)
+uint32_t octaspire_helpers_calculate_hash_for_size_t_argument(size_t const value)
 {
-    uint32_t result = 0;
-    MurmurHash3_x86_32(&value, sizeof(value), OCTASPIRE_HELPERS_MURMUR3_HASH_SEED, &result);
-    return result;
+    return jenkins_one_at_a_time_hash(&value, sizeof(value));
 }
 
-uint32_t octaspire_helpers_calculate_murmur3_hash_for_bool_argument(bool const value)
+uint32_t octaspire_helpers_calculate_hash_for_bool_argument(bool const value)
 {
-    uint32_t result = 0;
-    MurmurHash3_x86_32(&value, sizeof(value), OCTASPIRE_HELPERS_MURMUR3_HASH_SEED, &result);
-    return result;
+    return jenkins_one_at_a_time_hash(&value, sizeof(value));
 }
 
-uint32_t octaspire_helpers_calculate_murmur3_hash_for_int32_t_argument(int32_t const value)
+uint32_t octaspire_helpers_calculate_hash_for_int32_t_argument(int32_t const value)
 {
-    uint32_t result = 0;
-    MurmurHash3_x86_32(&value, sizeof(value), OCTASPIRE_HELPERS_MURMUR3_HASH_SEED, &result);
-    return result;
+    return jenkins_one_at_a_time_hash(&value, sizeof(value));
 }
 
-uint32_t octaspire_helpers_calculate_murmur3_hash_for_double_argument(double const value)
+uint32_t octaspire_helpers_calculate_hash_for_double_argument(double const value)
 {
-    uint32_t result = 0;
-    MurmurHash3_x86_32(&value, sizeof(value), OCTASPIRE_HELPERS_MURMUR3_HASH_SEED, &result);
-    return result;
+    return jenkins_one_at_a_time_hash(&value, sizeof(value));
 }
 
-uint32_t octaspire_helpers_calculate_murmur3_hash_for_void_pointer_argument(void const * const value)
+uint32_t octaspire_helpers_calculate_hash_for_void_pointer_argument(void const * const value)
 {
-    uint32_t result = 0;
-    MurmurHash3_x86_32(&value, sizeof(value), OCTASPIRE_HELPERS_MURMUR3_HASH_SEED, &result);
-    return result;
+    return jenkins_one_at_a_time_hash(&value, sizeof(value));
 }
 
 size_t octaspire_helpers_character_digit_to_number(uint32_t const c)
