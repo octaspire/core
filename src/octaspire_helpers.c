@@ -139,9 +139,25 @@ size_t octaspire_helpers_max_size_t(size_t const a, size_t const b)
     return b;
 }
 
-void octaspire_helpers_verify(bool const condition)
+void octaspire_helpers_verify_true(bool const condition)
 {
     if (!condition)
+    {
+        abort();
+    }
+}
+
+void octaspire_helpers_verify_null(void const * const ptr)
+{
+    if (ptr)
+    {
+        abort();
+    }
+}
+
+void octaspire_helpers_verify_not_null(void const * const ptr)
+{
+    if (!ptr)
     {
         abort();
     }

@@ -109,10 +109,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "37"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "38"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.37.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.38.0"
 
 
 
@@ -1114,7 +1114,9 @@ size_t octaspire_helpers_character_digit_to_number(uint32_t const c);
 size_t octaspire_helpers_min_size_t(size_t const a, size_t const b);
 size_t octaspire_helpers_max_size_t(size_t const a, size_t const b);
 
-void octaspire_helpers_verify(bool const condition);
+void octaspire_helpers_verify_true(bool const condition);
+void octaspire_helpers_verify_null(void const * const ptr);
+void octaspire_helpers_verify_not_null(void const * const ptr);
 
 #ifdef __cplusplus
 }
@@ -1876,9 +1878,25 @@ size_t octaspire_helpers_max_size_t(size_t const a, size_t const b)
     return b;
 }
 
-void octaspire_helpers_verify(bool const condition)
+void octaspire_helpers_verify_true(bool const condition)
 {
     if (!condition)
+    {
+        abort();
+    }
+}
+
+void octaspire_helpers_verify_null(void const * const ptr)
+{
+    if (ptr)
+    {
+        abort();
+    }
+}
+
+void octaspire_helpers_verify_not_null(void const * const ptr)
+{
+    if (!ptr)
     {
         abort();
     }
