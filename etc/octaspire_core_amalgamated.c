@@ -27,6 +27,33 @@ limitations under the License.
 #ifndef OCTASPIRE_CORE_AMALGAMATED_H
 #define OCTASPIRE_CORE_AMALGAMATED_H
 
+
+#ifdef OCTASPIRE_MAZE_PLAN9_IMPLEMENTATION
+
+#include <u.h>
+#include <libc.h>
+#include <mp.h>
+#include <stdio.h>
+#include <ctype.h>
+
+typedef long               int32_t;
+typeded unsigned long      uint32_t;
+typedef char               bool;
+typedef char               int8_t;
+typedef unsigned char      uint8_t;
+typedef long               ptrdiff_t;
+typedef unsigned long      size_t;
+typedef unsigned long long uintmax_t;
+
+#define true 1
+#define false 0
+
+#define CHAR_BIT 8
+#define INT32_MAX 2147483647
+#define va_copy(x,y) (x) = (y)
+
+#else
+
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -40,6 +67,8 @@ limitations under the License.
 #include <inttypes.h>
 #include <math.h>
 #include <wchar.h>
+
+#endif
 
 
 
@@ -100,10 +129,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "39"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "40"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.39.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.40.0"
 
 
 
@@ -1108,6 +1137,9 @@ void octaspire_helpers_verify_true(bool const condition);
 void octaspire_helpers_verify_null(void const * const ptr);
 void octaspire_helpers_verify_not_null(void const * const ptr);
 
+float octaspire_helpers_maxf(float const a, float const b);
+float octaspire_helpers_ceilf(float const value);
+
 #ifdef __cplusplus
 }
 #endif
@@ -1572,6 +1604,21 @@ void octaspire_helpers_verify_not_null(void const * const ptr)
     {
         abort();
     }
+}
+
+float octaspire_helpers_maxf(float const a, float const b)
+{
+    if (a > b)
+    {
+        return a;
+    }
+
+    return b;
+}
+
+float octaspire_helpers_ceilf(float const value)
+{
+    return (float)ceil(value);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2179,7 +2226,7 @@ static bool octaspire_container_vector_private_grow(
     octaspire_container_vector_t *self,
     float const factor)
 {
-    size_t const newNumAllocated = (size_t)(self->numAllocated * fmaxf(2, factor));
+    size_t const newNumAllocated = (size_t)(self->numAllocated * octaspire_helpers_maxf(2, factor));
 
     void *newElements = octaspire_memory_allocator_realloc(
         self->allocator,
@@ -2564,7 +2611,7 @@ bool octaspire_container_vector_insert_element_at(
     {
         if (!octaspire_container_vector_private_grow(
                 self,
-                ceilf((float)index / (float)self->numAllocated)))
+                octaspire_helpers_ceilf((float)index / (float)self->numAllocated)))
         {
             return false;
         }

@@ -17,6 +17,7 @@ limitations under the License.
 #include "octaspire/core/octaspire_helpers.h"
 #include <assert.h>
 #include <stdio.h>
+#include <math.h>
 #include "external/jenkins_one_at_a_time.h"
 
 bool octaspire_helpers_test_bit(uint32_t const bitSet, size_t const index)
@@ -151,5 +152,20 @@ void octaspire_helpers_verify_not_null(void const * const ptr)
     {
         abort();
     }
+}
+
+float octaspire_helpers_maxf(float const a, float const b)
+{
+    if (a > b)
+    {
+        return a;
+    }
+
+    return b;
+}
+
+float octaspire_helpers_ceilf(float const value)
+{
+    return (float)ceil(value);
 }
 

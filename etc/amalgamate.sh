@@ -41,6 +41,33 @@ EnDoFmEsSaGe
 
 # Write system includes
 cat >> $FILE << EnDoFmEsSaGe
+
+#ifdef OCTASPIRE_MAZE_PLAN9_IMPLEMENTATION
+
+#include <u.h>
+#include <libc.h>
+#include <mp.h>
+#include <stdio.h>
+#include <ctype.h>
+
+typedef long               int32_t;
+typeded unsigned long      uint32_t;
+typedef char               bool;
+typedef char               int8_t;
+typedef unsigned char      uint8_t;
+typedef long               ptrdiff_t;
+typedef unsigned long      size_t;
+typedef unsigned long long uintmax_t;
+
+#define true 1
+#define false 0
+
+#define CHAR_BIT 8
+#define INT32_MAX 2147483647
+#define va_copy(x,y) (x) = (y)
+
+#else
+
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -54,6 +81,8 @@ cat >> $FILE << EnDoFmEsSaGe
 #include <inttypes.h>
 #include <math.h>
 #include <wchar.h>
+
+#endif
 
 
 

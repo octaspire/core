@@ -20,6 +20,7 @@ limitations under the License.
 #include <string.h>
 #include <stdlib.h>
 #include "octaspire/core/octaspire_memory.h"
+#include "octaspire/core/octaspire_helpers.h"
 
 #include <stdio.h>
 
@@ -58,7 +59,7 @@ static bool octaspire_container_vector_private_grow(
     octaspire_container_vector_t *self,
     float const factor)
 {
-    size_t const newNumAllocated = (size_t)(self->numAllocated * fmaxf(2, factor));
+    size_t const newNumAllocated = (size_t)(self->numAllocated * octaspire_helpers_maxf(2, factor));
 
     void *newElements = octaspire_memory_allocator_realloc(
         self->allocator,
@@ -443,7 +444,7 @@ bool octaspire_container_vector_insert_element_at(
     {
         if (!octaspire_container_vector_private_grow(
                 self,
-                ceilf((float)index / (float)self->numAllocated)))
+                octaspire_helpers_ceilf((float)index / (float)self->numAllocated)))
         {
             return false;
         }

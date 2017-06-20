@@ -52,6 +52,9 @@ void octaspire_helpers_verify_true(bool const condition);
 void octaspire_helpers_verify_null(void const * const ptr);
 void octaspire_helpers_verify_not_null(void const * const ptr);
 
+float octaspire_helpers_maxf(float const a, float const b);
+float octaspire_helpers_ceilf(float const value);
+
 #ifdef __cplusplus
 }
 #endif
