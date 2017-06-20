@@ -37,7 +37,7 @@ limitations under the License.
 #include <ctype.h>
 
 typedef long               int32_t;
-typeded unsigned long      uint32_t;
+typedef unsigned long      uint32_t;
 typedef char               bool;
 typedef char               int8_t;
 typedef unsigned char      uint8_t;
@@ -130,9 +130,9 @@ limitations under the License.
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
 #define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "40"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "1"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.40.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.40.1"
 
 
 

@@ -51,7 +51,7 @@ cat >> $FILE << EnDoFmEsSaGe
 #include <ctype.h>
 
 typedef long               int32_t;
-typeded unsigned long      uint32_t;
+typedef unsigned long      uint32_t;
 typedef char               bool;
 typedef char               int8_t;
 typedef unsigned char      uint8_t;
