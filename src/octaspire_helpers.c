@@ -166,6 +166,6 @@ float octaspire_helpers_maxf(float const a, float const b)
 
 float octaspire_helpers_ceilf(float const value)
 {
-    return (float)ceil(value);
+    return (float)ceil((double)value);
 }
 

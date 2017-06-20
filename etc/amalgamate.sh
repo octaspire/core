@@ -42,7 +42,7 @@ EnDoFmEsSaGe
 # Write system includes
 cat >> $FILE << EnDoFmEsSaGe
 
-#ifdef OCTASPIRE_MAZE_PLAN9_IMPLEMENTATION
+#ifdef OCTASPIRE_PLAN9_IMPLEMENTATION
 
 #include <u.h>
 #include <libc.h>
