@@ -56,6 +56,11 @@ typedef unsigned long long uintmax_t;
 #define EXIT_FAILURE 1
 #define EXIT_SUCCESS 0
 
+void exit(int32_t const status)
+{
+    exits(status == 0 ? "" : "error");
+}
+
 #else
 
 #include <stdarg.h>
@@ -133,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "43"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "44"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.43.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.44.0"
 
 
 

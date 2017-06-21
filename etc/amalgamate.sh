@@ -70,6 +70,11 @@ typedef unsigned long long uintmax_t;
 #define EXIT_FAILURE 1
 #define EXIT_SUCCESS 0
 
+void exit(int32_t const status)
+{
+    exits(status == 0 ? "" : "error");
+}
+
 #else
 
 #include <stdarg.h>
