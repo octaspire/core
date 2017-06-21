@@ -50,7 +50,11 @@ typedef unsigned long long uintmax_t;
 
 #define CHAR_BIT 8
 #define INT32_MAX 2147483647
+#define UINTMAX_MAX 0xFFFFFFFF
 #define va_copy(x,y) (x) = (y)
+#define PRId32 "ld"
+#define EXIT_FAILURE 1
+#define EXIT_SUCCESS 0
 
 #else
 
@@ -129,10 +133,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "42"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "43"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.42.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.43.0"
 
 
 
