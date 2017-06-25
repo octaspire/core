@@ -771,7 +771,7 @@ bool octaspire_container_utf8_string_remove_character_at(
 
     for (size_t i = 0; i < character.numoctets; ++i)
     {
-        if (!octaspire_container_vector_remove_element_at(self->octets, octetsIndex + i))
+        if (!octaspire_container_vector_remove_element_at(self->octets, octetsIndex))
         {
             assert(false);
             return false;

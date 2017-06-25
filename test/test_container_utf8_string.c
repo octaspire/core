@@ -1690,6 +1690,30 @@ TEST octaspire_container_utf8_string_remove_character_at_test(void)
     PASS();
 }
 
+TEST octaspire_container_utf8_string_remove_character_at_called_on_string_with_two_os_with_diaeresis_test(void)
+{
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
+            "öö",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str);
+    ASSERT_EQ(2, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("öö", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_remove_character_at(str, 1));
+    ASSERT_EQ(1, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("ö", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_remove_character_at(str, 0));
+    ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
 TEST octaspire_container_utf8_string_remove_characters_at_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
@@ -2207,6 +2231,7 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_find_first_substring_abcd_from_123abc456abc_starting_from_index_0_failure_test);
     RUN_TEST(octaspire_container_utf8_string_private_ucs_character_index_to_octets_index_test);
     RUN_TEST(octaspire_container_utf8_string_remove_character_at_test);
+    RUN_TEST(octaspire_container_utf8_string_remove_character_at_called_on_string_with_two_os_with_diaeresis_test);
     RUN_TEST(octaspire_container_utf8_string_remove_characters_at_test);
     RUN_TEST(octaspire_container_utf8_string_remove_all_substrings_kitten_from_string_kitten_cat_kitten_dog_kitten_zebra_kitten_test);
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_1_of_ade_test);
