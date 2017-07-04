@@ -18,6 +18,7 @@ limitations under the License.
 #include <string.h>
 #include <stdlib.h>
 #include "octaspire/core/octaspire_memory.h"
+#include "octaspire/core/octaspire_helpers.h"
 
 struct octaspire_container_pair_t
 {
@@ -240,6 +241,8 @@ void octaspire_container_pair_set_first(
     octaspire_container_pair_t *self,
     void const *first)
 {
+    octaspire_helpers_verify_not_null(self);
+    octaspire_helpers_verify_not_null(first);
     if (self->first != memcpy(self->first,  first,  self->firstSize))
     {
         abort();

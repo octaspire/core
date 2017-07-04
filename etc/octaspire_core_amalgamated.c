@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "44"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "1"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "45"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.44.1"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.45.0"
 
 
 
@@ -4490,6 +4490,8 @@ void octaspire_container_pair_set_first(
     octaspire_container_pair_t *self,
     void const *first)
 {
+    octaspire_helpers_verify_not_null(self);
+    octaspire_helpers_verify_not_null(first);
     if (self->first != memcpy(self->first,  first,  self->firstSize))
     {
         abort();

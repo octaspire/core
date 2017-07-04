@@ -4,7 +4,7 @@ Octaspire Core Manual
 :lang: en
 :toc:
 
-Documentation for Octaspire Core library version 0.44.1
+Documentation for Octaspire Core library version 0.45.0
 
 == About
 
@@ -15,7 +15,7 @@ Octaspire Core is used by some other Octaspire projects like
 http://www.octaspire.com/dern[Dern], http://www.octaspire.com/maze[Maze] and
 http://www.octaspire.com/lightboard[Lightboard], but it should be usable on many
 different platforms and projects where containers like *vector*, *hash-map*,
-*pair* or *utf-8 string* are needed.
+*pair*, *list*, *queue* or *utf-8 string* are needed.
 
 Octaspire Core is licensed under the Apache License, Version 2.0. See file LICENSE
 in the source distribution for more information.
@@ -210,9 +210,25 @@ include::../examples/string-example.c[]
 include::../examples/vector-example.c[]
 ----
 
+
+
+=== List
+
+TODO
+
+
+
+=== Queue
+
+TODO
+
+
+
 === Pair
 
 TODO
+
+
 
 === Hash map
 
@@ -225,9 +241,14 @@ TODO
 include::../examples/hash-map-example.c[]
 ----
 
+
+
 === Input streams from memory and files
 
 TODO
+
+
+
 
 === Lower level helpers
 
