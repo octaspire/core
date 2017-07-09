@@ -23,8 +23,9 @@ struct octaspire_container_queue_t
 {
     octaspire_memory_allocator_t *allocator;
     octaspire_container_list_t   *list;
-    bool                          hasMaxLength;
     size_t                        maxLength;
+    bool                          hasMaxLength;
+    char                          padding[7];
 };
 
 static bool octaspire_container_queue_private_ensure_max_length(

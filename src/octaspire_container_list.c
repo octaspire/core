@@ -29,6 +29,7 @@ struct octaspire_container_list_node_t
     size_t                                       elementSize;
     octaspire_container_list_element_callback_t  elementReleaseCallback;
     bool                                         elementIsPointer;
+    char                                         padding[7];
 };
 
 octaspire_container_list_node_t *octaspire_container_list_node_new(
@@ -180,6 +181,7 @@ struct octaspire_container_list_t
     octaspire_container_list_element_callback_t  elementReleaseCallback;
     size_t                                       numElements;
     bool                                         elementIsPointer;
+    char                                         padding[7];
 };
 
 octaspire_container_list_t *octaspire_container_list_new(

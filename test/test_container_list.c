@@ -281,8 +281,8 @@ TEST octaspire_container_list_push_back_test(void)
         octaspire_container_list_node_t const * front = octaspire_container_list_get_front(list);
         octaspire_container_list_node_t const * back  = octaspire_container_list_get_back(list);
 
-        ASSERT_EQ(0,     *((size_t*)octaspire_container_list_node_get_element_const(front)));
-        ASSERT_EQ(i,     *((size_t*)octaspire_container_list_node_get_element_const(back)));
+        ASSERT_EQ(0,     *((size_t const * const)octaspire_container_list_node_get_element_const(front)));
+        ASSERT_EQ(i,     *((size_t const * const)octaspire_container_list_node_get_element_const(back)));
     }
 
     ASSERT_EQ(numElements, list->numElements);
@@ -292,7 +292,7 @@ TEST octaspire_container_list_push_back_test(void)
     for (size_t i = 0; i < numElements; ++i)
     {
         ASSERT(node);
-        ASSERT_EQ(i, *((size_t*)octaspire_container_list_node_get_element_const(node)));
+        ASSERT_EQ(i, *((size_t const * const)octaspire_container_list_node_get_element_const(node)));
         node = octaspire_container_list_node_get_next_const(node);
     }
 
@@ -326,8 +326,8 @@ TEST octaspire_container_list_push_front_test(void)
         octaspire_container_list_node_t const * front = octaspire_container_list_get_front(list);
         octaspire_container_list_node_t const * back  = octaspire_container_list_get_back(list);
 
-        ASSERT_EQ(i,     *((size_t*)octaspire_container_list_node_get_element_const(front)));
-        ASSERT_EQ(0,     *((size_t*)octaspire_container_list_node_get_element_const(back)));
+        ASSERT_EQ(i,     *((size_t const * const)octaspire_container_list_node_get_element_const(front)));
+        ASSERT_EQ(0,     *((size_t const * const)octaspire_container_list_node_get_element_const(back)));
     }
 
     ASSERT_EQ(numElements, list->numElements);
@@ -337,7 +337,7 @@ TEST octaspire_container_list_push_front_test(void)
     for (size_t i = 0; i < numElements; ++i)
     {
         ASSERT(node);
-        ASSERT_EQ(numElements - 1 - i, *((size_t*)octaspire_container_list_node_get_element_const(node)));
+        ASSERT_EQ(numElements - 1 - i, *((size_t const * const)octaspire_container_list_node_get_element_const(node)));
         node = octaspire_container_list_node_get_next_const(node);
     }
 
@@ -368,7 +368,7 @@ TEST octaspire_container_list_pop_front_test(void)
     {
         octaspire_container_list_node_t const * node = octaspire_container_list_get_front(list);
         ASSERT(node);
-        ASSERT_EQ(i, *((size_t*)octaspire_container_list_node_get_element_const(node)));
+        ASSERT_EQ(i, *((size_t const * const)octaspire_container_list_node_get_element_const(node)));
 
         ASSERT(octaspire_container_list_pop_front(list));
     }
@@ -404,7 +404,7 @@ TEST octaspire_container_list_pop_back_test(void)
             octaspire_container_list_get_front_const(list);
 
         ASSERT(first1);
-        ASSERT_EQ(0, *((size_t*)octaspire_container_list_node_get_element_const(first1)));
+        ASSERT_EQ(0, *((size_t const * const)octaspire_container_list_node_get_element_const(first1)));
 
         ASSERT(octaspire_container_list_pop_back(list));
 
