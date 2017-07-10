@@ -173,6 +173,8 @@ concat_config_file "../build/include/octaspire/core/octaspire_core_config.h"
 concat_file "../include/octaspire/core/octaspire_utf8.h"
 concat_file "../include/octaspire/core/octaspire_memory.h"
 concat_file "../include/octaspire/core/octaspire_container_vector.h"
+concat_file "../include/octaspire/core/octaspire_container_list.h"
+concat_file "../include/octaspire/core/octaspire_container_queue.h"
 concat_file "../include/octaspire/core/octaspire_container_utf8_string.h"
 concat_file "../include/octaspire/core/octaspire_container_pair.h"
 concat_file "../include/octaspire/core/octaspire_stdio.h"
@@ -241,6 +243,8 @@ concat_file "../src/octaspire_memory.c"
 concat_file "../src/octaspire_helpers.c"
 concat_file "../src/octaspire_utf8.c"
 concat_file "../src/octaspire_container_vector.c"
+concat_file "../src/octaspire_container_list.c"
+concat_file "../src/octaspire_container_queue.c"
 concat_file "../src/octaspire_container_utf8_string.c"
 concat_file "../src/octaspire_container_pair.c"
 concat_file "../src/octaspire_container_hash_map.c"
@@ -291,6 +295,8 @@ concat_file "../test/test_memory.c"
 concat_file "../test/test_stdio.c"
 concat_file "../test/test_input.c"
 concat_file "../test/test_container_vector.c"
+concat_file "../test/test_container_list.c"
+concat_file "../test/test_container_queue.c"
 concat_file "../test/test_container_utf8_string.c"
 concat_file "../test/test_container_pair.c"
 concat_file "../test/test_container_hash_map.c"
@@ -472,6 +478,8 @@ int main(int argc, char **argv)
     RUN_SUITE(octaspire_stdio_suite);
     RUN_SUITE(octaspire_input_suite);
     RUN_SUITE(octaspire_container_vector_suite);
+    RUN_SUITE(octaspire_container_list_suite);
+    RUN_SUITE(octaspire_container_queue_suite);
     RUN_SUITE(octaspire_container_utf8_string_suite);
     RUN_SUITE(octaspire_container_pair_suite);
     RUN_SUITE(octaspire_container_hash_map_suite);
