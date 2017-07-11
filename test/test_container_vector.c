@@ -2060,7 +2060,7 @@ TEST octaspire_container_vector_clear_called_on_empty_vector_test(void)
 
     ASSERT_EQ(0, octaspire_container_vector_get_length(vec));
 
-    ASSERT_FALSE(octaspire_container_vector_clear(vec));
+    ASSERT(octaspire_container_vector_clear(vec));
 
     ASSERT_EQ(0, octaspire_container_vector_get_length(vec));
 

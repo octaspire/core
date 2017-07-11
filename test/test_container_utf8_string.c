@@ -1648,25 +1648,6 @@ TEST octaspire_container_utf8_string_find_first_substring_abcd_from_123abc456abc
     PASS();
 }
 
-TEST octaspire_container_utf8_string_private_ucs_character_index_to_octets_index_test(void)
-{
-    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
-            "0123456789",
-            octaspireContainerUtf8StringTestAllocator);
-
-    ASSERT(str);
-
-    for (size_t i = 0; i < octaspire_container_utf8_string_get_length_in_ucs_characters(str); ++i)
-    {
-        ASSERT_EQ(i, octaspire_container_utf8_string_private_ucs_character_index_to_octets_index(str, i));
-    }
-
-    octaspire_container_utf8_string_release(str);
-    str = 0;
-
-    PASS();
-}
-
 TEST octaspire_container_utf8_string_remove_character_at_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
@@ -1962,7 +1943,7 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_tes
     PASS();
 }
 
-TEST octaspire_container_utf8_string_overwrite_with_string_at_test(void)
+TEST octaspire_container_utf8_string_overwrite_with_string_at_first_test(void)
 {
     octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
             "",
@@ -1992,6 +1973,33 @@ TEST octaspire_container_utf8_string_overwrite_with_string_at_test(void)
     ASSERT_EQ(4, octaspire_container_utf8_string_get_length_in_octets(strTarget));
     ASSERT_STR_EQ(
         "aqö",
+        octaspire_container_utf8_string_get_c_string(strTarget));
+
+    octaspire_container_utf8_string_release(strAddition);
+    strAddition = 0;
+
+    octaspire_container_utf8_string_release(strTarget);
+    strTarget = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_overwrite_with_string_at_second_test(void)
+{
+    octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
+            "abc",
+            octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *strAddition =
+        octaspire_container_utf8_string_new("ö",octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(strTarget && strAddition);
+
+    ASSERT(octaspire_container_utf8_string_overwrite_with_string_at(strTarget, strAddition, 1));
+    ASSERT_EQ(3, octaspire_container_utf8_string_get_length_in_ucs_characters(strTarget));
+    ASSERT_EQ(4, octaspire_container_utf8_string_get_length_in_octets(strTarget));
+    ASSERT_STR_EQ(
+        "aöc",
         octaspire_container_utf8_string_get_c_string(strTarget));
 
     octaspire_container_utf8_string_release(strAddition);
@@ -2270,7 +2278,6 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_starting_from_index_0_test);
     RUN_TEST(octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_starting_from_index_4_test);
     RUN_TEST(octaspire_container_utf8_string_find_first_substring_abcd_from_123abc456abc_starting_from_index_0_failure_test);
-    RUN_TEST(octaspire_container_utf8_string_private_ucs_character_index_to_octets_index_test);
     RUN_TEST(octaspire_container_utf8_string_remove_character_at_test);
     RUN_TEST(octaspire_container_utf8_string_remove_character_at_called_on_string_with_two_os_with_diaeresis_test);
     RUN_TEST(octaspire_container_utf8_string_remove_characters_at_test);
@@ -2283,7 +2290,8 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_0_of_ade_test);
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_test);
 
-    RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_test);
+    RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_first_test);
+    RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_second_test);
 
     RUN_TEST(octaspire_container_utf8_string_pop_back_ucs_character_test);
 

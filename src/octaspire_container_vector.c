@@ -680,7 +680,7 @@ bool octaspire_container_vector_clear(
 {
     if (octaspire_container_vector_is_empty(self))
     {
-        return false;
+        return true;
     }
 
     self->numElements = 0;
