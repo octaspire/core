@@ -450,6 +450,7 @@ bool octaspire_container_list_remove(
             self->front = self->back;
         }
 
+        octaspire_container_list_node_release(node);
         return true;
     }
 }

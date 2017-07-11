@@ -433,6 +433,37 @@ bool octaspire_container_vector_insert_element_before_the_element_at_index(
     return true;
 }
 
+bool octaspire_container_vector_replace_element_at_index_or_push_back(
+    octaspire_container_vector_t *self,
+    void const *element,
+    ptrdiff_t const index)
+{
+    size_t realIndexToUse = 0;
+
+    if (index < 0)
+    {
+        ptrdiff_t const tmpIdx = (ptrdiff_t)octaspire_container_vector_get_length(self) + index;
+
+        if (tmpIdx < 0)
+        {
+            abort();
+        }
+
+        realIndexToUse = (size_t)tmpIdx;
+    }
+    else
+    {
+        realIndexToUse = (size_t)index;
+    }
+
+    if (realIndexToUse >= octaspire_container_vector_get_length(self))
+    {
+        return octaspire_container_vector_push_back_element(self, element);
+    }
+
+    return octaspire_container_vector_insert_element_at(self, element, realIndexToUse);
+}
+
 bool octaspire_container_vector_insert_element_at(
     octaspire_container_vector_t * const self,
     void const * const element,

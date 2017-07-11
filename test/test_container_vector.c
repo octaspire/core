@@ -1400,6 +1400,58 @@ TEST octaspire_container_vector_insert_element_at_test(void)
     PASS();
 }
 
+TEST octaspire_container_vector_replace_element_at_index_or_push_back_test(void)
+{
+    octaspire_container_vector_t *vec =
+        octaspire_container_vector_new(sizeof(size_t), false, 0, octaspireContainerVectorTestAllocator);
+
+    size_t expected = 123;
+
+    ASSERT(octaspire_container_vector_replace_element_at_index_or_push_back(vec, &expected, 0));
+    ASSERT_EQ(1, octaspire_container_vector_get_length(vec));
+    ASSERT_EQ(expected, *(size_t*)octaspire_container_vector_get_element_at(vec, 0));
+
+    expected = 987;
+
+    ASSERT(octaspire_container_vector_replace_element_at_index_or_push_back(vec, &expected, 0));
+    ASSERT_EQ(1, octaspire_container_vector_get_length(vec));
+    ASSERT_EQ(expected, *(size_t*)octaspire_container_vector_get_element_at(vec, 0));
+
+    expected = 297;
+
+    ASSERT(octaspire_container_vector_replace_element_at_index_or_push_back(vec, &expected, 1));
+    ASSERT_EQ(2,        octaspire_container_vector_get_length(vec));
+    ASSERT_EQ(987,      *(size_t*)octaspire_container_vector_get_element_at(vec, 0));
+    ASSERT_EQ(expected, *(size_t*)octaspire_container_vector_get_element_at(vec, 1));
+
+    expected = 777;
+
+    ASSERT(octaspire_container_vector_replace_element_at_index_or_push_back(vec, &expected, 1));
+    ASSERT_EQ(2,        octaspire_container_vector_get_length(vec));
+    ASSERT_EQ(987,      *(size_t*)octaspire_container_vector_get_element_at(vec, 0));
+    ASSERT_EQ(expected, *(size_t*)octaspire_container_vector_get_element_at(vec, 1));
+
+    expected = 222;
+
+    ASSERT(octaspire_container_vector_replace_element_at_index_or_push_back(vec, &expected, 0));
+    ASSERT_EQ(2,        octaspire_container_vector_get_length(vec));
+    ASSERT_EQ(expected, *(size_t*)octaspire_container_vector_get_element_at(vec, 0));
+    ASSERT_EQ(777,      *(size_t*)octaspire_container_vector_get_element_at(vec, 1));
+
+    expected = 1111;
+
+    ASSERT(octaspire_container_vector_replace_element_at_index_or_push_back(vec, &expected, 2));
+    ASSERT_EQ(3,        octaspire_container_vector_get_length(vec));
+    ASSERT_EQ(222,      *(size_t*)octaspire_container_vector_get_element_at(vec, 0));
+    ASSERT_EQ(777,      *(size_t*)octaspire_container_vector_get_element_at(vec, 1));
+    ASSERT_EQ(expected, *(size_t*)octaspire_container_vector_get_element_at(vec, 2));
+
+    octaspire_container_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
+
 TEST octaspire_container_vector_insert_element_at_index_100_of_empty_vector_test(void)
 {
     octaspire_container_vector_t *vec =
@@ -2070,6 +2122,9 @@ GREATEST_SUITE(octaspire_container_vector_suite)
     RUN_TEST(octaspire_container_vector_insert_element_before_the_element_at_index_allocation_failure_test);
     RUN_TEST(octaspire_container_vector_insert_element_before_the_element_at_index_the_middle_test);
     RUN_TEST(octaspire_container_vector_insert_element_at_test);
+
+    RUN_TEST(octaspire_container_vector_replace_element_at_index_or_push_back_test);
+
     RUN_TEST(octaspire_container_vector_insert_element_at_index_100_of_empty_vector_test);
     RUN_TEST(octaspire_container_vector_insert_element_at_failure_test);
     RUN_TEST(octaspire_container_vector_push_front_element_test);

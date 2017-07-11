@@ -168,6 +168,11 @@ bool octaspire_container_utf8_string_insert_string_to(
     octaspire_container_utf8_string_t const * const str,
     ptrdiff_t const indexToPutFirstCharacter);
 
+bool octaspire_container_utf8_string_overwrite_with_string_at(
+    octaspire_container_utf8_string_t * const self,
+    octaspire_container_utf8_string_t const * const str,
+    ptrdiff_t const indexToPutFirstCharacter);
+
 octaspire_container_vector_t *octaspire_container_utf8_string_split(
     octaspire_container_utf8_string_t *self,
     char const * const delimiter);

@@ -84,6 +84,11 @@ bool octaspire_container_vector_insert_element_before_the_element_at_index(
     void const *element,
     ptrdiff_t const index);
 
+bool octaspire_container_vector_replace_element_at_index_or_push_back(
+    octaspire_container_vector_t *self,
+    void const *element,
+    ptrdiff_t const index);
+
 bool octaspire_container_vector_insert_element_at(
     octaspire_container_vector_t * const self,
     void const * const element,

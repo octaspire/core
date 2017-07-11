@@ -1962,6 +1962,47 @@ TEST octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_tes
     PASS();
 }
 
+TEST octaspire_container_utf8_string_overwrite_with_string_at_test(void)
+{
+    octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
+            "",
+            octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *strAddition =
+        octaspire_container_utf8_string_new("abö",octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(strTarget && strAddition);
+
+    ASSERT(octaspire_container_utf8_string_overwrite_with_string_at(strTarget, strAddition, 0));
+    ASSERT_EQ(3, octaspire_container_utf8_string_get_length_in_ucs_characters(strTarget));
+    ASSERT_EQ(4, octaspire_container_utf8_string_get_length_in_octets(strTarget));
+    ASSERT_STR_EQ(
+        "abö",
+        octaspire_container_utf8_string_get_c_string(strTarget));
+
+    octaspire_container_utf8_string_release(strAddition);
+    strAddition = 0;
+
+    strAddition = octaspire_container_utf8_string_new("q",octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(strTarget && strAddition);
+
+    ASSERT(octaspire_container_utf8_string_overwrite_with_string_at(strTarget, strAddition, 1));
+    ASSERT_EQ(3, octaspire_container_utf8_string_get_length_in_ucs_characters(strTarget));
+    ASSERT_EQ(4, octaspire_container_utf8_string_get_length_in_octets(strTarget));
+    ASSERT_STR_EQ(
+        "aqö",
+        octaspire_container_utf8_string_get_c_string(strTarget));
+
+    octaspire_container_utf8_string_release(strAddition);
+    strAddition = 0;
+
+    octaspire_container_utf8_string_release(strTarget);
+    strTarget = 0;
+
+    PASS();
+}
+
 TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
@@ -2241,6 +2282,9 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_3_of_ade_failure_test);
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_0_of_ade_test);
     RUN_TEST(octaspire_container_utf8_string_insert_string_to_bc_into_index_2_of_ade_test);
+
+    RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_test);
+
     RUN_TEST(octaspire_container_utf8_string_pop_back_ucs_character_test);
 
     RUN_TEST(octaspire_container_utf8_string_compare_with_two_empty_strings_test);
