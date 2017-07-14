@@ -58,6 +58,97 @@ create_new_version() {
     "$PROJECT_PATH/build/octaspire_core_amalgamated_test_runner"
     RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
 
+    echo "\nRemoving old release directory and archive...\n--------------------------\n"
+    rm -rf "$PROJECT_PATH/etc/release.tar.bz2"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    rm -rf "$PROJECT_PATH/etc/release"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nCreating a directories for the source release...\n--------------------------\n"
+    mkdir -p "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    mkdir -p "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/documentation"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    mkdir -p "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/examples"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nCreate a README file...\n--------------------------\n"
+    echo \
+"This is amalgamated single file source release for Octaspire Core library\n\
+version $NEW_MAJOR.$NEW_MINOR.$NEW_PATCH. File 'octaspire-core-amalgamated.c'\n\
+is all that is needed; it has no other dependencies than a C compiler and\n\
+standard library supporting C99.\n\
+\n\
+SHA-512 checksums for this and older releases can be found from:\n\
+https://octaspire.github.io/core/\n\
+If you want to check this release, download checksums for version $NEW_MAJOR.$NEW_MINOR.$NEW_PATCH from:\n\
+https://octaspire.github.io/core/checksums-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH\n\
+\n\
+Building instructions for all supported platforms (and scripts for building\n\
+automatically) can be found in directory 'how-to-build'. Look for a file that\n\
+has your platform's name in the file's name. If instructions for your\n\
+platform are not yet added, looking instructions for a similar system will\n\
+probably help. The amalgamation contains only one source file and should be\n\
+straightforward to use. By using few compiler defines, the single file can\n\
+be used for different purposes:\n\
+\n\
+\t(1) to build stand-alone unit test runner for the file.\n\
+\t(2) to use the file as a single file header+library in C/C++ programs\n\
+\t    wanting to use the Octaspire Core library.\n\
+\n\
+Octaspire Core is work in progress. The most recent version\n\
+of this amalgamated source release can be downloaded from:\n\
+\n\
+\t* octaspire.com/core/release.tar.bz2\n\
+\t* https://octaspire.github.io/core/release.tar.bz2\n\
+\n\
+Directory 'documentation' contains the book 'Octaspire Core Manual'\n\
+and directory 'examples' has some short examples.\n\
+\n\
+More information about Core can be found from the homepage:\n\
+octaspire.com/core\n" > "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/README"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nCopying amalgamation...\n--------------------------\n"
+    cp "$PROJECT_PATH/etc/octaspire_core_amalgamated.c" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/octaspire-core-amalgamated.c"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nCopying LICENSE file...\n--------------------------\n"
+    cp "$PROJECT_PATH/LICENSE" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/LICENSE"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nCopying book to the release directory...\n--------------------------\n"
+    cp "$PROJECT_PATH/doc/book/Octaspire_Core_Manual.html" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/documentation/"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    cp "$PROJECT_PATH/doc/book/Octaspire_Core_Manual.pdf" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/documentation/"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nCopying examples...\n--------------------------\n"
+    cp "$PROJECT_PATH/doc/examples/hash-map-example.c" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/examples/"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    cp "$PROJECT_PATH/doc/examples/string-example.c" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/examples/"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    cp "$PROJECT_PATH/doc/examples/vector-example.c" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/examples/"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nCopying build scripts to the release directory...\n--------------------------\n"
+    cp -r "$PROJECT_PATH/etc/how-to-build/" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nCompressing release directory into tar.bz2...\n--------------------------\n"
+    cd "$PROJECT_PATH/etc/"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    tar --bzip2 -cf "release.tar.bz2" release
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
+    echo "\nRemoving $PROJECT_PATH/release/ and creating it again with updates\n--------------------------\n"
+    rm -rf "$PROJECT_PATH/release"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    cp -r "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH" "$PROJECT_PATH"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+    mv "$PROJECT_PATH/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH" "$PROJECT_PATH/release"
+    RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
+
     echo "\nRelease $NEW_MAJOR.$NEW_MINOR.$NEW_PATCH created."
 }
 

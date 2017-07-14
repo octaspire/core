@@ -88,6 +88,26 @@ TEST octaspire_container_queue_new_with_max_length_test(void)
     ASSERT_EQ(maxLength, octaspire_container_queue_get_max_length(queue));
     ASSERT(octaspire_container_queue_has_max_length(queue));
 
+    for (size_t i = 0; i < (2 * maxLength); ++i)
+    {
+        octaspire_container_queue_push(queue, &i);
+
+        ASSERT(octaspire_container_queue_get_length(queue) <= maxLength);
+
+        ASSERT_EQ(
+            i < maxLength ? 0 : (i + 1 - maxLength),
+            *(size_t const * const)octaspire_container_queue_peek(queue));
+    }
+
+    ASSERT_EQ(maxLength, octaspire_container_queue_get_length(queue));
+
+    for (size_t i = 0; i < octaspire_container_queue_get_length(queue); ++i)
+    {
+        ASSERT_EQ(
+            (maxLength * 2) - 1 - i,
+            *(size_t const * const)octaspire_container_queue_get_at_const(queue, i));
+    }
+
     octaspire_container_queue_release(queue);
     queue = 0;
 
