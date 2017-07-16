@@ -42,17 +42,17 @@ replace **YOUR_PLATFORM_NAME_HERE.XX** with **FreeBSD.sh**, **NetBSD.sh**, **Ope
 ### Windows using MinGW
 
 1. Download and install **MinGW** from
-[http://www.mingw.org](www.mingw.org) into directory `C:\MinGW`. Please note, that you might need
+[http://www.mingw.org](http://www.mingw.org) into directory `C:\MinGW`. Please note, that you might need
 to add `C:\MinGW` and `C:\MinGW\bin` into the `PATH`.
 If you cannot install into `C:\MinGW`, you can install MinGW to some other place.
 Remember the installation path, because later you can write it into the
 `WindowsMinGW.bat` file, so that the script finds MinGW.
 
 2. Download and install **7-Zip** from
-[http://www.7-zip.org](www.7-zip.org).
+[http://www.7-zip.org](http://www.7-zip.org).
 
 3. Download
-[http://www.octaspire.com/core/release.tar.bz2](www.octaspire.com/core/release.tar.bz2) and
+[http://www.octaspire.com/core/release.tar.bz2](http://www.octaspire.com/core/release.tar.bz2) and
 extract it with 7-Zip. You might need to extract it twice; first into file `release.tar`
 and then again to get the directory.
 
