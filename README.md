@@ -26,7 +26,6 @@ platforms. More platforms and build scripts will be added later.
 ### Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, Syllable Desktop
 
 ```shell
-----
 curl -O octaspire.com/core/release.tar.bz2
 tar jxf release.tar.bz2
 cd release/*
