@@ -4,7 +4,7 @@ Octaspire Core Manual
 :lang: en
 :toc:
 
-Documentation for Octaspire Core library version 0.52.0
+Documentation for Octaspire Core library version 0.53.0
 
 == About
 
@@ -40,7 +40,7 @@ As long as the MAJOR version number is zero anything can change at any time,
 even in backwards incompatible manner.
 
 ++++
-<script type="text/javascript" src="https://asciinema.org/a/120956.js" id="asciicast-120956" async></script>
+<script type="text/javascript" src="https://asciinema.org/a/129147.js" id="asciicast-129147" async></script>
 ++++
 
 
