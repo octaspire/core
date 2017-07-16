@@ -139,9 +139,9 @@ limitations under the License.
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
 #define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "54"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "2"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "3"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.54.2"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.54.3"
 
 
 
@@ -17756,12 +17756,16 @@ void octaspire_core_amalgamated_write_test_file(
 
     if (!buffer || !bufferSize)
     {
-        if (fwrite("", sizeof(char), 0, stream) != 0)
+        if (fclose(stream) != 0)
         {
-            fclose(stream);
-            stream = 0;
             abort();
         }
+
+        stream = 0;
+
+        printf("  Wrote empty file '%s'\n", name);
+
+        return;
     }
     else
     {
