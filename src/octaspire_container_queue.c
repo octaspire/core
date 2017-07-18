@@ -131,7 +131,7 @@ void octaspire_container_queue_release(octaspire_container_queue_t *self)
 void *octaspire_container_queue_peek(
     octaspire_container_queue_t * const self)
 {
-    octaspire_container_list_node_t * const node = octaspire_container_list_get_back(self->list);
+    octaspire_container_list_node_t * const node = octaspire_container_list_get_front(self->list);
 
     if (!node)
     {
@@ -145,7 +145,7 @@ void const *octaspire_container_queue_peek_const(
     octaspire_container_queue_t const * const self)
 {
     octaspire_container_list_node_t const * const node =
-        octaspire_container_list_get_back(self->list);
+        octaspire_container_list_get_front(self->list);
 
     if (!node)
     {
@@ -158,14 +158,14 @@ void const *octaspire_container_queue_peek_const(
 bool octaspire_container_queue_pop(
     octaspire_container_queue_t * const self)
 {
-    return octaspire_container_list_pop_back(self->list);
+    return octaspire_container_list_pop_front(self->list);
 }
 
 bool octaspire_container_queue_push(
     octaspire_container_queue_t *self,
     void const * const element)
 {
-    if (!octaspire_container_list_push_front(self->list, element))
+    if (!octaspire_container_list_push_back(self->list, element))
     {
         return false;
     }
