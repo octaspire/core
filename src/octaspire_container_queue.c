@@ -193,10 +193,10 @@ bool octaspire_container_queue_is_empty(
 
 void *octaspire_container_queue_get_at(
     octaspire_container_queue_t * const self,
-    size_t const index)
+    ptrdiff_t const possiblyNegativeIndex)
 {
     octaspire_container_list_node_t * const node =
-        octaspire_container_list_get_at(self->list, index);
+        octaspire_container_list_get_at(self->list, possiblyNegativeIndex);
 
     if (!node)
     {
@@ -208,10 +208,10 @@ void *octaspire_container_queue_get_at(
 
 void const *octaspire_container_queue_get_at_const(
     octaspire_container_queue_t const * const self,
-    size_t const index)
+    ptrdiff_t const possiblyNegativeIndex)
 {
     octaspire_container_list_node_t const * const node =
-        octaspire_container_list_get_at(self->list, index);
+        octaspire_container_list_get_at(self->list, possiblyNegativeIndex);
 
     if (!node)
     {

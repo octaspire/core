@@ -117,7 +117,7 @@ size_t octaspire_container_hash_map_get_number_of_elements(
 
 octaspire_container_hash_map_element_t *octaspire_container_hash_map_get_at_index(
     octaspire_container_hash_map_t *self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 typedef struct octaspire_container_hash_map_element_iterator_t
 {

@@ -71,7 +71,11 @@ TEST octaspire_container_utf8_string_new_with_simple_ascii_string_test(void)
 
     for (size_t i = 0; i < octaspire_container_utf8_string_get_length_in_ucs_characters(str); ++i)
     {
-        ASSERT_EQ((uint32_t)(expected[i]), octaspire_container_utf8_string_get_ucs_character_at_index(str, i));
+        ASSERT_EQ(
+            (uint32_t)(expected[i]),
+            octaspire_container_utf8_string_get_ucs_character_at_index(
+                str,
+                (ptrdiff_t)i));
     }
 
     octaspire_container_utf8_string_release(str);
@@ -136,9 +140,15 @@ TEST octaspire_container_utf8_string_new_with_simple_ascii_string_with_error_tes
     ASSERT_EQ(strlen((char const * const)expected), octaspire_container_utf8_string_get_length_in_ucs_characters(str));
     ASSERT_STR_EQ(expected, octaspire_container_utf8_string_get_c_string(str));
 
-    for (size_t i = 0; i < octaspire_container_utf8_string_get_length_in_ucs_characters(str); ++i)
+    for (size_t i = 0;
+         i < octaspire_container_utf8_string_get_length_in_ucs_characters(str);
+         ++i)
     {
-        ASSERT_EQ((uint32_t)(expected[i]), octaspire_container_utf8_string_get_ucs_character_at_index(str, i));
+        ASSERT_EQ(
+            (uint32_t)(expected[i]),
+            octaspire_container_utf8_string_get_ucs_character_at_index(
+                str,
+                (ptrdiff_t)i));
     }
 
     octaspire_container_utf8_string_release(str);
@@ -727,7 +737,19 @@ TEST octaspire_container_utf8_string_get_ucs_character_at_index_test(void)
 
     for (size_t i = 0; i < EXPECTED_LENGTH; ++i)
     {
-        ASSERT_EQ(expected[i], octaspire_container_utf8_string_get_ucs_character_at_index(str, i));
+        ASSERT_EQ(
+            expected[i],
+            octaspire_container_utf8_string_get_ucs_character_at_index(
+                str,
+                (ptrdiff_t)i));
+    }
+
+    for (size_t i = 0; i < EXPECTED_LENGTH; ++i)
+    {
+        ptrdiff_t const index = -((ptrdiff_t)(i + 1));
+        ASSERT_EQ(
+            expected[EXPECTED_LENGTH - 1 - i],
+            octaspire_container_utf8_string_get_ucs_character_at_index(str, index));
     }
 
     octaspire_container_utf8_string_release(str);
@@ -1033,7 +1055,7 @@ TEST octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test(void
         octaspire_container_utf8_string_private_null_octet,
         *(char const * const)octaspire_container_vector_get_element_at(
             str->octets,
-            octaspire_container_vector_get_length(str->octets) - 1));
+            (ptrdiff_t)(octaspire_container_vector_get_length(str->octets) - 1)));
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1046,7 +1068,7 @@ TEST octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test(void
         octaspire_container_utf8_string_private_null_octet,
         *(char const * const)octaspire_container_vector_get_element_at(
             str->octets,
-            octaspire_container_vector_get_length(str->octets) - 1));
+            (ptrdiff_t)(octaspire_container_vector_get_length(str->octets) - 1)));
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1059,7 +1081,7 @@ TEST octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test(void
         octaspire_container_utf8_string_private_null_octet,
         *(char const * const)octaspire_container_vector_get_element_at(
             str->octets,
-            octaspire_container_vector_get_length(str->octets) - 1));
+            (ptrdiff_t)(octaspire_container_vector_get_length(str->octets) - 1)));
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1073,7 +1095,7 @@ TEST octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test(void
         octaspire_container_utf8_string_private_null_octet,
         *(char const * const)octaspire_container_vector_get_element_at(
             str->octets,
-            octaspire_container_vector_get_length(str->octets) - 1));
+            (ptrdiff_t)(octaspire_container_vector_get_length(str->octets) - 1)));
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1105,7 +1127,7 @@ TEST octaspire_container_utf8_string_new_format_numbers_into_vector_test(void)
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_utf8_string_t const * const str =
-            octaspire_container_vector_get_element_at_const(vec, i);
+            octaspire_container_vector_get_element_at_const(vec, (ptrdiff_t)i);
 
         ASSERT_EQ(i, (size_t)atoi(octaspire_container_utf8_string_get_c_string(str)));
     }
@@ -1125,6 +1147,52 @@ TEST octaspire_container_utf8_string_new_format_number_test(void)
             i);
 
     ASSERT_EQ(i, (size_t)atoi(octaspire_container_utf8_string_get_c_string(str)));
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_find_char_a_from_string_a123a56a89a_using_negative_indice_test(void)
+{
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
+            "a123a56a89a",
+            octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *character =
+        octaspire_container_utf8_string_new("a123",octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str && character);
+
+    // Test failure first
+    octaspire_container_vector_t *indices = octaspire_container_utf8_string_find_char(
+        str,
+        character,
+        -5);
+
+    ASSERT_FALSE(indices);
+
+    // Test success
+    indices = octaspire_container_utf8_string_find_char(
+        str,
+        character,
+        -4);
+
+    ASSERT(indices);
+
+    ASSERT_EQ(4, octaspire_container_vector_get_length(indices));
+
+    ASSERT_EQ(0,  *(size_t*)octaspire_container_vector_get_element_at(indices, 0));
+    ASSERT_EQ(4,  *(size_t*)octaspire_container_vector_get_element_at(indices, 1));
+    ASSERT_EQ(7,  *(size_t*)octaspire_container_vector_get_element_at(indices, 2));
+    ASSERT_EQ(10, *(size_t*)octaspire_container_vector_get_element_at(indices, 3));
+
+    octaspire_container_vector_release(indices);
+    indices = 0;
+
+    octaspire_container_utf8_string_release(character);
+    character = 0;
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1263,6 +1331,43 @@ TEST octaspire_container_utf8_string_find_char_c_from_string_a123y56q89q_using_i
 
     octaspire_container_utf8_string_release(character);
     character = 0;
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_find_string_Xcat_from_string_cat_dog_cat_zebra_car_kitten_cat_using_index_minus_3_and_length_of_3_test(void)
+{
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
+            "cat dog cat zebra car kitten cat",
+            octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *lookFor =
+        octaspire_container_utf8_string_new("Xcat",octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str && lookFor);
+
+    octaspire_container_vector_t *indices = octaspire_container_utf8_string_find_string(
+        str,
+        lookFor,
+        -3,
+        3);
+
+    ASSERT(indices);
+
+    ASSERT_EQ(3, octaspire_container_vector_get_length(indices));
+
+    ASSERT_EQ(0,   *(size_t*)octaspire_container_vector_get_element_at(indices, 0));
+    ASSERT_EQ(8,   *(size_t*)octaspire_container_vector_get_element_at(indices, 1));
+    ASSERT_EQ(29,  *(size_t*)octaspire_container_vector_get_element_at(indices, 2));
+
+    octaspire_container_vector_release(indices);
+    indices = 0;
+
+    octaspire_container_utf8_string_release(lookFor);
+    lookFor = 0;
 
     octaspire_container_utf8_string_release(str);
     str = 0;
@@ -1594,6 +1699,62 @@ TEST octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_
     PASS();
 }
 
+TEST octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_starting_from_index_minus_three_test(void)
+{
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
+            "123abc456abc",
+            octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *substring =
+        octaspire_container_utf8_string_new("abc",octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str && substring);
+
+    ASSERT_EQ(
+        9,
+        octaspire_container_utf8_string_find_first_substring(
+            str,
+            -3,
+            substring));
+
+    ASSERT_EQ(
+        9,
+        octaspire_container_utf8_string_find_first_substring(
+            str,
+            -4,
+            substring));
+
+    ASSERT_EQ(
+        3,
+        octaspire_container_utf8_string_find_first_substring(
+            str,
+            -9,
+            substring));
+
+    ASSERT_EQ(
+        3,
+        octaspire_container_utf8_string_find_first_substring(
+            str,
+            -12,
+            substring));
+
+    // Not found
+    ASSERT_EQ(
+        -1,
+        octaspire_container_utf8_string_find_first_substring(
+            str,
+            -2,
+            substring));
+
+    octaspire_container_utf8_string_release(substring);
+    substring = 0;
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
 TEST octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_starting_from_index_4_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
@@ -1665,6 +1826,21 @@ TEST octaspire_container_utf8_string_remove_character_at_test(void)
     ASSERT(octaspire_container_utf8_string_remove_character_at(str, 7));
     ASSERT_STR_EQ("2345678", octaspire_container_utf8_string_get_c_string(str));
 
+    ASSERT(octaspire_container_utf8_string_remove_character_at(str, -1));
+    ASSERT_STR_EQ("234567", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_remove_character_at(str, -1));
+    ASSERT_STR_EQ("23456", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_remove_character_at(str, -5));
+    ASSERT_STR_EQ("3456", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_remove_character_at(str, -4));
+    ASSERT_STR_EQ("456", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_remove_character_at(str, -2));
+    ASSERT_STR_EQ("46", octaspire_container_utf8_string_get_c_string(str));
+
     octaspire_container_utf8_string_release(str);
     str = 0;
 
@@ -1698,8 +1874,8 @@ TEST octaspire_container_utf8_string_remove_character_at_called_on_string_with_t
 TEST octaspire_container_utf8_string_remove_characters_at_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
-            "0123456789",
-            octaspireContainerUtf8StringTestAllocator);
+        "0123456789",
+        octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
 
@@ -1713,6 +1889,36 @@ TEST octaspire_container_utf8_string_remove_characters_at_test(void)
     ASSERT_STR_EQ("6", octaspire_container_utf8_string_get_c_string(str));
 
     ASSERT_EQ(1, octaspire_container_utf8_string_remove_characters_at(str, 0, 1));
+    ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    // Using negative indices
+    str = octaspire_container_utf8_string_new(
+        "0123456789",
+        octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str);
+
+    // Failures
+    ASSERT_EQ(0, octaspire_container_utf8_string_remove_characters_at(str, -11, 3));
+    ASSERT_STR_EQ("0123456789", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT_EQ(0, octaspire_container_utf8_string_remove_characters_at(str, -12, 3));
+    ASSERT_STR_EQ("0123456789", octaspire_container_utf8_string_get_c_string(str));
+
+    // Success
+    ASSERT_EQ(3, octaspire_container_utf8_string_remove_characters_at(str, -3, 3));
+    ASSERT_STR_EQ("0123456", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT_EQ(3, octaspire_container_utf8_string_remove_characters_at(str, -5, 3));
+    ASSERT_STR_EQ("0156", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT_EQ(3, octaspire_container_utf8_string_remove_characters_at(str, -4, 3));
+    ASSERT_STR_EQ("6", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT_EQ(1, octaspire_container_utf8_string_remove_characters_at(str, -1, 1));
     ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
 
     octaspire_container_utf8_string_release(str);
@@ -2011,6 +2217,39 @@ TEST octaspire_container_utf8_string_overwrite_with_string_at_second_test(void)
     PASS();
 }
 
+TEST octaspire_container_utf8_string_overwrite_with_string_at_called_with_negative_index_test(void)
+{
+    octaspire_container_utf8_string_t *strTarget = octaspire_container_utf8_string_new(
+            "abc",
+            octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *strAddition =
+        octaspire_container_utf8_string_new(
+            "ö",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(strTarget && strAddition);
+
+    ASSERT(octaspire_container_utf8_string_overwrite_with_string_at(
+            strTarget,
+            strAddition,
+            -2));
+
+    ASSERT_EQ(3, octaspire_container_utf8_string_get_length_in_ucs_characters(strTarget));
+    ASSERT_EQ(4, octaspire_container_utf8_string_get_length_in_octets(strTarget));
+    ASSERT_STR_EQ(
+        "aöc",
+        octaspire_container_utf8_string_get_c_string(strTarget));
+
+    octaspire_container_utf8_string_release(strAddition);
+    strAddition = 0;
+
+    octaspire_container_utf8_string_release(strTarget);
+    strTarget = 0;
+
+    PASS();
+}
+
 TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
@@ -2262,10 +2501,12 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_c_strings_end_always_in_null_byte_test);
     RUN_TEST(octaspire_container_utf8_string_new_format_numbers_into_vector_test);
     RUN_TEST(octaspire_container_utf8_string_new_format_number_test);
+    RUN_TEST(octaspire_container_utf8_string_find_char_a_from_string_a123a56a89a_using_negative_indice_test);
     RUN_TEST(octaspire_container_utf8_string_find_char_a_from_string_a123a56a89a_using_index_zero_test);
     RUN_TEST(octaspire_container_utf8_string_find_char_q_from_string_a123a56q89q_using_index_one_test);
     RUN_TEST(octaspire_container_utf8_string_find_char_c_from_string_a123c56q89q_using_index_two_test);
     RUN_TEST(octaspire_container_utf8_string_find_char_c_from_string_a123y56q89q_using_index_two_failure_test);
+    RUN_TEST(octaspire_container_utf8_string_find_string_Xcat_from_string_cat_dog_cat_zebra_car_kitten_cat_using_index_minus_3_and_length_of_3_test);
     RUN_TEST(octaspire_container_utf8_string_find_string_cat_from_string_cat_dog_cat_zebra_car_kitten_cat_using_index_zero_and_length_of_3_test);
     RUN_TEST(octaspire_container_utf8_string_find_string_cat_from_string_cat_dog_cat_zebra_car_kitten_cat_using_index_one_and_length_of_3_test);
     RUN_TEST(octaspire_container_utf8_string_find_string_dog_from_string_dog_cat_zebra_using_index_zero_and_length_of_three_test);
@@ -2276,6 +2517,7 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_private_check_substring_match_at_the_beginning_test);
     RUN_TEST(octaspire_container_utf8_string_private_check_substring_match_at_the_end_test);
     RUN_TEST(octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_starting_from_index_0_test);
+    RUN_TEST(octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_starting_from_index_minus_three_test);
     RUN_TEST(octaspire_container_utf8_string_find_first_substring_abc_from_123abc456abc_starting_from_index_4_test);
     RUN_TEST(octaspire_container_utf8_string_find_first_substring_abcd_from_123abc456abc_starting_from_index_0_failure_test);
     RUN_TEST(octaspire_container_utf8_string_remove_character_at_test);
@@ -2292,6 +2534,7 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
 
     RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_first_test);
     RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_second_test);
+    RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_called_with_negative_index_test);
 
     RUN_TEST(octaspire_container_utf8_string_pop_back_ucs_character_test);
 

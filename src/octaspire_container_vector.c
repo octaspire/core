@@ -280,16 +280,53 @@ bool octaspire_container_vector_is_empty(
     return (self->numElements == 0);
 }
 
-bool octaspire_container_vector_remove_element_at(
-    octaspire_container_vector_t * const self,
-    size_t const index)
+typedef struct octaspire_container_vector_private_index_t
 {
-    if (octaspire_container_vector_is_empty(self))
+    size_t index;
+    bool   isValid;
+    char   padding[7];
+
+} octaspire_container_vector_private_index_t;
+
+static octaspire_container_vector_private_index_t octaspire_container_vector_private_is_index_valid(
+    octaspire_container_vector_t const * const self,
+    ptrdiff_t const possiblyNegativeIndex)
+{
+    octaspire_container_vector_private_index_t result = {.isValid=false, .index=0};
+
+    if (possiblyNegativeIndex < 0)
     {
-        return false;
+        ptrdiff_t tmpIndex =
+            (ptrdiff_t)octaspire_container_vector_get_length(self) + possiblyNegativeIndex;
+
+        if (tmpIndex >= 0 && (size_t)tmpIndex < octaspire_container_vector_get_length(self))
+        {
+            result.index   = (size_t)tmpIndex;
+            result.isValid = true;
+
+            return result;
+        }
     }
 
-    if (index >= octaspire_container_vector_get_length(self))
+    if ((size_t)possiblyNegativeIndex < octaspire_container_vector_get_length(self))
+    {
+        result.index   = (size_t)possiblyNegativeIndex;
+        result.isValid = true;
+
+        return result;
+    }
+
+    return result;
+}
+
+bool octaspire_container_vector_remove_element_at(
+    octaspire_container_vector_t * const self,
+    ptrdiff_t const possiblyNegativeIndex)
+{
+    octaspire_container_vector_private_index_t const realIndex =
+        octaspire_container_vector_private_is_index_valid(self, possiblyNegativeIndex);
+
+    if (!realIndex.isValid)
     {
         return false;
     }
@@ -298,19 +335,19 @@ bool octaspire_container_vector_remove_element_at(
     {
         if (self->elementIsPointer)
         {
-            self->elementReleaseCallback(*(void**)octaspire_container_vector_private_index_to_pointer(self, index));
+            self->elementReleaseCallback(*(void**)octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
         }
         else
         {
-            self->elementReleaseCallback(octaspire_container_vector_private_index_to_pointer(self, index));
+            self->elementReleaseCallback(octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
         }
     }
 
-    if ((index + 1) != self->numElements)
+    if ((realIndex.index + 1) != self->numElements)
     {
-        size_t const numOctetsToMove = (self->numElements - index - 1) * self->elementSize;
-        void *moveTarget = octaspire_container_vector_private_index_to_pointer(self, index);
-        void *moveSource = octaspire_container_vector_private_index_to_pointer(self, index + 1);
+        size_t const numOctetsToMove = (self->numElements - realIndex.index - 1) * self->elementSize;
+        void *moveTarget = octaspire_container_vector_private_index_to_pointer(self, realIndex.index);
+        void *moveSource = octaspire_container_vector_private_index_to_pointer(self, realIndex.index + 1);
 
         if (moveTarget != memmove(moveTarget, moveSource, numOctetsToMove))
         {
@@ -325,14 +362,17 @@ bool octaspire_container_vector_remove_element_at(
 
 void *octaspire_container_vector_get_element_at(
     octaspire_container_vector_t * const self,
-    size_t const index)
+    ptrdiff_t const possiblyNegativeIndex)
 {
-    if (index >= octaspire_container_vector_get_length(self))
+    octaspire_container_vector_private_index_t const realIndex =
+        octaspire_container_vector_private_is_index_valid(self, possiblyNegativeIndex);
+
+    if (!realIndex.isValid)
     {
         return 0;
     }
 
-    void *result = octaspire_container_vector_private_index_to_pointer(self, index);
+    void *result = octaspire_container_vector_private_index_to_pointer(self, realIndex.index);
 
     if (self->elementIsPointer)
     {
@@ -344,14 +384,19 @@ void *octaspire_container_vector_get_element_at(
 
 void const *octaspire_container_vector_get_element_at_const(
     octaspire_container_vector_t const * const self,
-    size_t const index)
+    ptrdiff_t const possiblyNegativeIndex)
 {
-    if (index >= octaspire_container_vector_get_length(self))
+    octaspire_container_vector_private_index_t const realIndex =
+        octaspire_container_vector_private_is_index_valid(
+            self,
+            possiblyNegativeIndex);
+
+    if (!realIndex.isValid)
     {
         return 0;
     }
 
-    void const * const result = octaspire_container_vector_private_index_to_pointer_const(self, index);
+    void const * const result = octaspire_container_vector_private_index_to_pointer_const(self, realIndex.index);
 
     if (self->elementIsPointer)
     {
@@ -370,37 +415,19 @@ size_t octaspire_container_vector_get_element_size_in_octets(
 bool octaspire_container_vector_insert_element_before_the_element_at_index(
     octaspire_container_vector_t *self,
     void const *element,
-    ptrdiff_t const index)
+    ptrdiff_t const possiblyNegativeIndex)
 {
-    if (octaspire_container_vector_is_empty(self))
+    octaspire_container_vector_private_index_t const realIndex =
+        octaspire_container_vector_private_is_index_valid(
+            self,
+            possiblyNegativeIndex);
+
+    if (!realIndex.isValid)
     {
         return false;
     }
 
-    size_t realIndexToUse = 0;
-
-    if (index < 0)
-    {
-        ptrdiff_t const tmpIdx = (ptrdiff_t)octaspire_container_vector_get_length(self) + index;
-
-        if (tmpIdx < 0)
-        {
-            abort();
-        }
-
-        realIndexToUse = (size_t)tmpIdx;
-    }
-    else
-    {
-        if ((size_t)index >= octaspire_container_vector_get_length(self))
-        {
-            return false;
-        }
-
-        realIndexToUse = (size_t)index;
-    }
-
-    assert(realIndexToUse < octaspire_container_vector_get_length(self));
+    assert(realIndex.index < octaspire_container_vector_get_length(self));
 
     // Make room for the new element
     if (self->numElements >= self->numAllocated)
@@ -411,9 +438,9 @@ bool octaspire_container_vector_insert_element_before_the_element_at_index(
         }
     }
 
-    size_t const numOctetsToMove = (self->numElements - realIndexToUse) * self->elementSize;
-    void *moveTarget = octaspire_container_vector_private_index_to_pointer(self, realIndexToUse + 1);
-    void *moveSource = octaspire_container_vector_private_index_to_pointer(self, realIndexToUse);
+    size_t const numOctetsToMove = (self->numElements - realIndex.index) * self->elementSize;
+    void *moveTarget = octaspire_container_vector_private_index_to_pointer(self, realIndex.index + 1);
+    void *moveSource = octaspire_container_vector_private_index_to_pointer(self, realIndex.index);
 
     if (moveTarget != memmove(moveTarget, moveSource, numOctetsToMove))
     {
@@ -421,7 +448,7 @@ bool octaspire_container_vector_insert_element_before_the_element_at_index(
     }
 
     // Copy the new element into the vector
-    void *copyTarget = octaspire_container_vector_private_index_to_pointer(self, realIndexToUse);
+    void *copyTarget = octaspire_container_vector_private_index_to_pointer(self, realIndex.index);
 
     if (copyTarget != memcpy(copyTarget, element, self->elementSize))
     {
@@ -436,32 +463,19 @@ bool octaspire_container_vector_insert_element_before_the_element_at_index(
 bool octaspire_container_vector_replace_element_at_index_or_push_back(
     octaspire_container_vector_t *self,
     void const *element,
-    ptrdiff_t const index)
+    ptrdiff_t const possiblyNegativeIndex)
 {
-    size_t realIndexToUse = 0;
+    octaspire_container_vector_private_index_t const realIndex =
+        octaspire_container_vector_private_is_index_valid(
+            self,
+            possiblyNegativeIndex);
 
-    if (index < 0)
-    {
-        ptrdiff_t const tmpIdx = (ptrdiff_t)octaspire_container_vector_get_length(self) + index;
-
-        if (tmpIdx < 0)
-        {
-            abort();
-        }
-
-        realIndexToUse = (size_t)tmpIdx;
-    }
-    else
-    {
-        realIndexToUse = (size_t)index;
-    }
-
-    if (realIndexToUse >= octaspire_container_vector_get_length(self))
+    if (!realIndex.isValid)
     {
         return octaspire_container_vector_push_back_element(self, element);
     }
 
-    return octaspire_container_vector_insert_element_at(self, element, realIndexToUse);
+    return octaspire_container_vector_insert_element_at(self, element, realIndex.index);
 }
 
 bool octaspire_container_vector_insert_element_at(
@@ -509,10 +523,15 @@ bool octaspire_container_vector_insert_element_at(
 
 bool octaspire_container_vector_replace_element_at(
     octaspire_container_vector_t *self,
-    size_t const index,
+    ptrdiff_t const possiblyNegativeIndex,
     void const *element)
 {
-    if (index >= octaspire_container_vector_get_length(self))
+    octaspire_container_vector_private_index_t const realIndex =
+        octaspire_container_vector_private_is_index_valid(
+            self,
+            possiblyNegativeIndex);
+
+    if (!realIndex.isValid)
     {
         return false;
     }
@@ -521,15 +540,15 @@ bool octaspire_container_vector_replace_element_at(
     {
         if (self->elementIsPointer)
         {
-            self->elementReleaseCallback(*(void**)octaspire_container_vector_private_index_to_pointer(self, index));
+            self->elementReleaseCallback(*(void**)octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
         }
         else
         {
-            self->elementReleaseCallback(octaspire_container_vector_private_index_to_pointer(self, index));
+            self->elementReleaseCallback(octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
         }
     }
 
-    return octaspire_container_vector_insert_element_at(self, element, index);
+    return octaspire_container_vector_insert_element_at(self, element, realIndex.index);
 }
 
 bool octaspire_container_vector_push_front_element(
@@ -581,7 +600,7 @@ void octaspire_container_vector_for_each(
 
     for (size_t i = 0; i < octaspire_container_vector_get_length(self); ++i)
     {
-        callback(octaspire_container_vector_get_element_at(self, i));
+        callback(octaspire_container_vector_get_element_at(self, (ptrdiff_t)i));
     }
 }
 
@@ -608,7 +627,7 @@ void *octaspire_container_vector_peek_back_element(
 
     return octaspire_container_vector_get_element_at(
         self,
-        octaspire_container_vector_get_length(self) - 1);
+        (ptrdiff_t)(octaspire_container_vector_get_length(self) - 1));
 }
 
 void const * octaspire_container_vector_peek_back_element_const(
@@ -621,7 +640,7 @@ void const * octaspire_container_vector_peek_back_element_const(
 
     return octaspire_container_vector_get_element_at_const(
         self,
-        octaspire_container_vector_get_length(self) - 1);
+        (ptrdiff_t)(octaspire_container_vector_get_length(self) - 1));
 }
 
 bool octaspire_container_vector_pop_front_element(
@@ -703,18 +722,8 @@ bool octaspire_container_vector_is_valid_index(
     octaspire_container_vector_t const * const self,
     ptrdiff_t const index)
 {
-    // TODO Should indexing with negative indices from back be supported?
-    if (index < 0)
-    {
-        return false;
-    }
+    octaspire_container_vector_private_index_t result =
+        octaspire_container_vector_private_is_index_valid(self, index);
 
-    size_t const len = octaspire_container_vector_get_length(self);
-
-    if (!len)
-    {
-        return false;
-    }
-
-    return ((size_t)index < len);
+    return result.isValid;
 }

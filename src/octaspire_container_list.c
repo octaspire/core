@@ -487,59 +487,120 @@ bool octaspire_container_list_is_empty(
 
 octaspire_container_list_node_t *octaspire_container_list_get_at(
     octaspire_container_list_t * const self,
-    size_t const index)
+    ptrdiff_t const possiblyNegativeIndex)
 {
     octaspire_helpers_verify_not_null(self);
 
-    size_t counter = 0;
-    octaspire_container_list_node_t * node = octaspire_container_list_get_front(self);
-
-    while (true)
+    if (possiblyNegativeIndex < 0)
     {
-        if (counter == index)
+        size_t const index = (size_t)(-(possiblyNegativeIndex + 1));
+        size_t counter = 0;
+        octaspire_container_list_node_t * node = octaspire_container_list_get_back(self);
+
+        while (true)
         {
-            return node;
+            if (counter == index)
+            {
+                return node;
+            }
+
+            node = octaspire_container_list_node_get_previous(node);
+
+            if (!node)
+            {
+                break;
+            }
+
+            ++counter;
         }
 
-        node = octaspire_container_list_node_get_next(node);
-
-        if (!node)
-        {
-            break;
-        }
-
-        ++counter;
+        return 0;
     }
+    else
+    {
+        size_t const index = (size_t)possiblyNegativeIndex;
+        size_t counter = 0;
+        octaspire_container_list_node_t * node = octaspire_container_list_get_front(self);
 
-    return 0;
+        while (true)
+        {
+            if (counter == index)
+            {
+                return node;
+            }
+
+            node = octaspire_container_list_node_get_next(node);
+
+            if (!node)
+            {
+                break;
+            }
+
+            ++counter;
+        }
+
+        return 0;
+    }
 }
 
 octaspire_container_list_node_t const *octaspire_container_list_get_at_const(
     octaspire_container_list_t const * const self,
-    size_t const index)
+    ptrdiff_t const possiblyNegativeIndex)
 {
     octaspire_helpers_verify_not_null(self);
 
-    size_t counter = 0;
-    octaspire_container_list_node_t const * node = octaspire_container_list_get_front_const(self);
-
-    while (true)
+    if (possiblyNegativeIndex < 0)
     {
-        if (counter == index)
+        size_t const index = (size_t)(-(possiblyNegativeIndex + 1));
+        size_t counter = 0;
+
+        octaspire_container_list_node_t const * node =
+            octaspire_container_list_get_back_const(self);
+
+        while (true)
         {
-            return node;
+            if (counter == index)
+            {
+                return node;
+            }
+
+            node = octaspire_container_list_node_get_previous_const(node);
+
+            if (!node)
+            {
+                break;
+            }
+
+            ++counter;
         }
 
-        node = octaspire_container_list_node_get_next_const(node);
-
-        if (!node)
-        {
-            break;
-        }
-
-        ++counter;
+        return 0;
     }
+    else
+    {
+        size_t const index = (size_t)possiblyNegativeIndex;
+        size_t counter = 0;
+        octaspire_container_list_node_t const * node =
+            octaspire_container_list_get_front_const(self);
 
-    return 0;
+        while (true)
+        {
+            if (counter == index)
+            {
+                return node;
+            }
+
+            node = octaspire_container_list_node_get_next_const(node);
+
+            if (!node)
+            {
+                break;
+            }
+
+            ++counter;
+        }
+
+        return 0;
+    }
 }
 

@@ -307,7 +307,7 @@ cat >> $FILE << EnDoFmEsSaGe
 
 void octaspire_core_amalgamated_write_test_file(
     char const * const name,
-    char const * const buffer,
+    unsigned char const * const buffer,
     size_t const bufferSize)
 {
     FILE *stream = fopen(name, "wb");
@@ -419,7 +419,7 @@ int main(int argc, char **argv)
 
 
 
-            char const octaspire_helpers_path_to_buffer_test[] = {
+            unsigned char const octaspire_helpers_path_to_buffer_test[] = {
                 0xc2, 0xa9, 0xe2, 0x89, 0xa0, 0xf0, 0x90, 0x80, 0x80
             };
             size_t const octaspire_helpers_path_to_buffer_test_len = 9;
@@ -430,7 +430,7 @@ int main(int argc, char **argv)
                 octaspire_helpers_path_to_buffer_test_len);
 
 
-            char const octaspire_input_new_from_path_test[] = {
+            unsigned char const octaspire_input_new_from_path_test[] = {
               0x61, 0x62, 0x63, 0xc2, 0xa9, 0xe2, 0x89, 0xa0, 0xf0, 0x90, 0x80, 0x80
             };
             size_t const octaspire_input_new_from_path_test_len = 12;
@@ -442,7 +442,7 @@ int main(int argc, char **argv)
 
 
 
-            char const octaspire_stdio_fread_test[] = {
+            unsigned char const octaspire_stdio_fread_test[] = {
               0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x71, 0x77,
               0x65, 0x72, 0x74, 0x79, 0x75, 0x69, 0x6f, 0x70, 0x0a
             };

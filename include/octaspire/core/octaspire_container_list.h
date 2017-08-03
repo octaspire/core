@@ -122,11 +122,11 @@ bool octaspire_container_list_is_empty(
 
 octaspire_container_list_node_t *octaspire_container_list_get_at(
     octaspire_container_list_t * const self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 octaspire_container_list_node_t const *octaspire_container_list_get_at_const(
     octaspire_container_list_t const * const self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 
 #ifdef __cplusplus

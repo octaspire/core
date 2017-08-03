@@ -69,11 +69,11 @@ bool octaspire_container_queue_is_empty(
 
 void *octaspire_container_queue_get_at(
     octaspire_container_queue_t * const self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 void const *octaspire_container_queue_get_at_const(
     octaspire_container_queue_t const * const self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 size_t octaspire_container_queue_get_max_length(
     octaspire_container_queue_t const * const self);

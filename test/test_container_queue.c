@@ -108,7 +108,9 @@ TEST octaspire_container_queue_new_with_max_length_of_56_with_size_t_elements_te
         for (size_t j = 0; j < octaspire_container_queue_get_length(queue); ++j)
         {
             size_t const storedNum =
-                *(size_t const * const)octaspire_container_queue_get_at_const(queue, j);
+                *(size_t const * const)octaspire_container_queue_get_at_const(
+                    queue,
+                    (ptrdiff_t)j);
 
             size_t const expectedNum = firstExpectedNumber + j;
 
@@ -160,7 +162,9 @@ TEST octaspire_container_queue_new_with_max_length_of_10_with_ostring_ptr_elemen
         for (size_t j = 0; j < octaspire_container_queue_get_length(queue); ++j)
         {
             octaspire_container_utf8_string_t const * const storedStr =
-                octaspire_container_queue_get_at_const(queue, j);
+                octaspire_container_queue_get_at_const(
+                    queue,
+                    (ptrdiff_t)j);
 
             octaspire_container_utf8_string_t * expectedStr =
                 octaspire_container_utf8_string_new_format(
@@ -314,7 +318,9 @@ TEST octaspire_container_queue_push_test(void)
         for (size_t j = 0; j < octaspire_container_queue_get_length(queue); ++j)
         {
             size_t const * const jth =
-                (size_t const * const)octaspire_container_queue_get_at(queue, j);
+                (size_t const * const)octaspire_container_queue_get_at(
+                    queue,
+                    (ptrdiff_t)j);
 
             ASSERT_EQ(j, *jth);
         }
@@ -463,11 +469,11 @@ TEST octaspire_container_queue_get_at_failure_on_too_large_index_test(void)
         size_t j;
         for (j = 0; j < i; ++j)
         {
-            ASSERT(octaspire_container_queue_get_at(queue, j));
+            ASSERT(octaspire_container_queue_get_at(queue, (ptrdiff_t)j));
         }
 
         ++j;
-        ASSERT_FALSE(octaspire_container_queue_get_at(queue, j));
+        ASSERT_FALSE(octaspire_container_queue_get_at(queue, (ptrdiff_t)j));
     }
 
     octaspire_container_queue_release(queue);
@@ -494,10 +500,28 @@ TEST octaspire_container_queue_get_at_test(void)
 
         for (size_t j = 0; j < i; ++j)
         {
-            size_t const * const ptr = octaspire_container_queue_get_at(queue, j);
+            size_t const * const ptr =
+                octaspire_container_queue_get_at(queue, (ptrdiff_t)j);
+
             ASSERT(ptr);
             ASSERT_EQ(j, *ptr);
         }
+
+        // Negative index
+        size_t * const ptr =
+            octaspire_container_queue_get_at(queue, -1);
+
+        ASSERT(ptr);
+        ASSERT_EQ(i, *ptr);
+
+        // Failure test
+        ASSERT_FALSE(octaspire_container_queue_get_at(
+            queue,
+            -((ptrdiff_t)(i + 2))));
+
+        ASSERT_FALSE(octaspire_container_queue_get_at(
+            queue,
+            (ptrdiff_t)(i + 1)));
     }
 
     octaspire_container_queue_release(queue);
@@ -527,11 +551,11 @@ TEST octaspire_container_queue_get_at_const_failure_on_too_large_index_test(void
         size_t j;
         for (j = 0; j < i; ++j)
         {
-            ASSERT(octaspire_container_queue_get_at_const(queue, j));
+            ASSERT(octaspire_container_queue_get_at_const(queue, (ptrdiff_t)j));
         }
 
         ++j;
-        ASSERT_FALSE(octaspire_container_queue_get_at_const(queue, j));
+        ASSERT_FALSE(octaspire_container_queue_get_at_const(queue, (ptrdiff_t)j));
     }
 
     octaspire_container_queue_release(queue);
@@ -558,10 +582,29 @@ TEST octaspire_container_queue_get_at_const_test(void)
 
         for (size_t j = 0; j < i; ++j)
         {
-            size_t const * const ptr = octaspire_container_queue_get_at_const(queue, j);
+            size_t const * const ptr =
+                octaspire_container_queue_get_at_const(
+                    queue,
+                    (ptrdiff_t)j);
             ASSERT(ptr);
             ASSERT_EQ(j, *ptr);
         }
+
+        // Negative index
+        size_t const * const ptr =
+            octaspire_container_queue_get_at_const(queue, -1);
+
+        ASSERT(ptr);
+        ASSERT_EQ(i, *ptr);
+
+        // Failure test
+        ASSERT_FALSE(octaspire_container_queue_get_at_const(
+            queue,
+            -((ptrdiff_t)(i + 2))));
+
+        ASSERT_FALSE(octaspire_container_queue_get_at_const(
+            queue,
+            (ptrdiff_t)(i + 1)));
     }
 
     octaspire_container_queue_release(queue);

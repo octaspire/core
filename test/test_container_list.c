@@ -468,7 +468,7 @@ TEST octaspire_container_list_remove_middle_test(void)
 
     for (size_t i = 0; i < (numElements - 1); ++i)
     {
-        node = octaspire_container_list_get_at(list, i);
+        node = octaspire_container_list_get_at(list, (ptrdiff_t)i);
 
         ASSERT(node);
 
@@ -515,7 +515,7 @@ TEST octaspire_container_list_remove_first_test(void)
 
     for (size_t i = 0; i < (numElements - 1); ++i)
     {
-        node = octaspire_container_list_get_at(list, i);
+        node = octaspire_container_list_get_at(list, (ptrdiff_t)i);
 
         ASSERT(node);
 
@@ -559,7 +559,7 @@ TEST octaspire_container_list_remove_last_test(void)
 
     for (size_t i = 0; i < (numElements - 1); ++i)
     {
-        node = octaspire_container_list_get_at(list, i);
+        node = octaspire_container_list_get_at(list, (ptrdiff_t)i);
 
         ASSERT(node);
 
@@ -653,15 +653,32 @@ TEST octaspire_container_list_get_at_test(void)
         ASSERT(octaspire_container_list_push_back(list, &i));
     }
 
+    // Positive indices
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_list_node_t const * const node =
-            octaspire_container_list_get_at(list, i);
+            octaspire_container_list_get_at(list, (ptrdiff_t)i);
 
         ASSERT_EQ(
             i,
             *((size_t const * const)octaspire_container_list_node_get_element_const(node)));
     }
+
+    // Negative indices
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        ptrdiff_t tmpIndex = -1 - (ptrdiff_t)i;
+        octaspire_container_list_node_t const * const node =
+            octaspire_container_list_get_at(list, tmpIndex);
+
+        ASSERT_EQ(
+            numElements - 1 - i,
+            *((size_t const * const)octaspire_container_list_node_get_element_const(node)));
+    }
+
+    // Test failure
+    ASSERT_FALSE(octaspire_container_list_get_at(list, numElements + 1));
+    ASSERT_FALSE(octaspire_container_list_get_at(list, -((ptrdiff_t)(numElements + 2))));
 
     octaspire_container_list_release(list);
     list = 0;
@@ -689,7 +706,7 @@ TEST octaspire_container_list_get_at_const_test(void)
     for (size_t i = 0; i < numElements; ++i)
     {
         octaspire_container_list_node_t const * const node =
-            octaspire_container_list_get_at_const(list, i);
+            octaspire_container_list_get_at_const(list, (ptrdiff_t)i);
 
         ASSERT_EQ(
             i,

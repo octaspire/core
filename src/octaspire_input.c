@@ -130,7 +130,9 @@ uint32_t octaspire_input_peek_next_ucs_character(octaspire_input_t *self)
         return 0;
     }
 
-    return octaspire_container_utf8_string_get_ucs_character_at_index(self->text, self->index);
+    return octaspire_container_utf8_string_get_ucs_character_at_index(
+        self->text,
+        (ptrdiff_t)(self->index));
 }
 
 uint32_t octaspire_input_peek_next_next_ucs_character(octaspire_input_t *self)
@@ -140,7 +142,9 @@ uint32_t octaspire_input_peek_next_next_ucs_character(octaspire_input_t *self)
         return 0;
     }
 
-    return octaspire_container_utf8_string_get_ucs_character_at_index(self->text, self->index + 1);
+    return octaspire_container_utf8_string_get_ucs_character_at_index(
+        self->text,
+        (ptrdiff_t)(self->index + 1));
 }
 
 bool octaspire_input_pop_next_ucs_character(octaspire_input_t *self)
@@ -151,7 +155,9 @@ bool octaspire_input_pop_next_ucs_character(octaspire_input_t *self)
     }
 
     uint32_t const result =
-        octaspire_container_utf8_string_get_ucs_character_at_index(self->text, self->index);
+        octaspire_container_utf8_string_get_ucs_character_at_index(
+            self->text,
+            (ptrdiff_t)(self->index));
 
     ++(self->index);
 

@@ -66,15 +66,15 @@ bool octaspire_container_vector_is_empty(
 
 bool octaspire_container_vector_remove_element_at(
     octaspire_container_vector_t * const self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 void *octaspire_container_vector_get_element_at(
     octaspire_container_vector_t * const self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 void const *octaspire_container_vector_get_element_at_const(
     octaspire_container_vector_t const * const self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 size_t octaspire_container_vector_get_element_size_in_octets(
     octaspire_container_vector_t const * const self);
@@ -82,12 +82,12 @@ size_t octaspire_container_vector_get_element_size_in_octets(
 bool octaspire_container_vector_insert_element_before_the_element_at_index(
     octaspire_container_vector_t *self,
     void const *element,
-    ptrdiff_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 bool octaspire_container_vector_replace_element_at_index_or_push_back(
     octaspire_container_vector_t *self,
     void const *element,
-    ptrdiff_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 bool octaspire_container_vector_insert_element_at(
     octaspire_container_vector_t * const self,
@@ -96,7 +96,7 @@ bool octaspire_container_vector_insert_element_at(
 
 bool octaspire_container_vector_replace_element_at(
     octaspire_container_vector_t *self,
-    size_t const index,
+    ptrdiff_t const possiblyNegativeIndex,
     void const *element);
 
 bool octaspire_container_vector_push_front_element(

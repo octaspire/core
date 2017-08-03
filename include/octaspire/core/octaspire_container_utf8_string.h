@@ -78,7 +78,8 @@ size_t octaspire_container_utf8_string_get_length_in_octets(
     octaspire_container_utf8_string_t const * const self);
 
 uint32_t octaspire_container_utf8_string_get_ucs_character_at_index(
-    octaspire_container_utf8_string_t const * const self, size_t const index);
+    octaspire_container_utf8_string_t const * const self,
+    ptrdiff_t const possiblyNegativeIndex);
 
 char const * octaspire_container_utf8_string_get_c_string(
     octaspire_container_utf8_string_t const * const self);
@@ -110,16 +111,16 @@ bool octaspire_container_utf8_string_concatenate_format(
 
 ptrdiff_t octaspire_container_utf8_string_find_first_substring(
     octaspire_container_utf8_string_t const * const self,
-    size_t const startFromIndex,
+    ptrdiff_t const startFromIndexPossiblyNegative,
     octaspire_container_utf8_string_t const * const substring);
 
 bool octaspire_container_utf8_string_remove_character_at(
     octaspire_container_utf8_string_t * const self,
-    size_t const index);
+    ptrdiff_t const possiblyNegativeIndex);
 
 size_t octaspire_container_utf8_string_remove_characters_at(
     octaspire_container_utf8_string_t * const self,
-    size_t const startFromIndex,
+    ptrdiff_t const startFromIndexPossiblyNegative,
     size_t const numCharacters);
 
 size_t octaspire_container_utf8_string_remove_all_substrings(
@@ -166,18 +167,18 @@ bool octaspire_container_utf8_string_pop_back_ucs_character(
 bool octaspire_container_utf8_string_insert_string_to(
     octaspire_container_utf8_string_t * const self,
     octaspire_container_utf8_string_t const * const str,
-    ptrdiff_t const indexToPutFirstCharacter);
+    ptrdiff_t const indexToPutFirstCharacterPossiblyNegative);
 
 bool octaspire_container_utf8_string_overwrite_with_string_at(
     octaspire_container_utf8_string_t * const self,
     octaspire_container_utf8_string_t const * const str,
-    ptrdiff_t const indexToPutFirstCharacter);
+    ptrdiff_t const indexToPutFirstCharacterPossiblyNegative);
 
 octaspire_container_vector_t *octaspire_container_utf8_string_split(
     octaspire_container_utf8_string_t *self,
     char const * const delimiter);
 
-// TODO make API yhtenäinen, nyt this differs from find_char below
+// TODO make API consistent, now this differs from find_char below
 bool octaspire_container_utf8_string_contains_char(
     octaspire_container_utf8_string_t const * const self,
     uint32_t const character);
@@ -189,12 +190,12 @@ bool octaspire_container_utf8_string_contains_only_these_chars(
 octaspire_container_vector_t *octaspire_container_utf8_string_find_char(
     octaspire_container_utf8_string_t const * const self,
     octaspire_container_utf8_string_t const * const character,
-    size_t const characterIndex);
+    ptrdiff_t const characterIndexPossiblyNegative);
 
 octaspire_container_vector_t *octaspire_container_utf8_string_find_string(
     octaspire_container_utf8_string_t const * const self,
     octaspire_container_utf8_string_t const * const str,
-    size_t const strStartIndex,
+    ptrdiff_t const strStartIndexPossiblyNegative,
     size_t const strLength);
 
 #ifdef __cplusplus
