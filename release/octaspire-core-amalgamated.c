@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "57"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "58"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.57.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.58.0"
 
 
 
@@ -1401,6 +1401,9 @@ void octaspire_helpers_verify_true(bool const condition);
 void octaspire_helpers_verify_null(void const * const ptr);
 void octaspire_helpers_verify_not_null(void const * const ptr);
 
+void octaspire_helpers_verify_not_null_void_funptr_void_ptr_const(
+        void (*ptr)(void * const));
+
 float octaspire_helpers_maxf(float const a, float const b);
 float octaspire_helpers_ceilf(float const value);
 
@@ -1863,6 +1866,15 @@ void octaspire_helpers_verify_null(void const * const ptr)
 }
 
 void octaspire_helpers_verify_not_null(void const * const ptr)
+{
+    if (!ptr)
+    {
+        abort();
+    }
+}
+
+void octaspire_helpers_verify_not_null_void_funptr_void_ptr_const(
+    void (*ptr)(void * const))
 {
     if (!ptr)
     {

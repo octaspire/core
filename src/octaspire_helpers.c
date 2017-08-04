@@ -154,6 +154,15 @@ void octaspire_helpers_verify_not_null(void const * const ptr)
     }
 }
 
+void octaspire_helpers_verify_not_null_void_funptr_void_ptr_const(
+    void (*ptr)(void * const))
+{
+    if (!ptr)
+    {
+        abort();
+    }
+}
+
 float octaspire_helpers_maxf(float const a, float const b)
 {
     if (a > b)
