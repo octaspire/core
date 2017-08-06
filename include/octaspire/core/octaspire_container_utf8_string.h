@@ -77,6 +77,10 @@ size_t octaspire_container_utf8_string_get_length_in_ucs_characters(
 size_t octaspire_container_utf8_string_get_length_in_octets(
     octaspire_container_utf8_string_t const * const self);
 
+bool octaspire_container_utf8_string_is_index_valid(
+    octaspire_container_utf8_string_t const * const self,
+    ptrdiff_t const possiblyNegativeIndex);
+
 uint32_t octaspire_container_utf8_string_get_ucs_character_at_index(
     octaspire_container_utf8_string_t const * const self,
     ptrdiff_t const possiblyNegativeIndex);

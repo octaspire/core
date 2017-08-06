@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "58"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "59"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.58.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.59.0"
 
 
 
@@ -824,6 +824,10 @@ size_t octaspire_container_utf8_string_get_length_in_ucs_characters(
 
 size_t octaspire_container_utf8_string_get_length_in_octets(
     octaspire_container_utf8_string_t const * const self);
+
+bool octaspire_container_utf8_string_is_index_valid(
+    octaspire_container_utf8_string_t const * const self,
+    ptrdiff_t const possiblyNegativeIndex);
 
 uint32_t octaspire_container_utf8_string_get_ucs_character_at_index(
     octaspire_container_utf8_string_t const * const self,
@@ -4565,6 +4569,18 @@ static octaspire_container_utf8_string_private_index_t octaspire_container_utf8_
     }
 
     return result;
+}
+
+bool octaspire_container_utf8_string_is_index_valid(
+    octaspire_container_utf8_string_t const * const self,
+    ptrdiff_t const possiblyNegativeIndex)
+{
+    const octaspire_container_utf8_string_private_index_t index =
+        octaspire_container_utf8_string_private_is_index_valid(
+            self,
+            possiblyNegativeIndex);
+
+    return index.isValid;
 }
 
 uint32_t octaspire_container_utf8_string_get_ucs_character_at_index(
@@ -17299,6 +17315,44 @@ TEST octaspire_container_utf8_string_compare_with_string_abb_and_abc_test(void)
 
 TEST octaspire_container_utf8_string_compare_with_string_abc_and_abca_test(void)
 {
+    octaspire_container_utf8_string_t *str =
+        octaspire_container_utf8_string_new(
+            "",
+            octaspireContainerUtf8StringTestAllocator);
+
+    for (ptrdiff_t i = -64; i < 64; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_utf8_string_is_index_valid(str, i));
+    }
+
+    octaspire_container_utf8_string_concatenate_c_string(str, "a");
+
+    for (ptrdiff_t i = -64; i < 64; ++i)
+    {
+        ASSERT_EQ(
+            i== -1 || i == 0,
+            octaspire_container_utf8_string_is_index_valid(str, i));
+    }
+
+    octaspire_container_utf8_string_concatenate_c_string(str, "b");
+
+    for (ptrdiff_t i = -64; i < 64; ++i)
+    {
+        ASSERT_EQ(
+            i == -1 || i == -2 || i == 0 || i == 1,
+            octaspire_container_utf8_string_is_index_valid(str, i));
+    }
+
+    ASSERT(str);
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_is_index_valid_test(void)
+{
     octaspire_container_utf8_string_t *str1 =
         octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
 
@@ -17413,6 +17467,8 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_compare_with_string_abca_and_abc_test);
     RUN_TEST(octaspire_container_utf8_string_compare_with_string_abb_and_abc_test);
     RUN_TEST(octaspire_container_utf8_string_compare_with_string_abc_and_abca_test);
+
+    RUN_TEST(octaspire_container_utf8_string_is_index_valid_test);
 
     octaspire_memory_allocator_release(octaspireContainerUtf8StringTestAllocator);
     octaspireContainerUtf8StringTestAllocator = 0;

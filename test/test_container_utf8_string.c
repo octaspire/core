@@ -2432,6 +2432,44 @@ TEST octaspire_container_utf8_string_compare_with_string_abb_and_abc_test(void)
 
 TEST octaspire_container_utf8_string_compare_with_string_abc_and_abca_test(void)
 {
+    octaspire_container_utf8_string_t *str =
+        octaspire_container_utf8_string_new(
+            "",
+            octaspireContainerUtf8StringTestAllocator);
+
+    for (ptrdiff_t i = -64; i < 64; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_utf8_string_is_index_valid(str, i));
+    }
+
+    octaspire_container_utf8_string_concatenate_c_string(str, "a");
+
+    for (ptrdiff_t i = -64; i < 64; ++i)
+    {
+        ASSERT_EQ(
+            i== -1 || i == 0,
+            octaspire_container_utf8_string_is_index_valid(str, i));
+    }
+
+    octaspire_container_utf8_string_concatenate_c_string(str, "b");
+
+    for (ptrdiff_t i = -64; i < 64; ++i)
+    {
+        ASSERT_EQ(
+            i == -1 || i == -2 || i == 0 || i == 1,
+            octaspire_container_utf8_string_is_index_valid(str, i));
+    }
+
+    ASSERT(str);
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_is_index_valid_test(void)
+{
     octaspire_container_utf8_string_t *str1 =
         octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
 
@@ -2546,6 +2584,8 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_compare_with_string_abca_and_abc_test);
     RUN_TEST(octaspire_container_utf8_string_compare_with_string_abb_and_abc_test);
     RUN_TEST(octaspire_container_utf8_string_compare_with_string_abc_and_abca_test);
+
+    RUN_TEST(octaspire_container_utf8_string_is_index_valid_test);
 
     octaspire_memory_allocator_release(octaspireContainerUtf8StringTestAllocator);
     octaspireContainerUtf8StringTestAllocator = 0;

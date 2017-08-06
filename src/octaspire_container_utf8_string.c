@@ -531,6 +531,18 @@ static octaspire_container_utf8_string_private_index_t octaspire_container_utf8_
     return result;
 }
 
+bool octaspire_container_utf8_string_is_index_valid(
+    octaspire_container_utf8_string_t const * const self,
+    ptrdiff_t const possiblyNegativeIndex)
+{
+    const octaspire_container_utf8_string_private_index_t index =
+        octaspire_container_utf8_string_private_is_index_valid(
+            self,
+            possiblyNegativeIndex);
+
+    return index.isValid;
+}
+
 uint32_t octaspire_container_utf8_string_get_ucs_character_at_index(
     octaspire_container_utf8_string_t const * const self,
     ptrdiff_t const possiblyNegativeIndex)
