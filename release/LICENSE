@@ -2,7 +2,8 @@ Octaspire Core is licensed under the Apache License, Version 2.0. This license a
 to everything else, but not the external-directory. For unit testing Octaspire Core
 uses external/greatest.h that is ISC licensed. This file is not the original version,
 but contains modifications by octaspire. These modifications are also ICS licensed.
-All licenses are listed here:
+For hash calculation Octaspire Core uses jenkins_one_at_a_time function that is
+placed in the public domain. All licenses are listed here:
 
 
 ---------------------------------------------------------------------------------------
