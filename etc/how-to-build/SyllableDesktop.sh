@@ -4,10 +4,16 @@ YELLOW="$(tput setaf 3 ; tput bold)"
 GREEN="$(tput setaf 2 ; tput bold)"
 NOCOLOR="$(tput setaf 9 ; tput sgr0)"
 
+CC=gcc
+COVERAGE=""
+
 echoAndRun() { echo "$@" ; "$@" ; }
 echoToDefs() { printf "$NOCOLOR\n" ; }
 
-CC=gcc
+if [ "$#" -ge "1" ]; then CC=$1; fi
+if [ "$2" = "--coverage" ]; then COVERAGE=$2; fi
+
+
 
 printf "$YELLOW\n"
 cat << EnDoFmEsSaGe
@@ -33,6 +39,7 @@ echoToDefs
 echoAndRun $CC -O2 -std=c99 -Wall -Wextra                      \
     -DOCTASPIRE_CORE_AMALGAMATED_UNIT_TEST_IMPLEMENTATION      \
     -DGREATEST_ENABLE_ANSI_COLORS                              \
+    $COVERAGE                                                  \
 -I . octaspire-core-amalgamated.c -lm                          \
 -o octaspire-core-unit-test-runner
 
