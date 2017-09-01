@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "70"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "71"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.70.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.71.0"
 
 
 
@@ -4619,8 +4619,12 @@ char const * octaspire_container_utf8_string_get_c_string(
     octaspire_container_utf8_string_t const * const self)
 {
     octaspire_helpers_verify_true(self->octetsAreUpToDate);
-    assert(!octaspire_container_vector_is_empty(self->octets));
-    assert(*(char const*)octaspire_container_vector_peek_back_element_const(self->octets) == '\0');
+    octaspire_helpers_verify_true(!octaspire_container_vector_is_empty(self->octets));
+
+    octaspire_helpers_verify_true(
+        *(char const*)octaspire_container_vector_peek_back_element_const(self->octets) ==
+            '\0');
+
     return octaspire_container_vector_peek_front_element_const(self->octets);
 }
 

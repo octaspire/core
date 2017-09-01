@@ -564,8 +564,12 @@ char const * octaspire_container_utf8_string_get_c_string(
     octaspire_container_utf8_string_t const * const self)
 {
     octaspire_helpers_verify_true(self->octetsAreUpToDate);
-    assert(!octaspire_container_vector_is_empty(self->octets));
-    assert(*(char const*)octaspire_container_vector_peek_back_element_const(self->octets) == '\0');
+    octaspire_helpers_verify_true(!octaspire_container_vector_is_empty(self->octets));
+
+    octaspire_helpers_verify_true(
+        *(char const*)octaspire_container_vector_peek_back_element_const(self->octets) ==
+            '\0');
+
     return octaspire_container_vector_peek_front_element_const(self->octets);
 }
 
