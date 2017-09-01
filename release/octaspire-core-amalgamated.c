@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "69"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "3"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "70"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.69.3"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.70.0"
 
 
 
@@ -2782,7 +2782,14 @@ bool octaspire_container_vector_remove_element_at(
     {
         if (self->elementIsPointer)
         {
-            self->elementReleaseCallback(*(void**)octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
+            void* const * const tmpPtr =
+                octaspire_container_vector_private_index_to_pointer(
+                    self,
+                    realIndex.index);
+
+            octaspire_helpers_verify_not_null(tmpPtr);
+
+            self->elementReleaseCallback(*tmpPtr);
         }
         else
         {
@@ -2823,6 +2830,7 @@ void *octaspire_container_vector_get_element_at(
 
     if (self->elementIsPointer)
     {
+        octaspire_helpers_verify_not_null(result);
         return *(void**)result;
     }
 
@@ -2847,6 +2855,7 @@ void const *octaspire_container_vector_get_element_at_const(
 
     if (self->elementIsPointer)
     {
+        octaspire_helpers_verify_not_null(result);
         return *(void const * const *)result;
     }
 
@@ -2987,7 +2996,13 @@ bool octaspire_container_vector_replace_element_at(
     {
         if (self->elementIsPointer)
         {
-            self->elementReleaseCallback(*(void**)octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
+            void* const * const tmpPtr =
+                octaspire_container_vector_private_index_to_pointer(
+                    self,
+                    realIndex.index);
+
+            octaspire_helpers_verify_not_null(tmpPtr);
+            self->elementReleaseCallback(*tmpPtr);
         }
         else
         {
