@@ -148,6 +148,11 @@ bool octaspire_container_vector_is_valid_index(
     octaspire_container_vector_t const * const self,
     ptrdiff_t const index);
 
+bool octaspire_container_vector_swap(
+    octaspire_container_vector_t * const self,
+    ptrdiff_t const indexA,
+    ptrdiff_t const indexB);
+
 #ifdef __cplusplus
 }
 #endif

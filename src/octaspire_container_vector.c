@@ -742,3 +742,51 @@ bool octaspire_container_vector_is_valid_index(
 
     return result.isValid;
 }
+
+bool octaspire_container_vector_swap(
+    octaspire_container_vector_t * const self,
+    ptrdiff_t const indexA,
+    ptrdiff_t const indexB)
+{
+    if (!octaspire_container_vector_is_valid_index(self, indexA))
+    {
+        return false;
+    }
+
+    if (!octaspire_container_vector_is_valid_index(self, indexB))
+    {
+        return false;
+    }
+
+    void *tmpBuffer =
+        octaspire_memory_allocator_malloc(self->allocator, self->elementSize);
+
+    if (!tmpBuffer)
+    {
+        return false;
+    }
+
+    void * const elementA = octaspire_container_vector_get_element_at(self, indexA);
+    void * const elementB = octaspire_container_vector_get_element_at(self, indexB);
+
+    if (tmpBuffer != memcpy(tmpBuffer, elementA, self->elementSize))
+    {
+        abort();
+    }
+
+    if (elementA != memcpy(elementA, elementB, self->elementSize))
+    {
+        abort();
+    }
+
+    if (elementB != memcpy(elementB, tmpBuffer, self->elementSize))
+    {
+        abort();
+    }
+
+    octaspire_memory_allocator_free(self->allocator, tmpBuffer);
+    tmpBuffer = 0;
+
+    return true;
+}
+
