@@ -19,8 +19,8 @@ before_script:
 script:
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ulimit -c unlimited -S; how-to-build/linux.sh $CC; fi
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then how-to-build/macOS.sh $CC; fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then valgrind --leak-check=full --error-exitcode=1 ./octaspire-core-unit-test-runner; fi
-    - ./octaspire-core-unit-test-runner
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then valgrind --leak-check=full --error-exitcode=1 ./octaspire-core-unit-test-runner --write-test-files; fi
+    - ./octaspire-core-unit-test-runner --write-test-files
 
 # 'after_failure'-hook in modified form from:
 # jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
