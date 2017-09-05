@@ -2489,6 +2489,80 @@ TEST octaspire_container_utf8_string_is_index_valid_test(void)
     PASS();
 }
 
+TEST octaspire_container_utf8_string_set_from_c_string_test(void)
+{
+    octaspire_container_utf8_string_t *str1 = octaspire_container_utf8_string_new(
+        "",
+        octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str2 = octaspire_container_utf8_string_new(
+        "ab",
+        octaspireContainerUtf8StringTestAllocator);
+
+    octaspire_container_utf8_string_t *str3 = octaspire_container_utf8_string_new(
+        "abc",
+        octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+    ASSERT(str2);
+    ASSERT(str3);
+
+    char const * const expected = "xy";
+
+    ASSERT(octaspire_container_utf8_string_set_from_c_string(str1, expected));
+    ASSERT(octaspire_container_utf8_string_set_from_c_string(str2, expected));
+    ASSERT(octaspire_container_utf8_string_set_from_c_string(str3, expected));
+
+    ASSERT(octaspire_container_utf8_string_compare_to_c_string(str1, expected) == 0);
+    ASSERT(octaspire_container_utf8_string_compare_to_c_string(str2, expected) == 0);
+    ASSERT(octaspire_container_utf8_string_compare_to_c_string(str3, expected) == 0);
+
+    ASSERT_STR_EQ(expected, octaspire_container_utf8_string_get_c_string(str1));
+    ASSERT_STR_EQ(expected, octaspire_container_utf8_string_get_c_string(str2));
+    ASSERT_STR_EQ(expected, octaspire_container_utf8_string_get_c_string(str3));
+
+    octaspire_container_utf8_string_release(str1);
+    str1 = 0;
+
+    octaspire_container_utf8_string_release(str2);
+    str2 = 0;
+
+    octaspire_container_utf8_string_release(str3);
+    str3 = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_utf8_string_set_from_c_string_allocation_failure_on_first_allocation_test(void)
+{
+    char const * const expected = "abc";
+
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
+        expected,
+        octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str);
+
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
+        octaspireContainerUtf8StringTestAllocator,
+        1,
+        0);
+
+    ASSERT_EQ(
+        1,
+        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
+            octaspireContainerUtf8StringTestAllocator));
+
+    ASSERT_FALSE(octaspire_container_utf8_string_set_from_c_string(str, "xy"));
+
+    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 0, 0x00);
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_container_utf8_string_suite)
 {
     octaspireContainerUtf8StringTestAllocator = octaspire_memory_allocator_new(0);
@@ -2586,6 +2660,9 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_compare_with_string_abc_and_abca_test);
 
     RUN_TEST(octaspire_container_utf8_string_is_index_valid_test);
+
+    RUN_TEST(octaspire_container_utf8_string_set_from_c_string_test);
+    RUN_TEST(octaspire_container_utf8_string_set_from_c_string_allocation_failure_on_first_allocation_test);
 
     octaspire_memory_allocator_release(octaspireContainerUtf8StringTestAllocator);
     octaspireContainerUtf8StringTestAllocator = 0;

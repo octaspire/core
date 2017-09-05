@@ -68,6 +68,10 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_substring
 
 void octaspire_container_utf8_string_release(octaspire_container_utf8_string_t *self);
 
+bool octaspire_container_utf8_string_set_from_c_string(
+    octaspire_container_utf8_string_t * const self,
+    char const * const str);
+
 bool octaspire_container_utf8_string_is_empty(
     octaspire_container_utf8_string_t const * const self);
 

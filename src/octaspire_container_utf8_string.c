@@ -467,6 +467,26 @@ void octaspire_container_utf8_string_release(octaspire_container_utf8_string_t *
     octaspire_memory_allocator_free(self->allocator, self);
 }
 
+bool octaspire_container_utf8_string_set_from_c_string(
+    octaspire_container_utf8_string_t * const self,
+    char const * const str)
+{
+    octaspire_helpers_verify_not_null(self);
+    octaspire_helpers_verify_not_null(str);
+
+    if (!octaspire_container_utf8_string_clear(self))
+    {
+        return false;
+    }
+
+    if (!octaspire_container_utf8_string_concatenate_c_string(self, str))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool octaspire_container_utf8_string_is_empty(
     octaspire_container_utf8_string_t const * const self)
 {
