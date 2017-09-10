@@ -790,3 +790,143 @@ bool octaspire_container_vector_swap(
     return true;
 }
 
+
+
+
+struct octaspire_container_vector_permutation_iterator_t
+{
+    octaspire_memory_allocator_t *allocator;
+    octaspire_container_vector_t *vector;
+    octaspire_container_vector_t *counts;
+    size_t                        stepsLeft;
+    size_t                        i;
+};
+
+octaspire_container_vector_permutation_iterator_t
+*octaspire_container_vector_permutation_iterator_new(
+    octaspire_container_vector_t * const vector,
+    octaspire_memory_allocator_t * const allocator)
+{
+    octaspire_container_vector_permutation_iterator_t *self =
+        octaspire_memory_allocator_malloc(
+            allocator,
+            sizeof(octaspire_container_vector_permutation_iterator_t));
+
+    if (!self)
+    {
+        return self;
+    }
+
+    self->allocator        = allocator;
+    self->vector           = vector;
+
+    self->counts = octaspire_container_vector_new(sizeof(int), false, 0, allocator);
+
+    if (!self->counts)
+    {
+        octaspire_container_vector_permutation_iterator_release(self);
+        self = 0;
+        return 0;
+    }
+
+    self->stepsLeft     = octaspire_container_vector_get_length(self->vector);
+    self->i             = 1;
+
+    for (size_t i = 0; i < self->stepsLeft; ++i)
+    {
+        int const zero = 0;
+        if (!octaspire_container_vector_push_back_element(self->counts, &zero))
+        {
+            octaspire_container_vector_permutation_iterator_release(self);
+            self = 0;
+            return 0;
+        }
+    }
+
+    return self;
+}
+
+void octaspire_container_vector_permutation_iterator_release(
+    octaspire_container_vector_permutation_iterator_t * const self)
+{
+    if (!self)
+    {
+        return;
+    }
+
+    octaspire_container_vector_release(self->counts);
+    self->counts = 0;
+
+    octaspire_memory_allocator_free(self->allocator, self);
+}
+
+bool octaspire_container_vector_permutation_iterator_next(
+    octaspire_container_vector_permutation_iterator_t * const self)
+{
+    octaspire_helpers_verify_not_null(self);
+    octaspire_helpers_verify_not_null(self->vector);
+    octaspire_helpers_verify_not_null(self->counts);
+
+    octaspire_helpers_verify_true(
+        octaspire_container_vector_get_length(self->counts) ==
+        octaspire_container_vector_get_length(self->vector));
+
+    while (self->i < octaspire_container_vector_get_length(self->vector))
+    {
+        int ci = *(int const * const) octaspire_container_vector_get_element_at(
+            self->counts,
+            (ptrdiff_t)self->i);
+
+        if (ci < (int)self->i)
+        {
+            if (self->i % 2 == 0)
+            {
+                octaspire_helpers_verify_true(octaspire_container_vector_swap(
+                        self->vector,
+                        0,
+                        (ptrdiff_t)self->i));
+            }
+            else
+            {
+                octaspire_helpers_verify_true(octaspire_container_vector_swap(
+                        self->vector,
+                        ci,
+                        (ptrdiff_t)self->i));
+            }
+
+            ++ci;
+
+            octaspire_helpers_verify_true(
+                octaspire_container_vector_replace_element_at(
+                    self->counts,
+                    (ptrdiff_t)self->i,
+                    &ci));
+
+            self->i = 1;
+
+            if (self->stepsLeft == 0)
+            {
+                return true;
+            }
+
+            --(self->stepsLeft);
+
+            return true;
+        }
+        else
+        {
+            ci = 0;
+
+            octaspire_helpers_verify_true(
+                octaspire_container_vector_replace_element_at(
+                    self->counts,
+                    (ptrdiff_t)self->i,
+                    &ci));
+
+            ++(self->i);
+        }
+    }
+
+    return false;
+}
+

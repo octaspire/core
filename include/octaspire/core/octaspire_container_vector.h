@@ -153,6 +153,23 @@ bool octaspire_container_vector_swap(
     ptrdiff_t const indexA,
     ptrdiff_t const indexB);
 
+
+
+
+typedef struct octaspire_container_vector_permutation_iterator_t
+    octaspire_container_vector_permutation_iterator_t;
+
+octaspire_container_vector_permutation_iterator_t
+*octaspire_container_vector_permutation_iterator_new(
+    octaspire_container_vector_t * const vector,
+    octaspire_memory_allocator_t * const allocator);
+
+void octaspire_container_vector_permutation_iterator_release(
+    octaspire_container_vector_permutation_iterator_t * const self);
+
+bool octaspire_container_vector_permutation_iterator_next(
+    octaspire_container_vector_permutation_iterator_t * const self);
+
 #ifdef __cplusplus
 }
 #endif

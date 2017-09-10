@@ -2694,6 +2694,364 @@ TEST octaspire_container_vector_swap_indices_0_and_5_of_vector_containing_six_sh
     PASS();
 }
 
+TEST octaspire_container_vector_permutation_iterator_0_short_test(void)
+{
+    octaspire_container_vector_t *vec = octaspire_container_vector_new(
+        sizeof(short),
+        false,
+        0,
+        octaspireContainerVectorTestAllocator);
+
+    ASSERT_EQ(0, octaspire_container_vector_get_length(vec));
+
+    octaspire_container_vector_permutation_iterator_t *iter =
+        octaspire_container_vector_permutation_iterator_new(
+            vec,
+            octaspireContainerVectorTestAllocator);
+
+    ASSERT(iter);
+
+    ASSERT_EQ(0, octaspire_container_vector_get_element_at_const(vec, 0));
+    ASSERT_FALSE(octaspire_container_vector_permutation_iterator_next(iter));
+    ASSERT_EQ(0, octaspire_container_vector_get_element_at_const(vec, 0));
+
+    octaspire_container_vector_permutation_iterator_release(iter);
+    iter = 0;
+
+    octaspire_container_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_vector_permutation_iterator_1_short_test(void)
+{
+    octaspire_container_vector_t *vec = octaspire_container_vector_new(
+        sizeof(short),
+        false,
+        0,
+        octaspireContainerVectorTestAllocator);
+
+    short const s = 0;
+    ASSERT(octaspire_container_vector_push_back_element(vec, &s));
+
+    ASSERT_EQ(1, octaspire_container_vector_get_length(vec));
+
+    ASSERT_EQ(
+        0,
+        *(short const * const)octaspire_container_vector_get_element_at_const(
+            vec,
+            0));
+
+    octaspire_container_vector_permutation_iterator_t *iter =
+        octaspire_container_vector_permutation_iterator_new(
+            vec,
+            octaspireContainerVectorTestAllocator);
+
+    ASSERT(iter);
+
+    ASSERT_EQ(
+        0,
+        *(short const * const)octaspire_container_vector_get_element_at_const(vec, 0));
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_vector_permutation_iterator_next(iter));
+
+        ASSERT_EQ(
+            0,
+            *(short const * const)octaspire_container_vector_get_element_at_const(vec, 0));
+    }
+
+    octaspire_container_vector_permutation_iterator_release(iter);
+    iter = 0;
+
+    octaspire_container_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
+
+static bool octaspire_container_vector_permutation_iterator_2_shorts_test_helper(
+    octaspire_container_vector_t const * const vec,
+    short const expected1,
+    short const expected2)
+{
+    if (expected1 !=
+        *(short const * const)octaspire_container_vector_get_element_at_const(vec, 0))
+    {
+        return false;
+    }
+
+    if (expected2 != 
+        *(short const * const)octaspire_container_vector_get_element_at_const(vec, 1))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+TEST octaspire_container_vector_permutation_iterator_2_shorts_test(void)
+{
+    octaspire_container_vector_t *vec = octaspire_container_vector_new(
+        sizeof(short),
+        false,
+        0,
+        octaspireContainerVectorTestAllocator);
+
+    for (size_t i = 0; i < 2; ++i)
+    {
+        short const s = (short)i;
+        ASSERT(octaspire_container_vector_push_back_element(vec, &s));
+    }
+
+    ASSERT_EQ(2, octaspire_container_vector_get_length(vec));
+
+    for (size_t i = 0; i < octaspire_container_vector_get_length(vec); ++i)
+    {
+        ASSERT_EQ(
+            (short)i,
+            *(short const * const)octaspire_container_vector_get_element_at_const(
+                vec,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_permutation_iterator_t *iter =
+        octaspire_container_vector_permutation_iterator_new(
+            vec,
+            octaspireContainerVectorTestAllocator);
+
+    ASSERT(iter);
+
+    ASSERT(octaspire_container_vector_permutation_iterator_2_shorts_test_helper(
+            vec, 0, 1));
+
+    ASSERT(octaspire_container_vector_permutation_iterator_next(iter));
+
+    ASSERT(octaspire_container_vector_permutation_iterator_2_shorts_test_helper(
+            vec, 1, 0));
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_vector_permutation_iterator_next(iter));
+        ASSERT(octaspire_container_vector_permutation_iterator_2_shorts_test_helper(
+                vec, 1, 0));
+    }
+
+    octaspire_container_vector_permutation_iterator_release(iter);
+    iter = 0;
+
+    octaspire_container_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
+
+static bool octaspire_container_vector_permutation_iterator_3_longs_test_helper(
+    octaspire_container_vector_t const * const vec,
+    long const * const expected)
+{
+    if (expected[0] !=
+        *(long const * const)octaspire_container_vector_get_element_at_const(vec, 0))
+    {
+        return false;
+    }
+
+    if (expected[1] != 
+        *(long const * const)octaspire_container_vector_get_element_at_const(vec, 1))
+    {
+        return false;
+    }
+
+    if (expected[2] != 
+        *(long const * const)octaspire_container_vector_get_element_at_const(vec, 2))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+TEST octaspire_container_vector_permutation_iterator_3_longs_test(void)
+{
+    octaspire_container_vector_t *vec = octaspire_container_vector_new(
+        sizeof(long),
+        false,
+        0,
+        octaspireContainerVectorTestAllocator);
+
+    for (size_t i = 0; i < 3; ++i)
+    {
+        long const l = (long)i;
+        ASSERT(octaspire_container_vector_push_back_element(vec, &l));
+    }
+
+    ASSERT_EQ(3, octaspire_container_vector_get_length(vec));
+
+    for (size_t i = 0; i < octaspire_container_vector_get_length(vec); ++i)
+    {
+        ASSERT_EQ(
+            (long)i,
+            *(long const * const)octaspire_container_vector_get_element_at_const(
+                vec,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_permutation_iterator_t *iter =
+        octaspire_container_vector_permutation_iterator_new(
+            vec,
+            octaspireContainerVectorTestAllocator);
+
+    ASSERT(iter);
+
+    long expected[6][3] = {
+        {0, 1, 2},
+        {1, 0, 2},
+        {2, 0, 1},
+        {0, 2, 1},
+        {1, 2, 0},
+        {2, 1, 0}
+    };
+
+    for (size_t i = 0; i < 6; ++i)
+    {
+        ASSERT(octaspire_container_vector_permutation_iterator_3_longs_test_helper(
+                vec, expected[i]));
+
+        if (i < 5)
+        {
+            ASSERT(octaspire_container_vector_permutation_iterator_next(iter));
+        }
+        else
+        {
+            ASSERT_FALSE(octaspire_container_vector_permutation_iterator_next(iter));
+        }
+    }
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_vector_permutation_iterator_next(iter));
+        ASSERT(octaspire_container_vector_permutation_iterator_3_longs_test_helper(
+                vec, expected[5]));
+    }
+
+    octaspire_container_vector_permutation_iterator_release(iter);
+    iter = 0;
+
+    octaspire_container_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
+
+static bool octaspire_container_vector_permutation_iterator_4_size_ts_test_helper(
+    octaspire_container_vector_t const * const vec,
+    size_t const * const expected)
+{
+    for (size_t i = 0; i < 4; ++i)
+    {
+        if (expected[i] !=
+            *(size_t const * const)octaspire_container_vector_get_element_at_const(
+                vec,
+                (ptrdiff_t)i))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+TEST octaspire_container_vector_permutation_iterator_4_size_ts_test(void)
+{
+    octaspire_container_vector_t *vec = octaspire_container_vector_new(
+        sizeof(size_t),
+        false,
+        0,
+        octaspireContainerVectorTestAllocator);
+
+    for (size_t i = 0; i < 4; ++i)
+    {
+        ASSERT(octaspire_container_vector_push_back_element(vec, &i));
+    }
+
+    ASSERT_EQ(4, octaspire_container_vector_get_length(vec));
+
+    for (size_t i = 0; i < octaspire_container_vector_get_length(vec); ++i)
+    {
+        ASSERT_EQ(
+            i,
+            *(size_t const * const)octaspire_container_vector_get_element_at_const(
+                vec,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_permutation_iterator_t *iter =
+        octaspire_container_vector_permutation_iterator_new(
+            vec,
+            octaspireContainerVectorTestAllocator);
+
+    ASSERT(iter);
+
+    size_t expected[24][4] = {
+        {0, 1, 2, 3},
+        {1, 0, 2, 3},
+        {2, 0, 1, 3},
+        {0, 2, 1, 3},
+        {1, 2, 0, 3},
+        {2, 1, 0, 3},
+        {3, 1, 0, 2},
+        {1, 3, 0, 2},
+        {0, 3, 1, 2},
+        {3, 0, 1, 2},
+        {1, 0, 3, 2},
+        {0, 1, 3, 2},
+        {0, 2, 3, 1},
+        {2, 0, 3, 1},
+        {3, 0, 2, 1},
+        {0, 3, 2, 1},
+        {2, 3, 0, 1},
+        {3, 2, 0, 1},
+        {3, 2, 1, 0},
+        {2, 3, 1, 0},
+        {1, 3, 2, 0},
+        {3, 1, 2, 0},
+        {2, 1, 3, 0},
+        {1, 2, 3, 0}
+    };
+
+    for (size_t i = 0; i < 24; ++i)
+    {
+        ASSERT(octaspire_container_vector_permutation_iterator_4_size_ts_test_helper(
+                vec, expected[i]));
+
+        if (i < 23)
+        {
+            ASSERT(octaspire_container_vector_permutation_iterator_next(iter));
+        }
+        else
+        {
+            ASSERT_FALSE(octaspire_container_vector_permutation_iterator_next(iter));
+        }
+    }
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_vector_permutation_iterator_next(iter));
+        ASSERT(octaspire_container_vector_permutation_iterator_4_size_ts_test_helper(
+                vec, expected[23]));
+    }
+
+    octaspire_container_vector_permutation_iterator_release(iter);
+    iter = 0;
+
+    octaspire_container_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_container_vector_suite)
 {
     octaspireContainerVectorTestAllocator = octaspire_memory_allocator_new(0);
@@ -2790,6 +3148,12 @@ GREATEST_SUITE(octaspire_container_vector_suite)
     RUN_TEST(octaspire_container_vector_swap_indices_2_and_3_of_vector_containing_six_chars_test);
     RUN_TEST(octaspire_container_vector_swap_indices_0_and_5_of_vector_containing_six_chars_test);
     RUN_TEST(octaspire_container_vector_swap_indices_0_and_5_of_vector_containing_six_shorts_test);
+
+    RUN_TEST(octaspire_container_vector_permutation_iterator_0_short_test);
+    RUN_TEST(octaspire_container_vector_permutation_iterator_1_short_test);
+    RUN_TEST(octaspire_container_vector_permutation_iterator_2_shorts_test);
+    RUN_TEST(octaspire_container_vector_permutation_iterator_3_longs_test);
+    RUN_TEST(octaspire_container_vector_permutation_iterator_4_size_ts_test);
 
     octaspire_memory_allocator_release(octaspireContainerVectorTestAllocator);
     octaspireContainerVectorTestAllocator = 0;
