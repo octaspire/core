@@ -371,15 +371,15 @@ void *octaspire_container_vector_get_element_at(
     octaspire_container_vector_t * const self,
     ptrdiff_t const possiblyNegativeIndex)
 {
-    octaspire_container_vector_private_index_t const realIndex =
-        octaspire_container_vector_private_is_index_valid(self, possiblyNegativeIndex);
+    void *result =
+        octaspire_container_vector_get_raw_data_for_element_at(
+            self,
+            possiblyNegativeIndex);
 
-    if (!realIndex.isValid)
+    if (!result)
     {
-        return 0;
+        return result;
     }
-
-    void *result = octaspire_container_vector_private_index_to_pointer(self, realIndex.index);
 
     if (self->elementIsPointer)
     {
@@ -394,17 +394,15 @@ void const *octaspire_container_vector_get_element_at_const(
     octaspire_container_vector_t const * const self,
     ptrdiff_t const possiblyNegativeIndex)
 {
-    octaspire_container_vector_private_index_t const realIndex =
-        octaspire_container_vector_private_is_index_valid(
+    void const * const result =
+        octaspire_container_vector_get_raw_data_for_element_at_const(
             self,
             possiblyNegativeIndex);
 
-    if (!realIndex.isValid)
+    if (!result)
     {
-        return 0;
+        return result;
     }
-
-    void const * const result = octaspire_container_vector_private_index_to_pointer_const(self, realIndex.index);
 
     if (self->elementIsPointer)
     {
@@ -413,6 +411,38 @@ void const *octaspire_container_vector_get_element_at_const(
     }
 
     return result;
+}
+
+void *octaspire_container_vector_get_raw_data_for_element_at(
+    octaspire_container_vector_t * const self,
+    ptrdiff_t const possiblyNegativeIndex)
+{
+    octaspire_container_vector_private_index_t const realIndex =
+        octaspire_container_vector_private_is_index_valid(self, possiblyNegativeIndex);
+
+    if (!realIndex.isValid)
+    {
+        return 0;
+    }
+
+    return octaspire_container_vector_private_index_to_pointer(self, realIndex.index);
+}
+
+void const *octaspire_container_vector_get_raw_data_for_element_at_const(
+    octaspire_container_vector_t const * const self,
+    ptrdiff_t const possiblyNegativeIndex)
+{
+    octaspire_container_vector_private_index_t const realIndex =
+        octaspire_container_vector_private_is_index_valid(self, possiblyNegativeIndex);
+
+    if (!realIndex.isValid)
+    {
+        return 0;
+    }
+
+    return octaspire_container_vector_private_index_to_pointer_const(
+        self,
+        realIndex.index);
 }
 
 size_t octaspire_container_vector_get_element_size_in_octets(
@@ -766,8 +796,11 @@ bool octaspire_container_vector_swap(
         return false;
     }
 
-    void * const elementA = octaspire_container_vector_get_element_at(self, indexA);
-    void * const elementB = octaspire_container_vector_get_element_at(self, indexB);
+    void * const elementA =
+        octaspire_container_vector_get_raw_data_for_element_at(self, indexA);
+
+    void * const elementB =
+        octaspire_container_vector_get_raw_data_for_element_at(self, indexB);
 
     if (tmpBuffer != memcpy(tmpBuffer, elementA, self->elementSize))
     {
@@ -790,6 +823,40 @@ bool octaspire_container_vector_swap(
     return true;
 }
 
+/*
+void octaspire_container_vector_debug_print(
+    octaspire_container_vector_t const * const self,
+    FILE * const stream)
+{
+    octaspire_helpers_verify_not_null(self);
+    octaspire_helpers_verify_not_null(stream);
+
+    fprintf(stream, "[");
+
+    for (size_t i = 0; i < octaspire_container_vector_get_length(self); ++i)
+    {
+        char const * const ptr =
+            octaspire_container_vector_private_index_to_pointer_const(
+                self,
+                i);
+
+        for (size_t j = 0;
+             j < octaspire_container_vector_get_element_size_in_octets(self);
+             ++j)
+        {
+            unsigned int const tmpUint = (unsigned int)*(ptr + j);
+            fprintf(stream, "%02X", tmpUint);
+        }
+
+        if ((i + 1) < octaspire_container_vector_get_length(self))
+        {
+            fprintf(stream, "|");
+        }
+    }
+
+    fprintf(stream, "]\n");
+}
+*/
 
 
 

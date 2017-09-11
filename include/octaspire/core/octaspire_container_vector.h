@@ -19,6 +19,7 @@ limitations under the License.
 
 #include <stdbool.h>
 #include <stddef.h>
+//#include <stdio.h>
 #include "octaspire_memory.h"
 
 #ifdef __cplusplus
@@ -73,6 +74,14 @@ void *octaspire_container_vector_get_element_at(
     ptrdiff_t const possiblyNegativeIndex);
 
 void const *octaspire_container_vector_get_element_at_const(
+    octaspire_container_vector_t const * const self,
+    ptrdiff_t const possiblyNegativeIndex);
+
+void *octaspire_container_vector_get_raw_data_for_element_at(
+    octaspire_container_vector_t * const self,
+    ptrdiff_t const possiblyNegativeIndex);
+
+void const *octaspire_container_vector_get_raw_data_for_element_at_const(
     octaspire_container_vector_t const * const self,
     ptrdiff_t const possiblyNegativeIndex);
 
@@ -153,7 +162,11 @@ bool octaspire_container_vector_swap(
     ptrdiff_t const indexA,
     ptrdiff_t const indexB);
 
-
+/*
+void octaspire_container_vector_debug_print(
+    octaspire_container_vector_t const * const self,
+    FILE * const stream);
+*/
 
 
 typedef struct octaspire_container_vector_permutation_iterator_t
