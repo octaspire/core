@@ -178,3 +178,13 @@ float octaspire_helpers_ceilf(float const value)
     return (float)ceil((double)value);
 }
 
+bool octaspire_helpers_is_even_size_t(size_t const value)
+{
+    return (value % 2 == 0);
+}
+
+bool octaspire_helpers_is_odd_size_t( size_t const value)
+{
+    return (!octaspire_helpers_is_even_size_t(value));
+}
+

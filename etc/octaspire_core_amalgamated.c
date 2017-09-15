@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "78"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "79"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.78.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.79.0"
 
 
 
@@ -1449,6 +1449,9 @@ void octaspire_helpers_verify_not_null_void_funptr_void_ptr_const(
 float octaspire_helpers_maxf(float const a, float const b);
 float octaspire_helpers_ceilf(float const value);
 
+bool octaspire_helpers_is_even_size_t(size_t const value);
+bool octaspire_helpers_is_odd_size_t( size_t const value);
+
 #ifdef __cplusplus
 }
 #endif
@@ -1937,6 +1940,16 @@ float octaspire_helpers_maxf(float const a, float const b)
 float octaspire_helpers_ceilf(float const value)
 {
     return (float)ceil((double)value);
+}
+
+bool octaspire_helpers_is_even_size_t(size_t const value)
+{
+    return (value % 2 == 0);
+}
+
+bool octaspire_helpers_is_odd_size_t( size_t const value)
+{
+    return (!octaspire_helpers_is_even_size_t(value));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -8779,6 +8792,44 @@ TEST octaspire_helpers_path_to_buffer_read_failure_test(void)
     PASS();
 }
 
+TEST octaspire_helpers_is_even_size_t_test(void)
+{
+    ASSERT(octaspire_helpers_is_even_size_t(0));
+
+    for (size_t i = 2; i < 1024; i += 2)
+    {
+        ASSERT(octaspire_helpers_is_even_size_t(i));
+    }
+
+    ASSERT_FALSE(octaspire_helpers_is_even_size_t(1));
+
+    for (size_t i = 3; i < 1024; i += 2)
+    {
+        ASSERT_FALSE(octaspire_helpers_is_even_size_t(i));
+    }
+
+    PASS();
+}
+
+TEST octaspire_helpers_is_odd_size_t_test(void)
+{
+    ASSERT_FALSE(octaspire_helpers_is_odd_size_t(0));
+
+    for (size_t i = 1; i < 1024; i += 2)
+    {
+        ASSERT(octaspire_helpers_is_odd_size_t(i));
+    }
+
+    ASSERT_FALSE(octaspire_helpers_is_odd_size_t(2));
+
+    for (size_t i = 4; i < 1024; i += 2)
+    {
+        ASSERT_FALSE(octaspire_helpers_is_odd_size_t(i));
+    }
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_helpers_suite)
 {
     octaspireHelpersTestAllocator = octaspire_memory_allocator_new(0);
@@ -8798,6 +8849,9 @@ GREATEST_SUITE(octaspire_helpers_suite)
     RUN_TEST(octaspire_helpers_path_to_buffer_failure_on_empty_file_test);
     RUN_TEST(octaspire_helpers_path_to_buffer_allocation_failure_test);
     RUN_TEST(octaspire_helpers_path_to_buffer_read_failure_test);
+
+    RUN_TEST(octaspire_helpers_is_even_size_t_test);
+    RUN_TEST(octaspire_helpers_is_odd_size_t_test);
 
     octaspire_stdio_release(octaspireHelpersTestStdio);
     octaspireHelpersTestStdio = 0;

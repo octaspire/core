@@ -58,6 +58,9 @@ void octaspire_helpers_verify_not_null_void_funptr_void_ptr_const(
 float octaspire_helpers_maxf(float const a, float const b);
 float octaspire_helpers_ceilf(float const value);
 
+bool octaspire_helpers_is_even_size_t(size_t const value);
+bool octaspire_helpers_is_odd_size_t( size_t const value);
+
 #ifdef __cplusplus
 }
 #endif
