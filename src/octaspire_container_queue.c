@@ -249,3 +249,23 @@ bool octaspire_container_queue_set_has_max_length(
     return octaspire_container_queue_set_max_length(self, self->maxLength);
 }
 
+
+
+
+octaspire_container_queue_iterator_t octaspire_container_queue_iterator_init(
+    octaspire_container_queue_t * const self)
+{
+    octaspire_container_queue_iterator_t iterator;
+
+    iterator.queue = self;
+    iterator.iterator = octaspire_container_list_node_iterator_init(self->list);
+
+    return iterator;
+}
+
+bool octaspire_container_queue_iterator_next(
+    octaspire_container_queue_iterator_t * const self)
+{
+    return octaspire_container_list_node_iterator_next(&(self->iterator));
+}
+

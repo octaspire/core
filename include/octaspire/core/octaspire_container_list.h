@@ -129,6 +129,26 @@ octaspire_container_list_node_t const *octaspire_container_list_get_at_const(
     ptrdiff_t const possiblyNegativeIndex);
 
 
+
+
+
+typedef struct octaspire_container_list_node_iterator_t
+{
+    octaspire_container_list_t      *list;
+    octaspire_container_list_node_t *currentNode;
+}
+octaspire_container_list_node_iterator_t;
+
+octaspire_container_list_node_iterator_t octaspire_container_list_node_iterator_init(
+    octaspire_container_list_t * const self);
+
+bool octaspire_container_list_node_iterator_next(
+    octaspire_container_list_node_iterator_t * const self);
+
+
+
+
+
 #ifdef __cplusplus
 }
 #endif

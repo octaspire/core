@@ -719,6 +719,78 @@ TEST octaspire_container_list_get_at_const_test(void)
     PASS();
 }
 
+TEST octaspire_container_list_node_iterator_called_on_empty_list_test(void)
+{
+    octaspire_container_list_t *list = octaspire_container_list_new(
+        sizeof(size_t),
+        false,
+        0,
+        octaspireContainerListTestAllocator);
+
+    ASSERT(list);
+
+    octaspire_container_list_node_iterator_t iter =
+        octaspire_container_list_node_iterator_init(list);
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_EQ(iter.list, list);
+        ASSERT_FALSE(iter.currentNode);
+        ASSERT_FALSE(octaspire_container_list_node_iterator_next(&iter));
+    }
+
+    octaspire_container_list_release(list);
+    list = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_list_node_iterator_test(void)
+{
+    octaspire_container_list_t *list = octaspire_container_list_new(
+        sizeof(size_t),
+        false,
+        0,
+        octaspireContainerListTestAllocator);
+
+    ASSERT(list);
+
+    size_t const numElements = 128;
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        ASSERT(octaspire_container_list_push_back(list, &i));
+    }
+
+    octaspire_container_list_node_iterator_t iter =
+        octaspire_container_list_node_iterator_init(list);
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        ASSERT(iter.currentNode);
+
+        size_t const fromIter =
+            *(size_t const * const)octaspire_container_list_node_get_element_const(
+                iter.currentNode);
+
+        ASSERT_EQ(iter.list, list);
+        ASSERT_EQ(i, fromIter);
+
+        if ((i + 1) < numElements)
+        {
+            ASSERT(octaspire_container_list_node_iterator_next(&iter));
+        }
+    }
+
+    ASSERT_FALSE(octaspire_container_list_node_iterator_next(&iter));
+    ASSERT_FALSE(iter.currentNode);
+
+    octaspire_container_list_release(list);
+    list = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_container_list_suite)
 {
     octaspireContainerListTestAllocator = octaspire_memory_allocator_new(0);
@@ -743,6 +815,8 @@ GREATEST_SUITE(octaspire_container_list_suite)
     RUN_TEST(octaspire_container_list_remove_even_test);
     RUN_TEST(octaspire_container_list_get_at_test);
     RUN_TEST(octaspire_container_list_get_at_const_test);
+    RUN_TEST(octaspire_container_list_node_iterator_called_on_empty_list_test);
+    RUN_TEST(octaspire_container_list_node_iterator_test);
 
     octaspire_memory_allocator_release(octaspireContainerListTestAllocator);
     octaspireContainerListTestAllocator = 0;

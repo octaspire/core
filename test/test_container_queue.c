@@ -657,6 +657,78 @@ TEST octaspire_container_queue_get_set_has_max_length_test(void)
     PASS();
 }
 
+TEST octaspire_container_queue_iterator_called_on_empty_queue_test(void)
+{
+    octaspire_container_queue_t *queue = octaspire_container_queue_new(
+        sizeof(size_t),
+        false,
+        0,
+        octaspireContainerQueueTestAllocator);
+
+    ASSERT(queue);
+
+    octaspire_container_queue_iterator_t iter =
+        octaspire_container_queue_iterator_init(queue);
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_EQ(iter.queue, queue);
+        ASSERT_FALSE(iter.iterator.currentNode);
+        ASSERT_FALSE(octaspire_container_queue_iterator_next(&iter));
+    }
+
+    octaspire_container_queue_release(queue);
+    queue = 0;
+
+    PASS();
+}
+
+TEST octaspire_container_queue_iterator_test(void)
+{
+    octaspire_container_queue_t *queue = octaspire_container_queue_new(
+        sizeof(size_t),
+        false,
+        0,
+        octaspireContainerQueueTestAllocator);
+
+    ASSERT(queue);
+
+    size_t const numElements = 128;
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        ASSERT(octaspire_container_queue_push(queue, &i));
+    }
+
+    octaspire_container_queue_iterator_t iter =
+        octaspire_container_queue_iterator_init(queue);
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        ASSERT(iter.iterator.currentNode);
+
+        size_t const fromIter =
+            *(size_t const * const)octaspire_container_list_node_get_element_const(
+                iter.iterator.currentNode);
+
+        ASSERT_EQ(iter.queue, queue);
+        ASSERT_EQ(i, fromIter);
+
+        if ((i + 1) < numElements)
+        {
+            ASSERT(octaspire_container_queue_iterator_next(&iter));
+        }
+    }
+
+    ASSERT_FALSE(octaspire_container_queue_iterator_next(&iter));
+    ASSERT_FALSE(iter.iterator.currentNode);
+
+    octaspire_container_queue_release(queue);
+    queue = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_container_queue_suite)
 {
     octaspireContainerQueueTestAllocator = octaspire_memory_allocator_new(0);
@@ -679,6 +751,8 @@ GREATEST_SUITE(octaspire_container_queue_suite)
     RUN_TEST(octaspire_container_queue_get_at_const_failure_on_too_large_index_test);
     RUN_TEST(octaspire_container_queue_get_at_const_test);
     RUN_TEST(octaspire_container_queue_get_set_has_max_length_test);
+    RUN_TEST(octaspire_container_queue_iterator_called_on_empty_queue_test);
+    RUN_TEST(octaspire_container_queue_iterator_test);
 
     octaspire_memory_allocator_release(octaspireContainerQueueTestAllocator);
     octaspireContainerQueueTestAllocator = 0;

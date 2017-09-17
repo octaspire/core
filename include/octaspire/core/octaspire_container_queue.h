@@ -20,6 +20,7 @@ limitations under the License.
 #include <stdbool.h>
 #include <stddef.h>
 #include "octaspire_memory.h"
+#include "octaspire_container_list.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -88,6 +89,21 @@ bool octaspire_container_queue_set_max_length(
 bool octaspire_container_queue_set_has_max_length(
     octaspire_container_queue_t * const self,
     bool hasMaxLength);
+
+
+
+typedef struct octaspire_container_queue_iterator_t
+{
+    octaspire_container_queue_t *queue;
+    octaspire_container_list_node_iterator_t iterator;
+}
+octaspire_container_queue_iterator_t;
+
+octaspire_container_queue_iterator_t octaspire_container_queue_iterator_init(
+    octaspire_container_queue_t * const self);
+
+bool octaspire_container_queue_iterator_next(
+    octaspire_container_queue_iterator_t * const self);
 
 #ifdef __cplusplus
 }
