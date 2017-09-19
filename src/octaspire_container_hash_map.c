@@ -149,6 +149,21 @@ void *octaspire_container_hash_map_element_get_value(
     //return self->valueIsPointer ? (*(void**)self->value) : self->value;
 }
 
+void const *octaspire_container_hash_map_element_get_key_const(
+    octaspire_container_hash_map_element_t const * const self)
+{
+    assert(self);
+    return self->keyIsPointer ? (*(void const**)self->key) : self->key;
+}
+
+void const *octaspire_container_hash_map_element_get_value_const(
+    octaspire_container_hash_map_element_t const * const self)
+{
+    assert(self);
+    assert(octaspire_container_vector_get_length(self->values) < 2);
+    return octaspire_container_vector_get_element_at_const(self->values, 0);
+}
+
 
 
 struct octaspire_container_hash_map_t
@@ -932,4 +947,111 @@ bool octaspire_container_hash_map_element_iterator_next(
 
     return self->element != 0;
 }
+
+
+
+
+
+
+octaspire_container_hash_map_element_const_iterator_t
+octaspire_container_hash_map_element_const_iterator_init(
+    octaspire_container_hash_map_t const * const self)
+{
+    octaspire_container_hash_map_element_const_iterator_t iterator;
+
+    iterator.hashMap = self;
+    iterator.bucketIndex = 0;
+    iterator.elementInsideBucketIndex = 0;
+    iterator.element = 0;
+
+    while (!(iterator.element))
+    {
+        if (iterator.bucketIndex < octaspire_container_vector_get_length(self->buckets))
+        {
+            octaspire_container_vector_t const * const bucket =
+                (octaspire_container_vector_t const *)
+                octaspire_container_vector_get_element_at_const(
+                    self->buckets,
+                    (ptrdiff_t)(iterator.bucketIndex));
+
+            size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+
+            for (; iterator.elementInsideBucketIndex < bucketSize; ++(iterator.elementInsideBucketIndex))
+            {
+                iterator.element = (octaspire_container_hash_map_element_t const *)
+                    octaspire_container_vector_get_element_at_const(
+                        bucket,
+                        (ptrdiff_t)(iterator.elementInsideBucketIndex));
+
+                if (iterator.element)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            break;
+        }
+
+        if (iterator.element)
+        {
+            return iterator;
+        }
+
+        ++(iterator.bucketIndex);
+        iterator.elementInsideBucketIndex = 0;
+    }
+
+    return iterator;
+}
+
+bool octaspire_container_hash_map_element_const_iterator_next(
+    octaspire_container_hash_map_element_const_iterator_t * const self)
+{
+    self->element = 0;
+    ++(self->elementInsideBucketIndex);
+
+    while (!(self->element))
+    {
+        if (self->bucketIndex < octaspire_container_vector_get_length(self->hashMap->buckets))
+        {
+            octaspire_container_vector_t const * const bucket =
+                (octaspire_container_vector_t const *)
+                octaspire_container_vector_get_element_at_const(
+                    self->hashMap->buckets,
+                    (ptrdiff_t)(self->bucketIndex));
+
+            size_t const bucketSize = octaspire_container_vector_get_length(bucket);
+
+            for (; self->elementInsideBucketIndex < bucketSize; ++(self->elementInsideBucketIndex))
+            {
+                self->element = (octaspire_container_hash_map_element_t const *)
+                    octaspire_container_vector_get_element_at_const(
+                        bucket,
+                        (ptrdiff_t)(self->elementInsideBucketIndex));
+
+                if (self->element)
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            break;
+        }
+
+        if (self->element)
+        {
+            return self->element != 0;
+        }
+
+        ++(self->bucketIndex);
+        self->elementInsideBucketIndex = 0;
+    }
+
+    return self->element != 0;
+}
+
 

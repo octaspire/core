@@ -52,6 +52,13 @@ octaspire_container_vector_t *octaspire_container_hash_map_element_get_values(
 void *octaspire_container_hash_map_element_get_value(
     octaspire_container_hash_map_element_t const * const self);
 
+void const *octaspire_container_hash_map_element_get_key_const(
+    octaspire_container_hash_map_element_t const * const self);
+
+void const *octaspire_container_hash_map_element_get_value_const(
+    octaspire_container_hash_map_element_t const * const self);
+
+
 // Hash map
 typedef struct octaspire_container_hash_map_t octaspire_container_hash_map_t;
 
@@ -119,6 +126,9 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get_at_inde
     octaspire_container_hash_map_t *self,
     ptrdiff_t const possiblyNegativeIndex);
 
+
+
+
 typedef struct octaspire_container_hash_map_element_iterator_t
 {
     octaspire_container_hash_map_t *hashMap;
@@ -133,6 +143,26 @@ octaspire_container_hash_map_element_iterator_t octaspire_container_hash_map_ele
 
 bool octaspire_container_hash_map_element_iterator_next(
     octaspire_container_hash_map_element_iterator_t * const self);
+
+
+
+
+typedef struct octaspire_container_hash_map_element_const_iterator_t
+{
+    octaspire_container_hash_map_t const *hashMap;
+    octaspire_container_hash_map_element_t const *element;
+    size_t bucketIndex;
+    size_t elementInsideBucketIndex;
+}
+octaspire_container_hash_map_element_const_iterator_t;
+
+octaspire_container_hash_map_element_const_iterator_t octaspire_container_hash_map_element_const_iterator_init(
+    octaspire_container_hash_map_t const * const self);
+
+bool octaspire_container_hash_map_element_const_iterator_next(
+    octaspire_container_hash_map_element_const_iterator_t * const self);
+
+
 
 #ifdef __cplusplus
 }

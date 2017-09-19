@@ -512,6 +512,71 @@ TEST octaspire_container_hash_map_element_iterator_test(void)
     PASS();
 }
 
+TEST octaspire_container_hash_map_element_const_iterator_test(void)
+{
+    octaspire_container_hash_map_t *hashMap = octaspire_container_hash_map_new(
+        sizeof(size_t),
+        false,
+        sizeof(size_t),
+        false,
+        octaspire_container_hash_map_new_test_key_compare_function_for_size_t_keys,
+        octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
+        0,
+        0,
+        octaspireContainerHashMapTestAllocator);
+
+    ASSERT(hashMap);
+
+    octaspire_container_hash_map_element_const_iterator_t iterator =
+        octaspire_container_hash_map_element_const_iterator_init(hashMap);
+
+    ASSERT_EQ(hashMap, iterator.hashMap);
+    ASSERT_EQ(0,       iterator.element);
+
+    for (size_t i = 0; i < 100; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_hash_map_element_const_iterator_next(&iterator));
+
+        ASSERT_EQ(hashMap, iterator.hashMap);
+        ASSERT_EQ(0,       iterator.element);
+    }
+
+    size_t const numElements = 128;
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        uint32_t hash = (uint32_t)i;
+
+        octaspire_container_hash_map_put(hashMap, hash, &i, &i);
+    }
+
+    ASSERT_EQ(numElements, octaspire_container_hash_map_get_number_of_elements(hashMap));
+
+    iterator =
+        octaspire_container_hash_map_element_const_iterator_init(hashMap);
+
+    ASSERT_EQ(hashMap, iterator.hashMap);
+
+    size_t counter = 0;
+    while (iterator.element)
+    {
+        ASSERT_EQ(hashMap, iterator.hashMap);
+        ASSERT_EQ(counter, octaspire_container_hash_map_element_get_hash(iterator.element));
+        ASSERT_EQ(counter, *(size_t const*)octaspire_container_hash_map_element_get_key_const(iterator.element));
+        ASSERT_EQ(counter, *(size_t const*)octaspire_container_hash_map_element_get_value_const(iterator.element));
+
+        ++counter;
+        octaspire_container_hash_map_element_const_iterator_next(&iterator);
+    }
+
+    ASSERT_EQ(numElements, counter);
+
+    octaspire_container_hash_map_release(hashMap);
+    hashMap = 0;
+
+    PASS();
+}
+
 TEST octaspire_container_hash_map_get_at_index_test(void)
 {
     octaspire_container_hash_map_t *hashMap = octaspire_container_hash_map_new(
@@ -590,6 +655,7 @@ GREATEST_SUITE(octaspire_container_hash_map_suite)
     RUN_TEST(octaspire_container_hash_map_new_keys_ostring_t_and_values_ostring_t_test);
     RUN_TEST(octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys_test);
     RUN_TEST(octaspire_container_hash_map_element_iterator_test);
+    RUN_TEST(octaspire_container_hash_map_element_const_iterator_test);
 
     RUN_TEST(octaspire_container_hash_map_get_at_index_test);
 
