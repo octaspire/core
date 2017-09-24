@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "82"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "83"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "1"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.82.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.83.1"
 
 
 
@@ -4194,7 +4194,7 @@ bool octaspire_container_list_node_iterator_next(
 
     self->currentNode = octaspire_container_list_node_get_next(self->currentNode);
 
-    return (self->currentNode);
+    return (self->currentNode != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

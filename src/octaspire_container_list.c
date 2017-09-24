@@ -628,6 +628,6 @@ bool octaspire_container_list_node_iterator_next(
 
     self->currentNode = octaspire_container_list_node_get_next(self->currentNode);
 
-    return (self->currentNode);
+    return (self->currentNode != 0);
 }
 
