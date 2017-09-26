@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "84"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "85"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.84.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.85.0"
 
 
 
@@ -985,6 +985,9 @@ uint32_t octaspire_container_utf8_string_get_hash(
 bool octaspire_container_utf8_string_push_back_ucs_character(
     octaspire_container_utf8_string_t *self,
     uint32_t const character);
+
+bool octaspire_container_utf8_string_pop_front_ucs_character(
+    octaspire_container_utf8_string_t *self);
 
 bool octaspire_container_utf8_string_pop_back_ucs_character(
     octaspire_container_utf8_string_t *self);
@@ -5556,6 +5559,28 @@ bool octaspire_container_utf8_string_push_back_ucs_character(
     self->octetsAreUpToDate = false;
 
     return octaspire_container_utf8_string_private_bring_octets_up_to_date(self);
+}
+
+bool octaspire_container_utf8_string_pop_front_ucs_character(
+    octaspire_container_utf8_string_t *self)
+{
+    assert(self);
+
+    if (octaspire_container_utf8_string_is_empty(self))
+    {
+        return false;
+    }
+
+    self->octetsAreUpToDate = false;
+
+    bool const result = octaspire_container_utf8_string_remove_character_at(self, 0);
+
+    if (!octaspire_container_utf8_string_private_bring_octets_up_to_date(self))
+    {
+        return false;
+    }
+
+    return result;
 }
 
 bool octaspire_container_utf8_string_pop_back_ucs_character(
@@ -18553,6 +18578,41 @@ TEST octaspire_container_utf8_string_overwrite_with_string_at_called_with_negati
     PASS();
 }
 
+TEST octaspire_container_utf8_string_pop_front_ucs_character_test(void)
+{
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
+        "abc",
+        octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str);
+    ASSERT_EQ(3, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("abc", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_pop_front_ucs_character(str));
+    ASSERT_EQ(2, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("bc", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_pop_front_ucs_character(str));
+    ASSERT_EQ(1, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("c", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_pop_front_ucs_character(str));
+    ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_utf8_string_pop_front_ucs_character(str));
+        ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+        ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
+    }
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
 TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
@@ -18951,6 +19011,7 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_second_test);
     RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_called_with_negative_index_test);
 
+    RUN_TEST(octaspire_container_utf8_string_pop_front_ucs_character_test);
     RUN_TEST(octaspire_container_utf8_string_pop_back_ucs_character_test);
 
     RUN_TEST(octaspire_container_utf8_string_compare_with_two_empty_strings_test);

@@ -1085,6 +1085,28 @@ bool octaspire_container_utf8_string_push_back_ucs_character(
     return octaspire_container_utf8_string_private_bring_octets_up_to_date(self);
 }
 
+bool octaspire_container_utf8_string_pop_front_ucs_character(
+    octaspire_container_utf8_string_t *self)
+{
+    assert(self);
+
+    if (octaspire_container_utf8_string_is_empty(self))
+    {
+        return false;
+    }
+
+    self->octetsAreUpToDate = false;
+
+    bool const result = octaspire_container_utf8_string_remove_character_at(self, 0);
+
+    if (!octaspire_container_utf8_string_private_bring_octets_up_to_date(self))
+    {
+        return false;
+    }
+
+    return result;
+}
+
 bool octaspire_container_utf8_string_pop_back_ucs_character(
     octaspire_container_utf8_string_t *self)
 {

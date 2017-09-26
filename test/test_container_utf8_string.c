@@ -2250,6 +2250,41 @@ TEST octaspire_container_utf8_string_overwrite_with_string_at_called_with_negati
     PASS();
 }
 
+TEST octaspire_container_utf8_string_pop_front_ucs_character_test(void)
+{
+    octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new(
+        "abc",
+        octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str);
+    ASSERT_EQ(3, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("abc", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_pop_front_ucs_character(str));
+    ASSERT_EQ(2, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("bc", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_pop_front_ucs_character(str));
+    ASSERT_EQ(1, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("c", octaspire_container_utf8_string_get_c_string(str));
+
+    ASSERT(octaspire_container_utf8_string_pop_front_ucs_character(str));
+    ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+    ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
+
+    for (size_t i = 0; i < 10; ++i)
+    {
+        ASSERT_FALSE(octaspire_container_utf8_string_pop_front_ucs_character(str));
+        ASSERT_EQ(0, octaspire_container_utf8_string_get_length_in_ucs_characters(str));
+        ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(str));
+    }
+
+    octaspire_container_utf8_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
 TEST octaspire_container_utf8_string_pop_back_ucs_character_test(void)
 {
     octaspire_container_utf8_string_t *str = octaspire_container_utf8_string_new("abc", octaspireContainerUtf8StringTestAllocator);
@@ -2648,6 +2683,7 @@ GREATEST_SUITE(octaspire_container_utf8_string_suite)
     RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_second_test);
     RUN_TEST(octaspire_container_utf8_string_overwrite_with_string_at_called_with_negative_index_test);
 
+    RUN_TEST(octaspire_container_utf8_string_pop_front_ucs_character_test);
     RUN_TEST(octaspire_container_utf8_string_pop_back_ucs_character_test);
 
     RUN_TEST(octaspire_container_utf8_string_compare_with_two_empty_strings_test);

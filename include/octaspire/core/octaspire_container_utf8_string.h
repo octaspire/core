@@ -169,6 +169,9 @@ bool octaspire_container_utf8_string_push_back_ucs_character(
     octaspire_container_utf8_string_t *self,
     uint32_t const character);
 
+bool octaspire_container_utf8_string_pop_front_ucs_character(
+    octaspire_container_utf8_string_t *self);
+
 bool octaspire_container_utf8_string_pop_back_ucs_character(
     octaspire_container_utf8_string_t *self);
 
