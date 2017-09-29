@@ -138,7 +138,7 @@ RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
     RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
 
     echo "Copying build scripts to the release directory..."
-    cp -r "$PROJECT_PATH/etc/how-to-build/" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH/"
+    cp -R "$PROJECT_PATH/etc/how-to-build" "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH"
     RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
 
     echo "Compressing release directory into tar.bz2..."
@@ -154,7 +154,7 @@ RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
     echo "Removing $PROJECT_PATH/release/ and creating it again with updates"
     rm -rf "$PROJECT_PATH/release"
     RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
-    cp -r "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH" "$PROJECT_PATH"
+    cp -R "$PROJECT_PATH/etc/release/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH" "$PROJECT_PATH"
     RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
     mv "$PROJECT_PATH/version-$NEW_MAJOR.$NEW_MINOR.$NEW_PATCH" "$PROJECT_PATH/release"
     RETVAL=$?; if [ $RETVAL != 0 ]; then exit $RETVAL; fi
