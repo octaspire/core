@@ -224,6 +224,7 @@ typedef struct greatest_run_info {
     char octaspire_padding[4];
     jmp_buf jump_dest;
 #endif
+    char padding[4];
 } greatest_run_info;
 
 struct greatest_report_t {
