@@ -139,9 +139,9 @@ limitations under the License.
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
 #define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "85"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "2"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "3"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.85.2"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.85.3"
 
 
 
@@ -8035,7 +8035,6 @@ typedef struct greatest_run_info {
     char octaspire_padding[4];
     jmp_buf jump_dest;
 #endif
-    char padding[4];
 } greatest_run_info;
 
 struct greatest_report_t {

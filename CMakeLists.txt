@@ -19,7 +19,7 @@ project(octaspire-core C)
 
 set(OCTASPIRE_CORE_CONFIG_VERSION_MAJOR 0)
 set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 85)
-set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 2)
+set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 3)
 
 message("== Building ${PROJECT_NAME} ${OCTASPIRE_CORE_CONFIG_VERSION_MAJOR}.${OCTASPIRE_CORE_CONFIG_VERSION_MINOR}.${OCTASPIRE_CORE_CONFIG_VERSION_PATCH}")
 
@@ -55,8 +55,8 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang")
     if(CMAKE_BUILD_TYPE MATCHES "Debug")
         target_compile_definitions(octaspire-core PRIVATE OCTASPIRE_CLANG_PRAGMAS_ENABLED=1)
         message("== Enabling clang pragmas for ${PROJECT_NAME}")
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything")
-        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Weverything")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything -Wno-padded")
+        set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Weverything -Wno-padded")
     endif(CMAKE_BUILD_TYPE MATCHES "Debug")
 
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcolor-diagnostics")
