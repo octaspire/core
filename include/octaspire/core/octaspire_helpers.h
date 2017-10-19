@@ -43,6 +43,10 @@ uint32_t octaspire_helpers_calculate_hash_for_int32_t_argument(int32_t const val
 uint32_t octaspire_helpers_calculate_hash_for_double_argument(double const value);
 uint32_t octaspire_helpers_calculate_hash_for_void_pointer_argument(void const * const value);
 
+uint32_t octaspire_helpers_calculate_hash_for_memory_buffer_argument(
+    void const * const value,
+    size_t const lengthInOctets);
+
 size_t octaspire_helpers_character_digit_to_number(uint32_t const c);
 
 size_t octaspire_helpers_min_size_t(size_t const a, size_t const b);

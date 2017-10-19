@@ -264,6 +264,27 @@ TEST octaspire_helpers_is_odd_size_t_test(void)
     PASS();
 }
 
+TEST octaspire_helpers_calculate_hash_for_memory_buffer_argument_test(void)
+{
+    char const buffer[] = {'a', 'b', 'c'};
+
+    ASSERT_EQ(
+        3977453403,
+        octaspire_helpers_calculate_hash_for_memory_buffer_argument(
+            buffer,
+            sizeof(buffer)));
+
+    char const * const buffer2 = "123456789=?qwertyuiop#_.:,!++?";
+
+    ASSERT_EQ(
+        3026418028,
+        octaspire_helpers_calculate_hash_for_memory_buffer_argument(
+            buffer2,
+            strlen(buffer2)));
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_helpers_suite)
 {
     octaspireHelpersTestAllocator = octaspire_memory_allocator_new(0);
@@ -286,6 +307,8 @@ GREATEST_SUITE(octaspire_helpers_suite)
 
     RUN_TEST(octaspire_helpers_is_even_size_t_test);
     RUN_TEST(octaspire_helpers_is_odd_size_t_test);
+
+    RUN_TEST(octaspire_helpers_calculate_hash_for_memory_buffer_argument_test);
 
     octaspire_stdio_release(octaspireHelpersTestStdio);
     octaspireHelpersTestStdio = 0;

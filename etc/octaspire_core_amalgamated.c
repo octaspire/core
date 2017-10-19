@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "85"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "3"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "86"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.85.3"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.86.0"
 
 
 
@@ -1502,6 +1502,10 @@ uint32_t octaspire_helpers_calculate_hash_for_int32_t_argument(int32_t const val
 uint32_t octaspire_helpers_calculate_hash_for_double_argument(double const value);
 uint32_t octaspire_helpers_calculate_hash_for_void_pointer_argument(void const * const value);
 
+uint32_t octaspire_helpers_calculate_hash_for_memory_buffer_argument(
+    void const * const value,
+    size_t const lengthInOctets);
+
 size_t octaspire_helpers_character_digit_to_number(uint32_t const c);
 
 size_t octaspire_helpers_min_size_t(size_t const a, size_t const b);
@@ -1935,6 +1939,13 @@ uint32_t octaspire_helpers_calculate_hash_for_double_argument(double const value
 uint32_t octaspire_helpers_calculate_hash_for_void_pointer_argument(void const * const value)
 {
     return jenkins_one_at_a_time_hash(&value, sizeof(value));
+}
+
+uint32_t octaspire_helpers_calculate_hash_for_memory_buffer_argument(
+    void const * const value,
+    size_t const lengthInOctets)
+{
+    return jenkins_one_at_a_time_hash(value, lengthInOctets);
 }
 
 size_t octaspire_helpers_character_digit_to_number(uint32_t const c)
@@ -9089,6 +9100,27 @@ TEST octaspire_helpers_is_odd_size_t_test(void)
     PASS();
 }
 
+TEST octaspire_helpers_calculate_hash_for_memory_buffer_argument_test(void)
+{
+    char const buffer[] = {'a', 'b', 'c'};
+
+    ASSERT_EQ(
+        3977453403,
+        octaspire_helpers_calculate_hash_for_memory_buffer_argument(
+            buffer,
+            sizeof(buffer)));
+
+    char const * const buffer2 = "123456789=?qwertyuiop#_.:,!++?";
+
+    ASSERT_EQ(
+        3026418028,
+        octaspire_helpers_calculate_hash_for_memory_buffer_argument(
+            buffer2,
+            strlen(buffer2)));
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_helpers_suite)
 {
     octaspireHelpersTestAllocator = octaspire_memory_allocator_new(0);
@@ -9111,6 +9143,8 @@ GREATEST_SUITE(octaspire_helpers_suite)
 
     RUN_TEST(octaspire_helpers_is_even_size_t_test);
     RUN_TEST(octaspire_helpers_is_odd_size_t_test);
+
+    RUN_TEST(octaspire_helpers_calculate_hash_for_memory_buffer_argument_test);
 
     octaspire_stdio_release(octaspireHelpersTestStdio);
     octaspireHelpersTestStdio = 0;

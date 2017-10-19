@@ -105,6 +105,13 @@ uint32_t octaspire_helpers_calculate_hash_for_void_pointer_argument(void const *
     return jenkins_one_at_a_time_hash(&value, sizeof(value));
 }
 
+uint32_t octaspire_helpers_calculate_hash_for_memory_buffer_argument(
+    void const * const value,
+    size_t const lengthInOctets)
+{
+    return jenkins_one_at_a_time_hash(value, lengthInOctets);
+}
+
 size_t octaspire_helpers_character_digit_to_number(uint32_t const c)
 {
     return c - '0';
