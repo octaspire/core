@@ -285,6 +285,254 @@ TEST octaspire_helpers_calculate_hash_for_memory_buffer_argument_test(void)
     PASS();
 }
 
+TEST octaspire_helpers_base64_encode_qwerty1_test(void)
+{
+    char const * const input = "qwerty1";
+
+    octaspire_container_utf8_string_t * encoded = octaspire_helpers_base64_encode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(encoded);
+
+    ASSERT_STR_EQ("cXdlcnR5MQ==", octaspire_container_utf8_string_get_c_string(encoded));
+
+    octaspire_container_utf8_string_release(encoded);
+    encoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_decode_encoded_qwerty1_test(void)
+{
+    char const * const input = "cXdlcnR5MQ==";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(decoded);
+
+    char const * const expected = "qwerty1";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < strlen(expected); ++i)
+    {
+        ASSERT_EQ(
+            expected[i],
+            *(char const * const)octaspire_container_vector_get_element_at_const(
+                decoded,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_encode_a_test(void)
+{
+    char const * const input = "a";
+
+    octaspire_container_utf8_string_t * encoded = octaspire_helpers_base64_encode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(encoded);
+
+    ASSERT_STR_EQ("YQ==", octaspire_container_utf8_string_get_c_string(encoded));
+
+    octaspire_container_utf8_string_release(encoded);
+    encoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_decode_encoded_a_test(void)
+{
+    char const * const input = "YQ==";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(decoded);
+
+    char const * const expected = "a";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < strlen(expected); ++i)
+    {
+        ASSERT_EQ(
+            expected[i],
+            *(char const * const)octaspire_container_vector_get_element_at_const(
+                decoded,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_encode_empty_string_test(void)
+{
+    char const * const input = "";
+
+    octaspire_container_utf8_string_t * encoded = octaspire_helpers_base64_encode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(encoded);
+
+    ASSERT_STR_EQ("", octaspire_container_utf8_string_get_c_string(encoded));
+
+    octaspire_container_utf8_string_release(encoded);
+    encoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_decode_encoded_empty_string_test(void)
+{
+    char const * const input = "";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT_EQ(0, decoded);
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_encode_base64_characters_test(void)
+{
+    char const * const input =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    octaspire_container_utf8_string_t * encoded = octaspire_helpers_base64_encode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(encoded);
+
+    ASSERT_STR_EQ(
+        "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5e"
+        "jAxMjM0NTY3ODkrLw==",
+        octaspire_container_utf8_string_get_c_string(encoded));
+
+    octaspire_container_utf8_string_release(encoded);
+    encoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_decode_encoded_base64_characters_test(void)
+{
+    char const * const input =
+        "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5e"
+        "jAxMjM0NTY3ODkrLw==";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(decoded);
+
+    char const * const expected =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < strlen(expected); ++i)
+    {
+        ASSERT_EQ(
+            expected[i],
+            *(char const * const)octaspire_container_vector_get_element_at_const(
+                decoded,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_encode_printable_ascii_characters_test(void)
+{
+    char const * const input =
+        " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abc"
+        "defghijklmnopqrstuvwxyz{|}~";
+
+    octaspire_container_utf8_string_t * encoded = octaspire_helpers_base64_encode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(encoded);
+
+    ASSERT_STR_EQ(
+        "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1R"
+        "VVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX4=",
+        octaspire_container_utf8_string_get_c_string(encoded));
+
+    octaspire_container_utf8_string_release(encoded);
+    encoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_decode_encoded_printable_ascii_characters_test(void)
+{
+    char const * const input =
+        "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1R"
+        "VVldYWVpbXF1eX2BhYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ent8fX4=";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(decoded);
+
+    char const * const expected =
+        " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abc"
+        "defghijklmnopqrstuvwxyz{|}~";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < strlen(expected); ++i)
+    {
+        ASSERT_EQ(
+            expected[i],
+            *(char const * const)octaspire_container_vector_get_element_at_const(
+                decoded,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_helpers_suite)
 {
     octaspireHelpersTestAllocator = octaspire_memory_allocator_new(0);
@@ -309,6 +557,17 @@ GREATEST_SUITE(octaspire_helpers_suite)
     RUN_TEST(octaspire_helpers_is_odd_size_t_test);
 
     RUN_TEST(octaspire_helpers_calculate_hash_for_memory_buffer_argument_test);
+
+    RUN_TEST(octaspire_helpers_base64_encode_qwerty1_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_qwerty1_test);
+    RUN_TEST(octaspire_helpers_base64_encode_a_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_a_test);
+    RUN_TEST(octaspire_helpers_base64_encode_empty_string_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_empty_string_test);
+    RUN_TEST(octaspire_helpers_base64_encode_base64_characters_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_base64_characters_test);
+    RUN_TEST(octaspire_helpers_base64_encode_printable_ascii_characters_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_printable_ascii_characters_test);
 
     octaspire_stdio_release(octaspireHelpersTestStdio);
     octaspireHelpersTestStdio = 0;

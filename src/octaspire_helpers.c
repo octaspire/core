@@ -17,6 +17,7 @@ limitations under the License.
 #include "octaspire/core/octaspire_helpers.h"
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 #include <math.h>
 #include "external/jenkins_one_at_a_time.h"
 
@@ -193,5 +194,244 @@ bool octaspire_helpers_is_even_size_t(size_t const value)
 bool octaspire_helpers_is_odd_size_t( size_t const value)
 {
     return (!octaspire_helpers_is_even_size_t(value));
+}
+
+static uint8_t octaspire_helpers_base64_private_base64_char_into_num(char const c)
+{
+    if (c >= 'A' && c <= 'Z')
+    {
+        return (uint8_t)c - 65;
+    }
+
+    if (c >= 'a' && c <= 'z')
+    {
+        return 26 + ((uint8_t)c - 97);
+    }
+
+    if (c >= '0' && c <= '9')
+    {
+        return 52 + ((uint8_t)c - 48);
+    }
+
+    if (c == '+')
+    {
+        return 62;
+    }
+
+    if (c == '/')
+    {
+        return 63;
+    }
+
+    return 64;
+}
+
+char octaspire_helpers_get_char_or_default_from_buf(
+    char const * const input,
+    size_t const inLen,
+    size_t const getAtIndex,
+    char const defaultChar)
+{
+    if (!input || getAtIndex >= inLen)
+    {
+        return defaultChar;
+    }
+
+    return input[getAtIndex];
+}
+
+octaspire_container_vector_t * octaspire_helpers_base64_decode(
+    char const * const input,
+    int32_t inLen,
+    octaspire_memory_allocator_t * const allocator)
+{
+    if (inLen < 2)
+    {
+        return 0;
+    }
+
+    int32_t const numPadding =
+        input[inLen-1] == '=' ? input[inLen-2] == '=' ? 2 : 1 : 0;
+
+    octaspire_container_vector_t * result = octaspire_container_vector_new(
+        sizeof(char),
+        false,
+        0,
+        allocator);
+
+    if (!result)
+    {
+        return result;
+    }
+
+    // Negative length means that the length must be measured here.
+    if (inLen < 0)
+    {
+        inLen = (int32_t)strlen(input);
+    }
+
+    for (int32_t i = 0; i < inLen; i += 4)
+    {
+        uint32_t const index1 =
+            octaspire_helpers_base64_private_base64_char_into_num(
+                inLen - i <= numPadding ? 'A' : input[i]);
+
+        octaspire_helpers_verify_true((i+1) < inLen);
+
+        uint32_t const index2 =
+            octaspire_helpers_base64_private_base64_char_into_num(
+                inLen - (i + 1) <= numPadding ? 'A' : input[i + 1]);
+
+        octaspire_helpers_verify_true((i+2) < inLen);
+
+        uint32_t const index3 =
+            octaspire_helpers_base64_private_base64_char_into_num(
+                inLen - (i + 2) <= numPadding ? 'A' : input[i + 2]);
+
+        octaspire_helpers_verify_true((i+3) < inLen);
+
+        uint32_t const index4 =
+            octaspire_helpers_base64_private_base64_char_into_num(
+                inLen - (i + 3) <= numPadding ? 'A' : input[i + 3]);
+
+        // Generate the number with 24 bits.
+        uint32_t const num24bits =
+            ((index1 & 63) << (24 -  6)) +
+            ((index2 & 63) << (24 - 12)) +
+            ((index3 & 63) << (24 - 18)) +
+             (index4 & 63);
+
+        // Break the number with 24 bits into the three original octets
+        // and save those into the result.
+
+        char octet = (char)((num24bits >> 16) & 0xFF);
+        if (!octaspire_container_vector_push_back_element(result, &octet))
+        {
+            octaspire_container_vector_release(result);
+            result = 0;
+            return result;
+        }
+
+        octet = (char)((num24bits >> 8) & 0xFF);
+        if (!octaspire_container_vector_push_back_element(result, &octet))
+        {
+            octaspire_container_vector_release(result);
+            result = 0;
+            return result;
+        }
+
+        octet = (char)(num24bits & 0xFF);
+        if (!octaspire_container_vector_push_back_element(result, &octet))
+        {
+            octaspire_container_vector_release(result);
+            result = 0;
+            return result;
+        }
+    }
+
+    for (int32_t i = 0; i < numPadding; ++i)
+    {
+        if (!octaspire_container_vector_pop_back_element(result))
+        {
+            octaspire_container_vector_release(result);
+            result = 0;
+            return result;
+        }
+    }
+
+    return result;
+}
+
+octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
+    char const * const input,
+    size_t const inLen,
+    octaspire_memory_allocator_t * const allocator)
+{
+    char const * const base64chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    octaspire_container_utf8_string_t * result = octaspire_container_utf8_string_new(
+        "",
+        allocator);
+
+    if (!result)
+    {
+        return result;
+    }
+
+    size_t numPadding = inLen % 3;
+
+    if (numPadding)
+    {
+        numPadding = 3 - numPadding;
+    }
+
+    for (size_t i = 0; i < inLen; i += 3)
+    {
+        // Three octets of input is converted into a number with 24 bits.
+        // Any missing characters are replaced with the NULL char.
+
+        uint32_t num24bits = 0;
+
+        for (size_t j = 0; j < 3; ++j)
+        {
+            uint32_t const val = (uint32_t)octaspire_helpers_get_char_or_default_from_buf(
+                input,
+                (size_t)inLen,
+                i + j,
+                '\0');
+
+            num24bits += (val << (16 - (j * 8)));
+        }
+
+        // This 24 bit number is broken down into four 6 bit numbers.
+        // Number 63 has bit pattern 111111.
+        uint8_t n[4];
+        n[0] = (num24bits >> (24 -  6)) & 63;
+        n[1] = (num24bits >> (24 - 12)) & 63;
+        n[2] = (num24bits >> (24 - 18)) & 63;
+        n[3] = (num24bits             ) & 63;
+
+        // Four six bit numbers are used as indices into the
+        // array of base64 characters.
+        for (size_t j = 0; j < 4; ++j)
+        {
+            if (!octaspire_container_utf8_string_push_back_ucs_character(
+                result,
+                (uint32_t)base64chars[n[j]]))
+            {
+                octaspire_container_utf8_string_release(result);
+                result = 0;
+
+                return result;
+            }
+        }
+    }
+
+    if (octaspire_container_utf8_string_remove_characters_at(
+        result,
+        -((ptrdiff_t)numPadding),
+        numPadding) != numPadding)
+    {
+        octaspire_container_utf8_string_release(result);
+        result = 0;
+
+        return result;
+    }
+
+    for (size_t i = 0; i < numPadding; ++i)
+    {
+        if (!octaspire_container_utf8_string_push_back_ucs_character(
+                result,
+                (uint32_t)'='))
+        {
+            octaspire_container_utf8_string_release(result);
+            result = 0;
+
+            return result;
+        }
+    }
+
+    return result;
 }
 
