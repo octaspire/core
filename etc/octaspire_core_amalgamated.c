@@ -138,10 +138,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "87"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "88"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.87.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.88.0"
 
 
 
@@ -2047,6 +2047,8 @@ bool octaspire_helpers_is_odd_size_t( size_t const value)
     return (!octaspire_helpers_is_even_size_t(value));
 }
 
+static uint8_t const octaspire_helpers_base64_private_bad_num = 64;
+
 static uint8_t octaspire_helpers_base64_private_base64_char_into_num(char const c)
 {
     if (c >= 'A' && c <= 'Z')
@@ -2074,7 +2076,7 @@ static uint8_t octaspire_helpers_base64_private_base64_char_into_num(char const 
         return 63;
     }
 
-    return 64;
+    return octaspire_helpers_base64_private_bad_num;
 }
 
 char octaspire_helpers_get_char_or_default_from_buf(
@@ -2091,6 +2093,19 @@ char octaspire_helpers_get_char_or_default_from_buf(
     return input[getAtIndex];
 }
 
+static int32_t octaspire_helpers_base64_private_skip_whitespace(
+    char const * const input,
+    int32_t const inLen,
+    int32_t index)
+{
+    while (index < inLen && isspace(input[index]))
+    {
+        ++index;
+    }
+
+    return index;
+}
+
 octaspire_container_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
     int32_t inLen,
@@ -2101,8 +2116,7 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
         return 0;
     }
 
-    int32_t const numPadding =
-        input[inLen-1] == '=' ? input[inLen-2] == '=' ? 2 : 1 : 0;
+    size_t numPadding = 0;
 
     octaspire_container_vector_t * result = octaspire_container_vector_new(
         sizeof(char),
@@ -2121,67 +2135,88 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
         inLen = (int32_t)strlen(input);
     }
 
-    for (int32_t i = 0; i < inLen; i += 4)
+    uint32_t indices[4] = {0, 0, 0, 0};
+    size_t   numIndices = 0;
+
+    for (int32_t i = 0; i <= inLen; /*NOP*/)
     {
-        uint32_t const index1 =
-            octaspire_helpers_base64_private_base64_char_into_num(
-                inLen - i <= numPadding ? 'A' : input[i]);
+        if (numIndices == 4)
+        {
+            // Generate the number with 24 bits.
+            uint32_t const num24bits =
+                ((indices[0] & 63) << (24 -  6)) +
+                ((indices[1] & 63) << (24 - 12)) +
+                ((indices[2] & 63) << (24 - 18)) +
+                ( indices[3] & 63);
 
-        octaspire_helpers_verify_true((i+1) < inLen);
+            // Break the number with 24 bits into the three original octets
+            // and save those into the result.
 
-        uint32_t const index2 =
-            octaspire_helpers_base64_private_base64_char_into_num(
-                inLen - (i + 1) <= numPadding ? 'A' : input[i + 1]);
+            for (size_t j = 0; j < 3; ++j)
+            {
+                char octet = (char)((num24bits >> (16 - (j * 8))) & 0xFF);
+                if (!octaspire_container_vector_push_back_element(result, &octet))
+                {
+                    octaspire_container_vector_release(result);
+                    result = 0;
+                    return result;
+                }
+            }
 
-        octaspire_helpers_verify_true((i+2) < inLen);
+            numIndices = 0;
+        }
 
-        uint32_t const index3 =
-            octaspire_helpers_base64_private_base64_char_into_num(
-                inLen - (i + 2) <= numPadding ? 'A' : input[i + 2]);
+        i = octaspire_helpers_base64_private_skip_whitespace(input, inLen, i);
 
-        octaspire_helpers_verify_true((i+3) < inLen);
+        if (i >= inLen)
+        {
+            break;
+        }
 
-        uint32_t const index4 =
-            octaspire_helpers_base64_private_base64_char_into_num(
-                inLen - (i + 3) <= numPadding ? 'A' : input[i + 3]);
+        char currentChar = input[i];
 
-        // Generate the number with 24 bits.
-        uint32_t const num24bits =
-            ((index1 & 63) << (24 -  6)) +
-            ((index2 & 63) << (24 - 12)) +
-            ((index3 & 63) << (24 - 18)) +
-             (index4 & 63);
+        if (currentChar == '=')
+        {
+            ++numPadding;
+            currentChar = 'A';
+        }
 
-        // Break the number with 24 bits into the three original octets
-        // and save those into the result.
+        uint32_t const index =
+            octaspire_helpers_base64_private_base64_char_into_num(currentChar);
 
-        char octet = (char)((num24bits >> 16) & 0xFF);
-        if (!octaspire_container_vector_push_back_element(result, &octet))
+        if (index == octaspire_helpers_base64_private_bad_num)
         {
             octaspire_container_vector_release(result);
             result = 0;
             return result;
         }
 
-        octet = (char)((num24bits >> 8) & 0xFF);
-        if (!octaspire_container_vector_push_back_element(result, &octet))
-        {
-            octaspire_container_vector_release(result);
-            result = 0;
-            return result;
-        }
-
-        octet = (char)(num24bits & 0xFF);
-        if (!octaspire_container_vector_push_back_element(result, &octet))
-        {
-            octaspire_container_vector_release(result);
-            result = 0;
-            return result;
-        }
+        indices[numIndices] = index;
+        ++numIndices;
+        ++i;
     }
 
-    for (int32_t i = 0; i < numPadding; ++i)
+    if (numIndices != 0 || numPadding >= octaspire_container_vector_get_length(result))
     {
+        octaspire_container_vector_release(result);
+        result = 0;
+        return result;
+    }
+
+    for (size_t i = 0; i < numPadding; ++i)
+    {
+        while (isspace(
+            *(char const * const)
+            octaspire_container_vector_peek_back_element_const(result)))
+        {
+            if (!octaspire_container_vector_pop_back_element(result))
+            {
+                octaspire_container_vector_release(result);
+                result = 0;
+                return result;
+            }
+        }
+
         if (!octaspire_container_vector_pop_back_element(result))
         {
             octaspire_container_vector_release(result);
@@ -9425,6 +9460,36 @@ TEST octaspire_helpers_base64_decode_encoded_qwerty1_test(void)
     PASS();
 }
 
+TEST octaspire_helpers_base64_decode_encoded_qwerty1_with_embedded_whitespace_test(void)
+{
+    char const * const input = "\ncX\nd l\ncnR5\nM Q= \n= \n ";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(decoded);
+
+    char const * const expected = "qwerty1";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < strlen(expected); ++i)
+    {
+        ASSERT_EQ(
+            expected[i],
+            *(char const * const)octaspire_container_vector_get_element_at_const(
+                decoded,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
 TEST octaspire_helpers_base64_encode_a_test(void)
 {
     char const * const input = "a";
@@ -9447,6 +9512,36 @@ TEST octaspire_helpers_base64_encode_a_test(void)
 TEST octaspire_helpers_base64_decode_encoded_a_test(void)
 {
     char const * const input = "YQ==";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(decoded);
+
+    char const * const expected = "a";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < strlen(expected); ++i)
+    {
+        ASSERT_EQ(
+            expected[i],
+            *(char const * const)octaspire_container_vector_get_element_at_const(
+                decoded,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_decode_encoded_a_with_embedded_whitespace_test(void)
+{
+    char const * const input = " Y\t \t \t\t Q  = =  \t \n";
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
@@ -9510,6 +9605,23 @@ TEST octaspire_helpers_base64_decode_encoded_empty_string_test(void)
     PASS();
 }
 
+TEST octaspire_helpers_base64_decode_encoded_empty_string_with_whitespace_test(void)
+{
+    char const * const input = " \t \n ";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT_EQ(0, decoded);
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
 TEST octaspire_helpers_base64_encode_base64_characters_test(void)
 {
     char const * const input =
@@ -9538,6 +9650,39 @@ TEST octaspire_helpers_base64_decode_encoded_base64_characters_test(void)
     char const * const input =
         "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5e"
         "jAxMjM0NTY3ODkrLw==";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(decoded);
+
+    char const * const expected =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < strlen(expected); ++i)
+    {
+        ASSERT_EQ(
+            expected[i],
+            *(char const * const)octaspire_container_vector_get_element_at_const(
+                decoded,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_decode_encoded_base64_characters_with_whitespace_test(void)
+{
+    char const * const input =
+        " QU JD   RE\tVGR0hJ\nSktMTU5PUFFSU\n1RVVl  dYW VphYmNkZWZna\tGlqa2xtbm9wcXJzdHV2d 3h5e"
+        "jAx M j M 0NTY\t\t\n 3ODkr Lw= =";
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
@@ -9624,6 +9769,40 @@ TEST octaspire_helpers_base64_decode_encoded_printable_ascii_characters_test(voi
     PASS();
 }
 
+TEST octaspire_helpers_base64_decode_encoded_printable_ascii_characters_with_whitespace_test(void)
+{
+    char const * const input =
+        " I C EiI yQ  lJ  icoK\tSorLC0uLzAx\n\nMjM0NTY3O Dk6Ozw9Pj9AQUJDREVGR0hJSktMTU5PUFFSU1R"
+        " V V l  d  Y  W    Vpb\nXF1eX\n\t 2B hYmN k  ZWZnaGlqa2xtbm9wcXJzdHV2d3 h 5ent8fX4=  ";
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        input,
+        strlen(input),
+        octaspireHelpersTestAllocator);
+
+    ASSERT(decoded);
+
+    char const * const expected =
+        " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abc"
+        "defghijklmnopqrstuvwxyz{|}~";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < strlen(expected); ++i)
+    {
+        ASSERT_EQ(
+            expected[i],
+            *(char const * const)octaspire_container_vector_get_element_at_const(
+                decoded,
+                (ptrdiff_t)i));
+    }
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_helpers_suite)
 {
     octaspireHelpersTestAllocator = octaspire_memory_allocator_new(0);
@@ -9651,14 +9830,19 @@ GREATEST_SUITE(octaspire_helpers_suite)
 
     RUN_TEST(octaspire_helpers_base64_encode_qwerty1_test);
     RUN_TEST(octaspire_helpers_base64_decode_encoded_qwerty1_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_qwerty1_with_embedded_whitespace_test);
     RUN_TEST(octaspire_helpers_base64_encode_a_test);
     RUN_TEST(octaspire_helpers_base64_decode_encoded_a_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_a_with_embedded_whitespace_test);
     RUN_TEST(octaspire_helpers_base64_encode_empty_string_test);
     RUN_TEST(octaspire_helpers_base64_decode_encoded_empty_string_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_empty_string_with_whitespace_test);
     RUN_TEST(octaspire_helpers_base64_encode_base64_characters_test);
     RUN_TEST(octaspire_helpers_base64_decode_encoded_base64_characters_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_base64_characters_with_whitespace_test);
     RUN_TEST(octaspire_helpers_base64_encode_printable_ascii_characters_test);
     RUN_TEST(octaspire_helpers_base64_decode_encoded_printable_ascii_characters_test);
+    RUN_TEST(octaspire_helpers_base64_decode_encoded_printable_ascii_characters_with_whitespace_test);
 
     octaspire_stdio_release(octaspireHelpersTestStdio);
     octaspireHelpersTestStdio = 0;

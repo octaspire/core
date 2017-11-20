@@ -17,6 +17,7 @@ limitations under the License.
 #include "octaspire/core/octaspire_helpers.h"
 #include <assert.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <string.h>
 #include <math.h>
 #include "external/jenkins_one_at_a_time.h"
@@ -196,6 +197,8 @@ bool octaspire_helpers_is_odd_size_t( size_t const value)
     return (!octaspire_helpers_is_even_size_t(value));
 }
 
+static uint8_t const octaspire_helpers_base64_private_bad_num = 64;
+
 static uint8_t octaspire_helpers_base64_private_base64_char_into_num(char const c)
 {
     if (c >= 'A' && c <= 'Z')
@@ -223,7 +226,7 @@ static uint8_t octaspire_helpers_base64_private_base64_char_into_num(char const 
         return 63;
     }
 
-    return 64;
+    return octaspire_helpers_base64_private_bad_num;
 }
 
 char octaspire_helpers_get_char_or_default_from_buf(
@@ -240,6 +243,19 @@ char octaspire_helpers_get_char_or_default_from_buf(
     return input[getAtIndex];
 }
 
+static int32_t octaspire_helpers_base64_private_skip_whitespace(
+    char const * const input,
+    int32_t const inLen,
+    int32_t index)
+{
+    while (index < inLen && isspace(input[index]))
+    {
+        ++index;
+    }
+
+    return index;
+}
+
 octaspire_container_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
     int32_t inLen,
@@ -250,8 +266,7 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
         return 0;
     }
 
-    int32_t const numPadding =
-        input[inLen-1] == '=' ? input[inLen-2] == '=' ? 2 : 1 : 0;
+    size_t numPadding = 0;
 
     octaspire_container_vector_t * result = octaspire_container_vector_new(
         sizeof(char),
@@ -270,67 +285,88 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
         inLen = (int32_t)strlen(input);
     }
 
-    for (int32_t i = 0; i < inLen; i += 4)
+    uint32_t indices[4] = {0, 0, 0, 0};
+    size_t   numIndices = 0;
+
+    for (int32_t i = 0; i <= inLen; /*NOP*/)
     {
-        uint32_t const index1 =
-            octaspire_helpers_base64_private_base64_char_into_num(
-                inLen - i <= numPadding ? 'A' : input[i]);
+        if (numIndices == 4)
+        {
+            // Generate the number with 24 bits.
+            uint32_t const num24bits =
+                ((indices[0] & 63) << (24 -  6)) +
+                ((indices[1] & 63) << (24 - 12)) +
+                ((indices[2] & 63) << (24 - 18)) +
+                ( indices[3] & 63);
 
-        octaspire_helpers_verify_true((i+1) < inLen);
+            // Break the number with 24 bits into the three original octets
+            // and save those into the result.
 
-        uint32_t const index2 =
-            octaspire_helpers_base64_private_base64_char_into_num(
-                inLen - (i + 1) <= numPadding ? 'A' : input[i + 1]);
+            for (size_t j = 0; j < 3; ++j)
+            {
+                char octet = (char)((num24bits >> (16 - (j * 8))) & 0xFF);
+                if (!octaspire_container_vector_push_back_element(result, &octet))
+                {
+                    octaspire_container_vector_release(result);
+                    result = 0;
+                    return result;
+                }
+            }
 
-        octaspire_helpers_verify_true((i+2) < inLen);
+            numIndices = 0;
+        }
 
-        uint32_t const index3 =
-            octaspire_helpers_base64_private_base64_char_into_num(
-                inLen - (i + 2) <= numPadding ? 'A' : input[i + 2]);
+        i = octaspire_helpers_base64_private_skip_whitespace(input, inLen, i);
 
-        octaspire_helpers_verify_true((i+3) < inLen);
+        if (i >= inLen)
+        {
+            break;
+        }
 
-        uint32_t const index4 =
-            octaspire_helpers_base64_private_base64_char_into_num(
-                inLen - (i + 3) <= numPadding ? 'A' : input[i + 3]);
+        char currentChar = input[i];
 
-        // Generate the number with 24 bits.
-        uint32_t const num24bits =
-            ((index1 & 63) << (24 -  6)) +
-            ((index2 & 63) << (24 - 12)) +
-            ((index3 & 63) << (24 - 18)) +
-             (index4 & 63);
+        if (currentChar == '=')
+        {
+            ++numPadding;
+            currentChar = 'A';
+        }
 
-        // Break the number with 24 bits into the three original octets
-        // and save those into the result.
+        uint32_t const index =
+            octaspire_helpers_base64_private_base64_char_into_num(currentChar);
 
-        char octet = (char)((num24bits >> 16) & 0xFF);
-        if (!octaspire_container_vector_push_back_element(result, &octet))
+        if (index == octaspire_helpers_base64_private_bad_num)
         {
             octaspire_container_vector_release(result);
             result = 0;
             return result;
         }
 
-        octet = (char)((num24bits >> 8) & 0xFF);
-        if (!octaspire_container_vector_push_back_element(result, &octet))
-        {
-            octaspire_container_vector_release(result);
-            result = 0;
-            return result;
-        }
-
-        octet = (char)(num24bits & 0xFF);
-        if (!octaspire_container_vector_push_back_element(result, &octet))
-        {
-            octaspire_container_vector_release(result);
-            result = 0;
-            return result;
-        }
+        indices[numIndices] = index;
+        ++numIndices;
+        ++i;
     }
 
-    for (int32_t i = 0; i < numPadding; ++i)
+    if (numIndices != 0 || numPadding >= octaspire_container_vector_get_length(result))
     {
+        octaspire_container_vector_release(result);
+        result = 0;
+        return result;
+    }
+
+    for (size_t i = 0; i < numPadding; ++i)
+    {
+        while (isspace(
+            *(char const * const)
+            octaspire_container_vector_peek_back_element_const(result)))
+        {
+            if (!octaspire_container_vector_pop_back_element(result))
+            {
+                octaspire_container_vector_release(result);
+                result = 0;
+                return result;
+            }
+        }
+
         if (!octaspire_container_vector_pop_back_element(result))
         {
             octaspire_container_vector_release(result);
