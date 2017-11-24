@@ -229,11 +229,11 @@ static uint8_t octaspire_helpers_base64_private_base64_char_into_num(char const 
     return octaspire_helpers_base64_private_bad_num;
 }
 
-char octaspire_helpers_get_char_or_default_from_buf(
-    char const * const input,
+uint8_t octaspire_helpers_get_char_or_default_from_buf(
+    uint8_t const * const input,
     size_t const inLen,
     size_t const getAtIndex,
-    char const defaultChar)
+    uint8_t const defaultChar)
 {
     if (!input || getAtIndex >= inLen)
     {
@@ -381,6 +381,7 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
 octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
     char const * const input,
     size_t const inLen,
+    size_t const lineLen,
     octaspire_memory_allocator_t * const allocator)
 {
     char const * const base64chars =
@@ -402,6 +403,8 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
         numPadding = 3 - numPadding;
     }
 
+    size_t currentLineLen = 0;
+
     for (size_t i = 0; i < inLen; i += 3)
     {
         // Three octets of input is converted into a number with 24 bits.
@@ -412,7 +415,7 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
         for (size_t j = 0; j < 3; ++j)
         {
             uint32_t const val = (uint32_t)octaspire_helpers_get_char_or_default_from_buf(
-                input,
+                (uint8_t const * const)input,
                 (size_t)inLen,
                 i + j,
                 '\0');
@@ -438,25 +441,70 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
             {
                 octaspire_container_utf8_string_release(result);
                 result = 0;
-
                 return result;
+            }
+
+            ++currentLineLen;
+
+            if (lineLen && currentLineLen >= lineLen)
+            {
+                if (!octaspire_container_utf8_string_push_back_ucs_character(
+                        result,
+                        '\n'))
+                {
+                    octaspire_container_utf8_string_release(result);
+                    result = 0;
+                    return result;
+                }
+
+                currentLineLen = 0;
             }
         }
     }
 
-    if (octaspire_container_utf8_string_remove_characters_at(
-        result,
-        -((ptrdiff_t)numPadding),
-        numPadding) != numPadding)
+    if (numPadding)
     {
-        octaspire_container_utf8_string_release(result);
-        result = 0;
+        size_t numZerosRemoved = 0;
 
-        return result;
+        for (size_t i = 0;
+            i < octaspire_container_utf8_string_get_length_in_ucs_characters(result);
+            ++i)
+        {
+            if (octaspire_container_utf8_string_get_ucs_character_at_index(result, -1) != '\n')
+            {
+                ++numZerosRemoved;
+            }
+
+            if (!octaspire_container_utf8_string_pop_back_ucs_character(result))
+            {
+                octaspire_container_utf8_string_release(result);
+                result = 0;
+                return result;
+            }
+
+            if (numZerosRemoved == numPadding)
+            {
+                break;
+            }
+        }
     }
 
     for (size_t i = 0; i < numPadding; ++i)
     {
+            if (lineLen && currentLineLen >= lineLen)
+            {
+                if (!octaspire_container_utf8_string_push_back_ucs_character(
+                        result,
+                        '\n'))
+                {
+                    octaspire_container_utf8_string_release(result);
+                    result = 0;
+                    return result;
+                }
+
+                currentLineLen = 0;
+            }
+
         if (!octaspire_container_utf8_string_push_back_ucs_character(
                 result,
                 (uint32_t)'='))
@@ -466,6 +514,8 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
 
             return result;
         }
+
+        ++currentLineLen;
     }
 
     return result;

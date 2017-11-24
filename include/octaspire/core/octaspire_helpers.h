@@ -65,11 +65,11 @@ float octaspire_helpers_ceilf(float const value);
 bool octaspire_helpers_is_even_size_t(size_t const value);
 bool octaspire_helpers_is_odd_size_t( size_t const value);
 
-char octaspire_helpers_get_char_or_default_from_buf(
-    char const * const input,
+uint8_t octaspire_helpers_get_char_or_default_from_buf(
+    uint8_t const * const input,
     size_t const inLen,
     size_t const getAtIndex,
-    char const defaultChar);
+    uint8_t const defaultChar);
 
 octaspire_container_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
@@ -79,6 +79,7 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
 octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
     char const * const input,
     size_t const inLen,
+    size_t const lineLen,
     octaspire_memory_allocator_t * const allocator);
 
 #ifdef __cplusplus
