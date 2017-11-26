@@ -243,6 +243,24 @@ uint8_t octaspire_helpers_get_char_or_default_from_buf(
     return input[getAtIndex];
 }
 
+size_t octaspire_helpers_measure_length_of_last_line(
+    octaspire_container_utf8_string_t const * const str)
+{
+    size_t result = 0;
+    while (result < octaspire_container_utf8_string_get_length_in_ucs_characters(str))
+    {
+        ++result;
+        if (octaspire_container_utf8_string_get_ucs_character_at_index(
+            str,
+            -(ptrdiff_t)result) == '\n')
+        {
+            return result;
+        }
+    }
+
+    return result;
+}
+
 static int32_t octaspire_helpers_base64_private_skip_whitespace(
     char const * const input,
     int32_t const inLen,
@@ -473,6 +491,11 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
             if (octaspire_container_utf8_string_get_ucs_character_at_index(result, -1) != '\n')
             {
                 ++numZerosRemoved;
+                --currentLineLen;
+            }
+            else
+            {
+                currentLineLen = octaspire_helpers_measure_length_of_last_line(result);
             }
 
             if (!octaspire_container_utf8_string_pop_back_ucs_character(result))
@@ -491,19 +514,19 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
 
     for (size_t i = 0; i < numPadding; ++i)
     {
-            if (lineLen && currentLineLen >= lineLen)
+        if (lineLen && currentLineLen >= lineLen)
+        {
+            if (!octaspire_container_utf8_string_push_back_ucs_character(
+                    result,
+                    '\n'))
             {
-                if (!octaspire_container_utf8_string_push_back_ucs_character(
-                        result,
-                        '\n'))
-                {
-                    octaspire_container_utf8_string_release(result);
-                    result = 0;
-                    return result;
-                }
-
-                currentLineLen = 0;
+                octaspire_container_utf8_string_release(result);
+                result = 0;
+                return result;
             }
+
+            currentLineLen = 0;
+        }
 
         if (!octaspire_container_utf8_string_push_back_ucs_character(
                 result,

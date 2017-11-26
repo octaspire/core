@@ -886,6 +886,79 @@ TEST octaspire_helpers_base64_encode_all_octets_line_len_0_test(void)
     PASS();
 }
 
+TEST octaspire_helpers_base64_encode_all_octets_line_len_69_test(void)
+{
+    unsigned char input[0xFF + 1];
+
+    for (size_t i = 0; i <= 0xFF; ++i)
+        input[i] = (unsigned char)i;
+
+    octaspire_container_utf8_string_t * encoded = octaspire_helpers_base64_encode(
+        (char const * const)input,
+        sizeof(input) / sizeof(input[0]),
+        69,
+        octaspireHelpersTestAllocator);
+
+    ASSERT(encoded);
+
+    char const * const expected =
+        "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyM\n"
+        "zQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZm\n"
+        "doaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZq\n"
+        "bnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3O\n"
+        "z9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==";
+
+    ASSERT_EQ(strlen(expected), octaspire_container_utf8_string_get_length_in_octets(encoded));
+
+    ASSERT_STR_EQ(
+        expected,
+        octaspire_container_utf8_string_get_c_string(encoded));
+
+    octaspire_container_utf8_string_release(encoded);
+    encoded = 0;
+
+    PASS();
+}
+
+TEST octaspire_helpers_base64_encode_and_then_decode_all_octets_line_len_69_test(void)
+{
+    unsigned char input[0xFF + 1];
+
+    for (size_t i = 0; i <= 0xFF; ++i)
+        input[i] = (unsigned char)i;
+
+    octaspire_container_utf8_string_t * encoded = octaspire_helpers_base64_encode(
+        (char const * const)input,
+        sizeof(input) / sizeof(input[0]),
+        69,
+        octaspireHelpersTestAllocator);
+
+    ASSERT(encoded);
+
+    octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
+        octaspire_container_utf8_string_get_c_string(encoded),
+        (int32_t)octaspire_container_utf8_string_get_length_in_octets(encoded),
+        octaspireHelpersTestAllocator);
+
+    ASSERT_EQ(0xFF + 1, octaspire_container_vector_get_length(decoded));
+
+    for (size_t i = 0; i < octaspire_container_vector_get_length(decoded); ++i)
+    {
+        ASSERT_EQ(
+            input[i],
+            *(unsigned char const * const)
+                octaspire_container_vector_get_element_at_const(decoded, (ptrdiff_t)i));
+    }
+
+    octaspire_container_utf8_string_release(encoded);
+    encoded = 0;
+
+    octaspire_container_vector_release(decoded);
+    decoded = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_helpers_suite)
 {
     octaspireHelpersTestAllocator = octaspire_memory_allocator_new(0);
@@ -933,6 +1006,8 @@ GREATEST_SUITE(octaspire_helpers_suite)
     RUN_TEST(octaspire_helpers_base64_decode_encoded_printable_ascii_characters_with_whitespace_test);
     RUN_TEST(octaspire_helpers_base64_encode_all_octets_one_by_one_line_len_0_test);
     RUN_TEST(octaspire_helpers_base64_encode_all_octets_line_len_0_test);
+    RUN_TEST(octaspire_helpers_base64_encode_all_octets_line_len_69_test);
+    RUN_TEST(octaspire_helpers_base64_encode_and_then_decode_all_octets_line_len_69_test);
 
     octaspire_stdio_release(octaspireHelpersTestStdio);
     octaspireHelpersTestStdio = 0;

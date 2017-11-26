@@ -71,6 +71,9 @@ uint8_t octaspire_helpers_get_char_or_default_from_buf(
     size_t const getAtIndex,
     uint8_t const defaultChar);
 
+size_t octaspire_helpers_measure_length_of_last_line(
+    octaspire_container_utf8_string_t const * const str);
+
 octaspire_container_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
     int32_t inLen,
