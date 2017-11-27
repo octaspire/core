@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
 #include "octaspire/core/octaspire_container_hash_map.h"
+#include "external/jenkins_one_at_a_time.h"
 #include <assert.h>
 #include <inttypes.h>
 #include <string.h>
@@ -452,6 +453,37 @@ octaspire_container_hash_map_t *octaspire_container_hash_map_new_with_octaspire_
         (octaspire_container_hash_map_key_compare_function_t)octaspire_container_utf8_string_is_equal,
         (octaspire_container_hash_map_key_hash_function_t)octaspire_container_utf8_string_get_hash,
         (octaspire_container_hash_map_element_callback_function_t)octaspire_container_utf8_string_release,
+        valueReleaseCallback,
+        allocator);
+}
+
+static bool octaspire_container_hash_map_helper_private_size_t_is_equal(
+    size_t const * const first,
+    size_t const * const second)
+{
+    return *first == *second;
+}
+
+uint32_t octaspire_container_hash_map_helper_size_t_get_hash(
+    size_t const value)
+{
+    return jenkins_one_at_a_time_hash(&value, sizeof(value));
+}
+
+octaspire_container_hash_map_t *octaspire_container_hash_map_new_with_size_t_keys(
+    size_t const valueSizeInOctets,
+    bool const valueIsPointer,
+    octaspire_container_hash_map_element_callback_function_t valueReleaseCallback,
+    octaspire_memory_allocator_t *allocator)
+{
+    return octaspire_container_hash_map_new(
+        sizeof(size_t),
+        false,
+        valueSizeInOctets,
+        valueIsPointer,
+        (octaspire_container_hash_map_key_compare_function_t)octaspire_container_hash_map_helper_private_size_t_is_equal,
+        (octaspire_container_hash_map_key_hash_function_t)octaspire_container_hash_map_helper_size_t_get_hash,
+        (octaspire_container_hash_map_element_callback_function_t)0,
         valueReleaseCallback,
         allocator);
 }
