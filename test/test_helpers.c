@@ -331,7 +331,7 @@ TEST octaspire_helpers_base64_decode_encoded_qwerty1_test(void)
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -361,7 +361,7 @@ TEST octaspire_helpers_base64_decode_encoded_qwerty1_with_embedded_whitespace_te
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -431,7 +431,7 @@ TEST octaspire_helpers_base64_decode_encoded_a_test(void)
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -461,7 +461,7 @@ TEST octaspire_helpers_base64_decode_encoded_a_with_embedded_whitespace_test(voi
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -531,7 +531,7 @@ TEST octaspire_helpers_base64_decode_encoded_empty_string_test(void)
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT_EQ(0, decoded);
@@ -548,7 +548,7 @@ TEST octaspire_helpers_base64_decode_encoded_empty_string_with_whitespace_test(v
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT_EQ(0, decoded);
@@ -615,7 +615,7 @@ TEST octaspire_helpers_base64_decode_encoded_base64_characters_test(void)
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -648,7 +648,7 @@ TEST octaspire_helpers_base64_decode_encoded_base64_characters_with_whitespace_t
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -731,7 +731,7 @@ TEST octaspire_helpers_base64_decode_encoded_printable_ascii_characters_test(voi
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -765,7 +765,7 @@ TEST octaspire_helpers_base64_decode_encoded_printable_ascii_characters_with_whi
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);

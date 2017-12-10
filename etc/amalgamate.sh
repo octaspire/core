@@ -77,6 +77,7 @@ void exit(int32_t const status)
 
 #else
 
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>

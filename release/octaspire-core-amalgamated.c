@@ -63,6 +63,7 @@ void exit(int32_t const status)
 
 #else
 
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -139,9 +140,9 @@ limitations under the License.
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
 #define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "89"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "2"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.89.0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.89.2"
 
 
 
@@ -9574,7 +9575,7 @@ TEST octaspire_helpers_base64_decode_encoded_qwerty1_test(void)
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -9604,7 +9605,7 @@ TEST octaspire_helpers_base64_decode_encoded_qwerty1_with_embedded_whitespace_te
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -9674,7 +9675,7 @@ TEST octaspire_helpers_base64_decode_encoded_a_test(void)
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -9704,7 +9705,7 @@ TEST octaspire_helpers_base64_decode_encoded_a_with_embedded_whitespace_test(voi
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -9774,7 +9775,7 @@ TEST octaspire_helpers_base64_decode_encoded_empty_string_test(void)
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT_EQ(0, decoded);
@@ -9791,7 +9792,7 @@ TEST octaspire_helpers_base64_decode_encoded_empty_string_with_whitespace_test(v
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT_EQ(0, decoded);
@@ -9858,7 +9859,7 @@ TEST octaspire_helpers_base64_decode_encoded_base64_characters_test(void)
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -9891,7 +9892,7 @@ TEST octaspire_helpers_base64_decode_encoded_base64_characters_with_whitespace_t
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -9974,7 +9975,7 @@ TEST octaspire_helpers_base64_decode_encoded_printable_ascii_characters_test(voi
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
@@ -10008,7 +10009,7 @@ TEST octaspire_helpers_base64_decode_encoded_printable_ascii_characters_with_whi
 
     octaspire_container_vector_t * decoded = octaspire_helpers_base64_decode(
         input,
-        strlen(input),
+        (int32_t)strlen(input),
         octaspireHelpersTestAllocator);
 
     ASSERT(decoded);
