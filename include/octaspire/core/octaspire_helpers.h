@@ -76,7 +76,7 @@ size_t octaspire_helpers_measure_length_of_last_line(
 
 octaspire_container_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
-    int32_t inLen,
+    int32_t const inputLenOrNegativeToMeasure,
     octaspire_memory_allocator_t * const allocator);
 
 octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(

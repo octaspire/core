@@ -140,9 +140,9 @@ limitations under the License.
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
 #define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "89"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "2"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "4"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.89.2"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.89.4"
 
 
 
@@ -1545,7 +1545,7 @@ size_t octaspire_helpers_measure_length_of_last_line(
 
 octaspire_container_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
-    int32_t inLen,
+    int32_t const inputLenOrNegativeToMeasure,
     octaspire_memory_allocator_t * const allocator);
 
 octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
@@ -2125,12 +2125,12 @@ size_t octaspire_helpers_measure_length_of_last_line(
     return result;
 }
 
-static int32_t octaspire_helpers_base64_private_skip_whitespace(
+static size_t octaspire_helpers_base64_private_skip_whitespace(
     char const * const input,
-    int32_t const inLen,
-    int32_t index)
+    size_t const inLen,
+    size_t index)
 {
-    while (index < inLen && isspace(input[index]))
+    while (index < inLen && isspace((int)input[index]))
     {
         ++index;
     }
@@ -2140,10 +2140,10 @@ static int32_t octaspire_helpers_base64_private_skip_whitespace(
 
 octaspire_container_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
-    int32_t inLen,
+    int32_t const inputLenOrNegativeToMeasure,
     octaspire_memory_allocator_t * const allocator)
 {
-    if (inLen < 2)
+    if (inputLenOrNegativeToMeasure < 2)
     {
         return 0;
     }
@@ -2162,15 +2162,14 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
     }
 
     // Negative length means that the length must be measured here.
-    if (inLen < 0)
-    {
-        inLen = (int32_t)strlen(input);
-    }
+    size_t const inLen = (inputLenOrNegativeToMeasure < 0)
+        ? strlen(input)
+        : (size_t)inputLenOrNegativeToMeasure;
 
     uint32_t indices[4] = {0, 0, 0, 0};
     size_t   numIndices = 0;
 
-    for (int32_t i = 0; i <= inLen; /*NOP*/)
+    for (size_t i = 0; i <= inLen; /*NOP*/)
     {
         if (numIndices == 4)
         {
@@ -2238,7 +2237,7 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
     for (size_t i = 0; i < numPadding; ++i)
     {
         while (isspace(
-            *(char const * const)
+            (int)*(char const * const)
             octaspire_container_vector_peek_back_element_const(result)))
         {
             if (!octaspire_container_vector_pop_back_element(result))
