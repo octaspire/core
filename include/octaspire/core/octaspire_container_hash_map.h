@@ -125,6 +125,9 @@ octaspire_container_hash_map_element_t const * octaspire_container_hash_map_get_
     uint32_t const hash,
     void const * const key);
 
+bool octaspire_container_hash_map_is_empty(
+    octaspire_container_hash_map_t const * const self);
+
 size_t octaspire_container_hash_map_get_number_of_elements(
     octaspire_container_hash_map_t const * const self);
 

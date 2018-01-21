@@ -807,6 +807,11 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get(
     return 0;
 }
 
+bool octaspire_container_hash_map_is_empty(octaspire_container_hash_map_t const * const self)
+{
+    return (octaspire_container_hash_map_get_number_of_elements(self) == 0);
+}
+
 size_t octaspire_container_hash_map_get_number_of_elements(octaspire_container_hash_map_t const * const self)
 {
     assert(self);

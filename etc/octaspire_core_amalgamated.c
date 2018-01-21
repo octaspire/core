@@ -139,10 +139,10 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "89"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "4"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "90"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
-#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.89.4"
+#define OCTASPIRE_CORE_CONFIG_VERSION_STR   "Octaspire Core version 0.90.0"
 
 
 
@@ -1409,6 +1409,9 @@ octaspire_container_hash_map_element_t const * octaspire_container_hash_map_get_
     octaspire_container_hash_map_t const * const self,
     uint32_t const hash,
     void const * const key);
+
+bool octaspire_container_hash_map_is_empty(
+    octaspire_container_hash_map_t const * const self);
 
 size_t octaspire_container_hash_map_get_number_of_elements(
     octaspire_container_hash_map_t const * const self);
@@ -7552,6 +7555,11 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get(
     }
 
     return 0;
+}
+
+bool octaspire_container_hash_map_is_empty(octaspire_container_hash_map_t const * const self)
+{
+    return (octaspire_container_hash_map_get_number_of_elements(self) == 0);
 }
 
 size_t octaspire_container_hash_map_get_number_of_elements(octaspire_container_hash_map_t const * const self)
@@ -21716,6 +21724,38 @@ TEST octaspire_container_hash_map_get_at_index_test(void)
     PASS();
 }
 
+TEST octaspire_container_hash_map_is_empty_test(void)
+{
+    octaspire_container_hash_map_t *hashMap = octaspire_container_hash_map_new(
+        sizeof(size_t),
+        false,
+        sizeof(size_t),
+        false,
+        octaspire_container_hash_map_new_test_key_compare_function_for_size_t_keys,
+        octaspire_container_hash_map_new_test_key_hash_function_for_size_t_keys,
+        0,
+        0,
+        octaspireContainerHashMapTestAllocator);
+
+    ASSERT(hashMap);
+
+    ASSERT(octaspire_container_hash_map_is_empty(hashMap));
+
+    size_t const numElements = 3;
+
+    for (size_t i = 0; i < numElements; ++i)
+    {
+        uint32_t hash = (uint32_t)i;
+        octaspire_container_hash_map_put(hashMap, hash, &i, &i);
+        ASSERT_FALSE(octaspire_container_hash_map_is_empty(hashMap));
+    }
+
+    octaspire_container_hash_map_release(hashMap);
+    hashMap = 0;
+
+    PASS();
+}
+
 GREATEST_SUITE(octaspire_container_hash_map_suite)
 {
     octaspireContainerHashMapTestAllocator = octaspire_memory_allocator_new(0);
@@ -21737,6 +21777,7 @@ GREATEST_SUITE(octaspire_container_hash_map_suite)
     RUN_TEST(octaspire_container_hash_map_element_const_iterator_test);
 
     RUN_TEST(octaspire_container_hash_map_get_at_index_test);
+    RUN_TEST(octaspire_container_hash_map_is_empty_test);
 
     octaspire_memory_allocator_release(octaspireContainerHashMapTestAllocator);
     octaspireContainerHashMapTestAllocator = 0;
