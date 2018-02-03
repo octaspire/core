@@ -236,7 +236,11 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_vformat(
 #endif
         n = vsnprintf(
             buffer,
+    #ifdef OCTASPIRE_PLAN9_IMPLEMENTATION
+            buflen - 1,
+    #else
             buflen,
+    #endif
             fmt,
             copyOfVarArgs);
 
