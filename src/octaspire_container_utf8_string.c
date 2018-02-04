@@ -113,8 +113,11 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_from_buff
         while (index < lengthInOctets)
         {
             // TODO XXX is (lengthInOctets - index) correct?
-            octaspire_utf8_decode_status_t status =
-                octaspire_utf8_decode_character(buffer + index, (lengthInOctets - index), &ucsChar, &numOctets);
+            octaspire_utf8_decode_status_t status = octaspire_utf8_decode_character(
+                buffer + index,
+                (lengthInOctets - index),
+                &ucsChar,
+                &numOctets);
 
             if (status != OCTASPIRE_UTF8_DECODE_STATUS_OK)
             {
@@ -254,8 +257,8 @@ octaspire_container_utf8_string_t *octaspire_container_utf8_string_new_vformat(
         {
             // Encoding error in C99 or, on older glibc, the output was truncated.
             // Try again with more space. Because we don't know how much
-            // space is required, lets double it (and make sure that the length is not zero). Because we don't know
-            // is the reason for failure an encoding error or missing space,
+            // space is required, lets double it (and make sure that the length is not zero).
+            // Because we don't know is the reason for failure an encoding error or missing space,
             // we will start counting to prevent looping forever.
             ++negativeResultCounter;
 
@@ -531,9 +534,11 @@ static octaspire_container_utf8_string_private_index_t octaspire_container_utf8_
     if (possiblyNegativeIndex < 0)
     {
         ptrdiff_t tmpIndex =
-            (ptrdiff_t)octaspire_container_utf8_string_get_length_in_ucs_characters(self) + possiblyNegativeIndex;
+            (ptrdiff_t)octaspire_container_utf8_string_get_length_in_ucs_characters(self) +
+            possiblyNegativeIndex;
 
-        if (tmpIndex >= 0 && (size_t)tmpIndex < octaspire_container_utf8_string_get_length_in_ucs_characters(self))
+        if (tmpIndex >= 0 &&
+            (size_t)tmpIndex < octaspire_container_utf8_string_get_length_in_ucs_characters(self))
         {
             result.index   = (size_t)tmpIndex;
             result.isValid = true;

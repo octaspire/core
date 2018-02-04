@@ -247,3 +247,4 @@ size_t octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
 {
     return self->numberOfFutureAllocationsToBeRigged;
 }
+

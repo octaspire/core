@@ -346,7 +346,8 @@ bool octaspire_container_vector_remove_element_at(
         }
         else
         {
-            self->elementReleaseCallback(octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
+            self->elementReleaseCallback(
+                octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
         }
     }
 
@@ -589,7 +590,8 @@ bool octaspire_container_vector_replace_element_at(
         }
         else
         {
-            self->elementReleaseCallback(octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
+            self->elementReleaseCallback(
+                octaspire_container_vector_private_index_to_pointer(self, realIndex.index));
         }
     }
 
@@ -734,7 +736,8 @@ void const * octaspire_container_vector_peek_front_element_const(
     return octaspire_container_vector_get_element_at_const(self, 0);
 }
 
-octaspire_container_vector_element_callback_t octaspire_container_vector_get_element_release_callback_const(octaspire_container_vector_t const * const self)
+octaspire_container_vector_element_callback_t
+octaspire_container_vector_get_element_release_callback_const(octaspire_container_vector_t const * const self)
 {
     return self->elementReleaseCallback;
 }

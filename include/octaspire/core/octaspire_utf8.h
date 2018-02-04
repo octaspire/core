@@ -22,7 +22,7 @@ limitations under the License.
 #include <stddef.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"       {
 #endif
 
 typedef enum octaspire_utf8_decode_status_t
@@ -68,7 +68,7 @@ octaspire_utf8_decode_status_t octaspire_utf8_decode_character_from_buffer(
     int *numoctets);
 
 #ifdef __cplusplus
-}
+/* extern "C" */ }
 #endif
 
 #endif

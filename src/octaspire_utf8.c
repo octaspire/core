@@ -34,15 +34,20 @@ typedef enum octaspire_utf8_character_range_t
 octaspire_utf8_character_range_t;
 
 static octaspire_utf8_character_range_t octaspire_utf8_private_rangeof(uint32_t const character);
-//static octaspire_utf8_character_range_t   octaspire_utf8_private_rangeof          (octaspire_utf8_character_range_t const range);
-static uint32_t                           octaspire_utf8_private_high_order_bits  (octaspire_utf8_character_range_t const range);
-static void                               octaspire_utf8_private_set_bit          (uint32_t *bitset, size_t const index, bool const on);
-static void                               octaspire_utf8_private_set_bit_of_char  (unsigned char *bitset, size_t const index, bool const on);
-static bool                               octaspire_utf8_private_get_bit          (uint32_t const bitset, size_t const index);
-static bool                               octaspire_utf8_private_get_bit_of_uint8 (char const bitset, size_t const index);
+static uint32_t octaspire_utf8_private_high_order_bits  (octaspire_utf8_character_range_t const range);
+static void     octaspire_utf8_private_set_bit          (uint32_t *bitset, size_t const index, bool const on);
 
-static int                                octaspire_utf8_private_octets_in_next   (char const * const text, size_t const textLengthInOctets);
-static int                                octaspire_utf8_private_octets_in_next_from_buffer   (char const * const buffer, size_t const lengthInOctets, size_t const currentIndex);
+static void octaspire_utf8_private_set_bit_of_char(unsigned char *bitset, size_t const index, bool const on);
+
+static bool     octaspire_utf8_private_get_bit          (uint32_t const bitset, size_t const index);
+static bool     octaspire_utf8_private_get_bit_of_uint8 (char const bitset, size_t const index);
+
+static int octaspire_utf8_private_octets_in_next(char const * const text, size_t const textLengthInOctets);
+
+static int octaspire_utf8_private_octets_in_next_from_buffer(
+    char const * const buffer,
+    size_t const lengthInOctets,
+    size_t const currentIndex);
 
 octaspire_utf8_decode_status_t octaspire_utf8_private_decode_helper(
     char const * const buffer,
@@ -137,7 +142,9 @@ static bool octaspire_utf8_private_get_bit_of_uint8(char const bitset, size_t co
     return (((uint8_t)bitset) >> index) & 1;
 }
 
-octaspire_utf8_encode_status_t octaspire_utf8_encode_character(uint32_t const character, octaspire_utf8_character_t *result)
+octaspire_utf8_encode_status_t octaspire_utf8_encode_character(
+    uint32_t const character,
+    octaspire_utf8_character_t *result)
 {
     memset(result->octets, 0, 4);
     result->numoctets = 0;
@@ -196,7 +203,10 @@ octaspire_utf8_encode_status_t octaspire_utf8_encode_character(uint32_t const ch
 
             for (size_t i = 0; i < 4; ++i)
             {
-                octaspire_utf8_private_set_bit(&bitset, 16+i, octaspire_utf8_private_get_bit(character, 12+i));
+                octaspire_utf8_private_set_bit(
+                    &bitset,
+                    16+i,
+                    octaspire_utf8_private_get_bit(character, 12+i));
             }
 
             result->numoctets = 3;
@@ -217,12 +227,18 @@ octaspire_utf8_encode_status_t octaspire_utf8_encode_character(uint32_t const ch
 
             for (size_t i = 0; i < 6; ++i)
             {
-                octaspire_utf8_private_set_bit(&bitset, 16+i, octaspire_utf8_private_get_bit(character, 12+i));
+                octaspire_utf8_private_set_bit(
+                    &bitset,
+                    16+i,
+                    octaspire_utf8_private_get_bit(character, 12+i));
             }
 
             for (size_t i = 0; i < 3; ++i)
             {
-                octaspire_utf8_private_set_bit(&bitset, 24+i, octaspire_utf8_private_get_bit(character, 18+i));
+                octaspire_utf8_private_set_bit(
+                    &bitset,
+                    24+i,
+                    octaspire_utf8_private_get_bit(character, 18+i));
             }
 
             result->numoctets = 4;
@@ -237,22 +253,34 @@ octaspire_utf8_encode_status_t octaspire_utf8_encode_character(uint32_t const ch
 
     for (size_t i = 0; i < 8; ++i)
     {
-        octaspire_utf8_private_set_bit_of_char(&(result->octets[3]), i, octaspire_utf8_private_get_bit(bitset, i));
+        octaspire_utf8_private_set_bit_of_char(
+            &(result->octets[3]),
+            i,
+            octaspire_utf8_private_get_bit(bitset, i));
     }
 
     for (size_t i = 0; i < 8; ++i)
     {
-        octaspire_utf8_private_set_bit_of_char(&(result->octets[2]), i, octaspire_utf8_private_get_bit(bitset, 8+i));
+        octaspire_utf8_private_set_bit_of_char(
+            &(result->octets[2]),
+            i,
+            octaspire_utf8_private_get_bit(bitset, 8+i));
     }
 
     for (size_t i = 0; i < 8; ++i)
     {
-        octaspire_utf8_private_set_bit_of_char(&(result->octets[1]), i, octaspire_utf8_private_get_bit(bitset, 16+i));
+        octaspire_utf8_private_set_bit_of_char(
+            &(result->octets[1]),
+            i,
+            octaspire_utf8_private_get_bit(bitset, 16+i));
     }
 
     for (size_t i = 0; i < 8; ++i)
     {
-        octaspire_utf8_private_set_bit_of_char(&(result->octets[0]), i, octaspire_utf8_private_get_bit(bitset, 24+i));
+        octaspire_utf8_private_set_bit_of_char(
+            &(result->octets[0]),
+            i,
+            octaspire_utf8_private_get_bit(bitset, 24+i));
     }
 
     return OCTASPIRE_UTF8_ENCODE_STATUS_OK;
@@ -282,7 +310,10 @@ static int octaspire_utf8_private_octets_in_next(char const * const text, size_t
     return octaspire_utf8_private_octets_in_next_from_buffer(text, lengthInOctets, 0);
 }
 
-static int octaspire_utf8_private_octets_in_next_from_buffer(char const * const buffer, size_t const lengthInOctets, size_t const currentIndex)
+static int octaspire_utf8_private_octets_in_next_from_buffer(
+    char const * const buffer,
+    size_t const lengthInOctets,
+    size_t const currentIndex)
 {
     if (!buffer || currentIndex >= lengthInOctets)
         return 0;
@@ -382,7 +413,10 @@ octaspire_utf8_decode_status_t octaspire_utf8_private_decode_helper(
             for (size_t i = 0; i < 7; ++i)
             {
                 // INVALID_READ_OF_1
-                octaspire_utf8_private_set_bit(result, i, octaspire_utf8_private_get_bit_of_uint8(buffer[0], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[0], i));
             }
         }
         break;
@@ -393,12 +427,18 @@ octaspire_utf8_decode_status_t octaspire_utf8_private_decode_helper(
 
             for (size_t i = 0; i < 5; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i+6, octaspire_utf8_private_get_bit_of_uint8(buffer[0], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i+6,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[0], i));
             }
 
             for (size_t i = 0; i < 6; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i,  octaspire_utf8_private_get_bit_of_uint8(buffer[1], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[1], i));
             }
 
             if (*result <= 0x7F)
@@ -414,17 +454,26 @@ octaspire_utf8_decode_status_t octaspire_utf8_private_decode_helper(
 
             for (size_t i = 0; i < 4; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i+12, octaspire_utf8_private_get_bit_of_uint8(buffer[0], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i+12,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[0], i));
             }
 
             for (size_t i = 0; i < 6; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i+6, octaspire_utf8_private_get_bit_of_uint8(buffer[1], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i+6,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[1], i));
             }
 
             for (size_t i = 0; i < 6; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i,  octaspire_utf8_private_get_bit_of_uint8(buffer[2], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[2], i));
             }
 
             if (*result <= 2047)
@@ -440,22 +489,34 @@ octaspire_utf8_decode_status_t octaspire_utf8_private_decode_helper(
 
             for (size_t i = 0; i < 3; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i+18, octaspire_utf8_private_get_bit_of_uint8(buffer[0], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i+18,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[0], i));
             }
 
             for (size_t i = 0; i < 6; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i+12, octaspire_utf8_private_get_bit_of_uint8(buffer[1], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i+12,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[1], i));
             }
 
             for (size_t i = 0; i < 6; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i+6, octaspire_utf8_private_get_bit_of_uint8(buffer[2], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i+6,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[2], i));
             }
 
             for (size_t i = 0; i < 6; ++i)
             {
-                octaspire_utf8_private_set_bit(result, i,  octaspire_utf8_private_get_bit_of_uint8(buffer[3], i));
+                octaspire_utf8_private_set_bit(
+                    result,
+                    i,
+                    octaspire_utf8_private_get_bit_of_uint8(buffer[3], i));
             }
 
             if (*result <= 65535)
@@ -469,7 +530,11 @@ octaspire_utf8_decode_status_t octaspire_utf8_private_decode_helper(
     return OCTASPIRE_UTF8_DECODE_STATUS_OK;
 }
 
-octaspire_utf8_decode_status_t octaspire_utf8_decode_character(char const * const text, size_t const textLengthInOctets, uint32_t *result, int *numoctets)
+octaspire_utf8_decode_status_t octaspire_utf8_decode_character(
+    char const * const text,
+    size_t const textLengthInOctets,
+    uint32_t *result,
+    int *numoctets)
 {
     if (!text || textLengthInOctets == 0 || text[0] == '\0')
     {
@@ -523,7 +588,9 @@ octaspire_utf8_decode_status_t octaspire_utf8_decode_character_from_buffer(
     }
 
     *result = 0;
-    *numoctets = octaspire_utf8_private_octets_in_next_from_buffer(buffer, bufferLengthInOctets, currentIndex);
+
+    *numoctets =
+        octaspire_utf8_private_octets_in_next_from_buffer(buffer, bufferLengthInOctets, currentIndex);
 
     if (*numoctets <= 0 || *numoctets > 4)
     {

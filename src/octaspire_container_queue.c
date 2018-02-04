@@ -250,8 +250,6 @@ bool octaspire_container_queue_set_has_max_length(
 }
 
 
-
-
 octaspire_container_queue_iterator_t octaspire_container_queue_iterator_init(
     octaspire_container_queue_t * const self)
 {

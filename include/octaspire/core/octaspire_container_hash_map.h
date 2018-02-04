@@ -21,8 +21,7 @@ limitations under the License.
 #include "octaspire_memory.h"
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C"       {
 #endif
 
 // Hash map element
@@ -136,8 +135,6 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get_at_inde
     ptrdiff_t const possiblyNegativeIndex);
 
 
-
-
 typedef struct octaspire_container_hash_map_element_iterator_t
 {
     octaspire_container_hash_map_t *hashMap;
@@ -154,8 +151,6 @@ bool octaspire_container_hash_map_element_iterator_next(
     octaspire_container_hash_map_element_iterator_t * const self);
 
 
-
-
 typedef struct octaspire_container_hash_map_element_const_iterator_t
 {
     octaspire_container_hash_map_t const *hashMap;
@@ -165,7 +160,8 @@ typedef struct octaspire_container_hash_map_element_const_iterator_t
 }
 octaspire_container_hash_map_element_const_iterator_t;
 
-octaspire_container_hash_map_element_const_iterator_t octaspire_container_hash_map_element_const_iterator_init(
+octaspire_container_hash_map_element_const_iterator_t
+octaspire_container_hash_map_element_const_iterator_init(
     octaspire_container_hash_map_t const * const self);
 
 bool octaspire_container_hash_map_element_const_iterator_next(
@@ -177,7 +173,8 @@ uint32_t octaspire_container_hash_map_helper_size_t_get_hash(
     size_t const value);
 
 #ifdef __cplusplus
-}
+/* extern "C" */ }
 #endif
 
 #endif
+

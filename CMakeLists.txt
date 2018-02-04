@@ -18,8 +18,8 @@ cmake_minimum_required(VERSION 2.8.12)
 project(octaspire-core C)
 
 set(OCTASPIRE_CORE_CONFIG_VERSION_MAJOR 0)
-set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 90)
-set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 1)
+set(OCTASPIRE_CORE_CONFIG_VERSION_MINOR 92)
+set(OCTASPIRE_CORE_CONFIG_VERSION_PATCH 0)
 
 message("== Building ${PROJECT_NAME} ${OCTASPIRE_CORE_CONFIG_VERSION_MAJOR}.${OCTASPIRE_CORE_CONFIG_VERSION_MINOR}.${OCTASPIRE_CORE_CONFIG_VERSION_PATCH}")
 
@@ -92,7 +92,7 @@ add_custom_target(
 
 add_custom_target(
     vera-core
-    COMMAND vera++ --error ${SOURCES} ${HEADERS})
+    COMMAND vera++ --root "${CMAKE_CURRENT_SOURCE_DIR}/external/vera" --profile octaspire --error ${SOURCES} ${HEADERS})
 
 add_custom_target(
     new-release-core

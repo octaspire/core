@@ -24,7 +24,7 @@ limitations under the License.
 #include "octaspire_container_utf8_string.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"       {
 #endif
 
 typedef struct octaspire_stdio_t octaspire_stdio_t;
@@ -51,7 +51,7 @@ size_t octaspire_stdio_get_number_of_future_reads_to_be_rigged(
 octaspire_container_utf8_string_t *octaspire_stdio_read_line(octaspire_stdio_t *self, FILE *stream);
 
 #ifdef __cplusplus
-}
+/* extern "C" */ }
 #endif
 
 #endif

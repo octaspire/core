@@ -23,7 +23,7 @@ limitations under the License.
 #include "octaspire_memory.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"       {
 #endif
 
 typedef struct octaspire_container_vector_t octaspire_container_vector_t;
@@ -184,7 +184,7 @@ bool octaspire_container_vector_permutation_iterator_next(
     octaspire_container_vector_permutation_iterator_t * const self);
 
 #ifdef __cplusplus
-}
+/* extern "C" */ }
 #endif
 
 #endif

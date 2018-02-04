@@ -24,7 +24,7 @@ limitations under the License.
 #include "octaspire_stdio.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"       {
 #endif
 
 #define OCTASPIRE_HELPERS_UNUSED_PARAMETER(x) (void)(x)
@@ -86,7 +86,7 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
     octaspire_memory_allocator_t * const allocator);
 
 #ifdef __cplusplus
-}
+/* extern "C" */ }
 #endif
 
 #endif

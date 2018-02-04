@@ -77,7 +77,12 @@ octaspire_input_t *octaspire_input_new_from_path(
     octaspire_stdio_t *octaspireStdio)
 {
     size_t octetsAllocated = 0;
-    char *buffer = octaspire_helpers_path_to_buffer(path, &octetsAllocated, octaspireAllocator, octaspireStdio);
+
+    char *buffer = octaspire_helpers_path_to_buffer(
+        path,
+        &octetsAllocated,
+        octaspireAllocator,
+        octaspireStdio);
 
     if (!buffer)
     {

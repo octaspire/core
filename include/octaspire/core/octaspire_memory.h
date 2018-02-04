@@ -21,7 +21,7 @@ limitations under the License.
 #include <stdint.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"       {
 #endif
 
 typedef void *(*octaspire_memory_allocator_custom_malloc_function_t)(size_t size);
@@ -37,8 +37,6 @@ typedef struct octaspire_memory_allocator_config_t
 octaspire_memory_allocator_config_t;
 
 octaspire_memory_allocator_config_t octaspire_memory_allocator_config_default(void);
-
-
 
 
 typedef struct octaspire_memory_allocator_t octaspire_memory_allocator_t;
@@ -93,7 +91,7 @@ size_t octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
     octaspire_memory_allocator_t const * const self);
 
 #ifdef __cplusplus
-}
+/* extern "C" */ }
 #endif
 
 #endif

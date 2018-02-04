@@ -481,7 +481,8 @@ octaspire_container_hash_map_t *octaspire_container_hash_map_new_with_size_t_key
         false,
         valueSizeInOctets,
         valueIsPointer,
-        (octaspire_container_hash_map_key_compare_function_t)octaspire_container_hash_map_helper_private_size_t_is_equal,
+        (octaspire_container_hash_map_key_compare_function_t)
+            octaspire_container_hash_map_helper_private_size_t_is_equal,
         (octaspire_container_hash_map_key_hash_function_t)octaspire_container_hash_map_helper_size_t_get_hash,
         (octaspire_container_hash_map_element_callback_function_t)0,
         valueReleaseCallback,
@@ -852,7 +853,7 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get_at_inde
 
                 counter += bucketSize;
             }
-         }
+        }
 
         return 0;
     }
@@ -880,7 +881,7 @@ octaspire_container_hash_map_element_t *octaspire_container_hash_map_get_at_inde
 
                 counter += bucketSize;
             }
-         }
+        }
 
         return 0;
     }
@@ -984,10 +985,6 @@ bool octaspire_container_hash_map_element_iterator_next(
 
     return self->element != 0;
 }
-
-
-
-
 
 
 octaspire_container_hash_map_element_const_iterator_t

@@ -170,8 +170,6 @@ octaspire_container_list_node_t const *octaspire_container_list_node_get_previou
 }
 
 
-
-
 struct octaspire_container_list_t
 {
     octaspire_memory_allocator_t                *allocator;
@@ -603,8 +601,6 @@ octaspire_container_list_node_t const *octaspire_container_list_get_at_const(
         return 0;
     }
 }
-
-
 
 
 octaspire_container_list_node_iterator_t octaspire_container_list_node_iterator_init(

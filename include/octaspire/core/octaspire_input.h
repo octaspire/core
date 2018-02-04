@@ -22,7 +22,7 @@ limitations under the License.
 #include "octaspire_stdio.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"       {
 #endif
 
 typedef struct octaspire_input_t octaspire_input_t;
@@ -69,7 +69,7 @@ size_t octaspire_input_get_ucs_character_index(octaspire_input_t const * const s
 void octaspire_input_print(octaspire_input_t const * const self);
 
 #ifdef __cplusplus
-}
+/* extern "C" */ }
 #endif
 
 #endif
