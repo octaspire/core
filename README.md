@@ -5,5 +5,5 @@
 
 Containers and other utility libraries in standard C99.
 
-[https://octaspire.io/core](https://octaspire.io/core)
+[https://octaspire.io](https://octaspire.io)
 
