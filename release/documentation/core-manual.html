@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-04-16 Mon 21:06 -->
+<!-- 2018-04-19 Thu 22:17 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Octaspire Core Manual</title>
@@ -236,42 +236,43 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgbe18805">1. About</a></li>
-<li><a href="#orgabcdb3e">2. Building the amalgamated source release</a>
+<li><a href="#orgb2617c9">1. About</a></li>
+<li><a href="#org888af08">2. Building the amalgamated source release</a>
 <ul>
-<li><a href="#orgfa3eb8b">2.1. Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, Syllable Desktop, macOS</a></li>
-<li><a href="#orgc2010bb">2.2. Windows using MinGW and Git</a></li>
-<li><a href="#orgf38b6ad">2.3. Running unit tests</a></li>
+<li><a href="#orgc9a80d3">2.1. Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, Syllable Desktop, macOS</a></li>
+<li><a href="#org093b888">2.2. Windows using MinGW and Git</a></li>
+<li><a href="#orgf473b0b">2.3. Running unit tests</a></li>
 </ul>
 </li>
-<li><a href="#orgc9294ce">3. Quick tour of library features</a>
+<li><a href="#orgae9de91">3. Quick tour of library features</a>
 <ul>
-<li><a href="#org602954b">3.1. Naming</a></li>
-<li><a href="#org308bd2d">3.2. UTF-8 Strings</a></li>
-<li><a href="#org3788e1d">3.3. Vector</a></li>
-<li><a href="#org86776a8">3.4. List</a></li>
-<li><a href="#org0f97277">3.5. Queue</a></li>
-<li><a href="#org1af093e">3.6. Pair</a></li>
-<li><a href="#org7c0e1c4">3.7. Hash map</a></li>
-<li><a href="#org824df8f">3.8. Input streams from memory and files</a></li>
-<li><a href="#org4ac1cb2">3.9. Lower level helpers</a></li>
+<li><a href="#orgd4f6f76">3.1. Naming</a></li>
+<li><a href="#orga09cf85">3.2. UTF-8 Strings</a></li>
+<li><a href="#org6a41e56">3.3. Vector</a></li>
+<li><a href="#org77df0db">3.4. List</a></li>
+<li><a href="#orgc5d373b">3.5. Queue</a></li>
+<li><a href="#orgd6d42ad">3.6. Pair</a></li>
+<li><a href="#orgb74cbb4">3.7. Hash map</a></li>
+<li><a href="#orgdd686e5">3.8. Input streams from memory and files</a></li>
+<li><a href="#org4755b83">3.9. Lower level helpers</a></li>
 </ul>
 </li>
-<li><a href="#orgeffec9d">4. Building the development repository</a>
+<li><a href="#org05a8690">4. Building the development repository</a>
 <ul>
-<li><a href="#org303e8d9">4.1. Raspberry Pi, Debian and Ubuntu</a></li>
-<li><a href="#orgd7e8d2e">4.2. Arch Linux</a></li>
-<li><a href="#orge887e07">4.3. Haiku</a></li>
-<li><a href="#org7360de5">4.4. FreeBSD</a></li>
-<li><a href="#org019804f">4.5. MINIX 3</a></li>
+<li><a href="#orgc1f9acc">4.1. Raspberry Pi, Debian and Ubuntu</a></li>
+<li><a href="#org6c4e072">4.2. Arch Linux</a></li>
+<li><a href="#org4183daa">4.3. Haiku</a></li>
+<li><a href="#org8d662f3">4.4. FreeBSD</a></li>
+<li><a href="#org527da0f">4.5. MINIX 3</a></li>
+<li><a href="#orgfdad3c6">4.6. Other systems</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgbe18805" class="outline-2">
-<h2 id="orgbe18805"><span class="section-number-2">1</span> About</h2>
+<div id="outline-container-orgb2617c9" class="outline-2">
+<h2 id="orgb2617c9"><span class="section-number-2">1</span> About</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <b>Octaspire Core</b> is a container, utf-8 and utility library written in standard <b>C99</b>.
@@ -284,18 +285,15 @@ in the source distribution for more information.
 </p>
 
 <p>
-Core uses
-<a href="http://semver.org">Semantic Versioning 2.0.0</a> version numbering scheme.
-As long as the MAJOR version number is zero anything can change at any time,
-even in backwards incompatible manner.
+Core uses <a href="http://semver.org">Semantic Versioning 2.0.0</a> version numbering scheme. As long as
+the MAJOR version number is zero anything can change at any time, even
+in backwards incompatible manner.
 </p>
 </div>
 </div>
 
-
-
-<div id="outline-container-orgabcdb3e" class="outline-2">
-<h2 id="orgabcdb3e"><span class="section-number-2">2</span> Building the amalgamated source release</h2>
+<div id="outline-container-org888af08" class="outline-2">
+<h2 id="org888af08"><span class="section-number-2">2</span> Building the amalgamated source release</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The amalgamated source release is the recommended way of using Core, if you don&rsquo;t need to
@@ -304,8 +302,8 @@ C standard library supporting C99.
 </p>
 </div>
 
-<div id="outline-container-orgfa3eb8b" class="outline-3">
-<h3 id="orgfa3eb8b"><span class="section-number-3">2.1</span> Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, Syllable Desktop, macOS</h3>
+<div id="outline-container-orgc9a80d3" class="outline-3">
+<h3 id="orgc9a80d3"><span class="section-number-3">2.1</span> Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, Syllable Desktop, macOS</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-sh">curl -O octaspire.com/core/release.tar.bz2
@@ -326,9 +324,8 @@ More scripts for different platforms will be added later.
 </div>
 </div>
 
-
-<div id="outline-container-orgc2010bb" class="outline-3">
-<h3 id="orgc2010bb"><span class="section-number-3">2.2</span> Windows using MinGW and Git</h3>
+<div id="outline-container-org093b888" class="outline-3">
+<h3 id="org093b888"><span class="section-number-3">2.2</span> Windows using MinGW and Git</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Download and install <b>MinGW</b> from
@@ -361,9 +358,8 @@ above. Run examples and programs in the <b>Command Prompt</b> window
 </div>
 </div>
 
-
-<div id="outline-container-orgf38b6ad" class="outline-3">
-<h3 id="orgf38b6ad"><span class="section-number-3">2.3</span> Running unit tests</h3>
+<div id="outline-container-orgf473b0b" class="outline-3">
+<h3 id="orgf473b0b"><span class="section-number-3">2.3</span> Running unit tests</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 This is all there should be to it; when make finishes, everything should be ready.
@@ -381,42 +377,29 @@ To run the unit tests:
 </div>
 </div>
 
-
-
-<div id="outline-container-orgc9294ce" class="outline-2">
-<h2 id="orgc9294ce"><span class="section-number-2">3</span> Quick tour of library features</h2>
+<div id="outline-container-orgae9de91" class="outline-2">
+<h2 id="orgae9de91"><span class="section-number-2">3</span> Quick tour of library features</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Here we take a quick look at the features of the library.
 </p>
 </div>
 
-<div id="outline-container-org602954b" class="outline-3">
-<h3 id="org602954b"><span class="section-number-3">3.1</span> Naming</h3>
+<div id="outline-container-orgd4f6f76" class="outline-3">
+<h3 id="orgd4f6f76"><span class="section-number-3">3.1</span> Naming</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 C doesn&rsquo;t have namespaces. To prevent name collisions, all names in the library
-are prefixed with <b>octaspire_</b>. For example, <b>octaspire<sub>container</sub><sub>utf8</sub><sub>string</sub><sub>t</sub></b>
-is the string type and <b>octaspire<sub>container</sub><sub>utf8</sub><sub>string</sub><sub>new</sub></b> is one of the functions
-that create new strings. <b>octaspire<sub>container</sub><sub>vector</sub><sub>t</sub></b> is the vector type and
-<b>octaspire<sub>container</sub><sub>hash</sub><sub>map</sub><sub>t</sub></b> is the hash-map type.
-</p>
-
-<p>
-These names can be pretty long, and quite annoying to write in the long run. I personally
-like to use the abbrevation features of vi/vim and emacs editors. You can see this setup
-in my <a href="https://github.com/octaspire/dotfiles.git">dotfiles</a> for nvi, vim and emacs editors. Your favorite editor or IDE might have
-similar functionality also available.
-</p>
-
-<p>
-So, I can write <b>ocus</b> and hit the spacebar to get <b>octaspire<sub>container</sub><sub>utf8</sub><sub>string</sub>_</b>.
+are prefixed with <code>octaspire_</code>. For example, <code>octaspire_string_t</code> is the string
+type and <code>octaspire_string_new</code> is one of the functions that create new strings.
+<code>octaspire_vector_t</code> is the vector type and <code>octaspire_map_t</code> isthe hash-map
+type.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org308bd2d" class="outline-3">
-<h3 id="org308bd2d"><span class="section-number-3">3.2</span> UTF-8 Strings</h3>
+<div id="outline-container-orga09cf85" class="outline-3">
+<h3 id="orga09cf85"><span class="section-number-3">3.2</span> UTF-8 Strings</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-C"><span style="color: #8D8D84;">/****************************************************</span>
@@ -431,23 +414,23 @@ So, I can write <b>ocus</b> and hit the spacebar to get <b>octaspire<sub>contain
 
 <span style="color: #6434A3;">int</span> <span style="color: #006699;">main</span>(<span style="color: #6434A3;">void</span>)
 {
-    <span style="color: #6434A3;">octaspire_memory_allocator_t</span> *<span style="color: #BA36A5;">allocator</span> =
-        octaspire_memory_allocator_new(0);
+    <span style="color: #6434A3;">octaspire_allocator_t</span> *<span style="color: #BA36A5;">allocator</span> =
+        octaspire_allocator_new(0);
 
-    <span style="color: #6434A3;">octaspire_container_utf8_string_t</span> *<span style="color: #BA36A5;">myStr</span> =
-        octaspire_container_utf8_string_new(
+    <span style="color: #6434A3;">octaspire_string_t</span> *<span style="color: #BA36A5;">myStr</span> =
+        octaspire_string_new(
             <span style="color: #008000;">"Hello world!"</span>,
             allocator);
 
     printf(
         <span style="color: #008000;">"String is \"%s\"\n"</span>,
-        octaspire_container_utf8_string_get_c_string(
+        octaspire_string_get_c_string(
             myStr));
 
-    octaspire_container_utf8_string_release(myStr);
+    octaspire_string_release(myStr);
     myStr = 0;
 
-    octaspire_memory_allocator_release(allocator);
+    octaspire_allocator_release(allocator);
     allocator = 0;
 
     <span style="color: #0000FF;">return</span> 0;
@@ -457,8 +440,8 @@ So, I can write <b>ocus</b> and hit the spacebar to get <b>octaspire<sub>contain
 </div>
 </div>
 
-<div id="outline-container-org3788e1d" class="outline-3">
-<h3 id="org3788e1d"><span class="section-number-3">3.3</span> Vector</h3>
+<div id="outline-container-org6a41e56" class="outline-3">
+<h3 id="org6a41e56"><span class="section-number-3">3.3</span> Vector</h3>
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 <pre class="src src-C"><span style="color: #8D8D84;">/***************************************************</span>
@@ -474,26 +457,26 @@ So, I can write <b>ocus</b> and hit the spacebar to get <b>octaspire<sub>contain
 
 <span style="color: #6434A3;">int</span> <span style="color: #006699;">main</span>(<span style="color: #6434A3;">void</span>)
 {
-    <span style="color: #6434A3;">octaspire_memory_allocator_t</span> *<span style="color: #BA36A5;">allocator</span> =
-        octaspire_memory_allocator_new(0);
+    <span style="color: #6434A3;">octaspire_allocator_t</span> *<span style="color: #BA36A5;">allocator</span> =
+        octaspire_allocator_new(0);
 
-    <span style="color: #6434A3;">octaspire_container_vector_t</span> *<span style="color: #BA36A5;">v</span> =
-        octaspire_container_vector_new(
-            <span style="color: #0000FF;">sizeof</span>(<span style="color: #6434A3;">octaspire_container_utf8_string_t</span>*),
+    <span style="color: #6434A3;">octaspire_vector_t</span> *<span style="color: #BA36A5;">v</span> =
+        octaspire_vector_new(
+            <span style="color: #0000FF;">sizeof</span>(<span style="color: #6434A3;">octaspire_string_t</span>*),
             <span style="color: #D0372D;">true</span>,
-            (<span style="color: #6434A3;">octaspire_container_vector_element_callback_t</span>)
-                octaspire_container_utf8_string_release,
+            (<span style="color: #6434A3;">octaspire_vector_element_callback_t</span>)
+                octaspire_string_release,
             allocator);
 
     <span style="color: #0000FF;">for</span> (<span style="color: #6434A3;">size_t</span> <span style="color: #BA36A5;">i</span> = 0; i &lt; 10; ++i)
     {
-        <span style="color: #6434A3;">octaspire_container_utf8_string_t</span> *<span style="color: #BA36A5;">s</span> =
-            octaspire_container_utf8_string_new_format(
+        <span style="color: #6434A3;">octaspire_string_t</span> *<span style="color: #BA36A5;">s</span> =
+            octaspire_string_new_format(
                 allocator,
                 <span style="color: #008000;">"Hello %zu world!"</span>,
                 i);
 
-        <span style="color: #0000FF;">if</span> (!octaspire_container_vector_push_back_element(
+        <span style="color: #0000FF;">if</span> (!octaspire_vector_push_back_element(
                 v,
                 &amp;s))
         {
@@ -502,25 +485,25 @@ So, I can write <b>ocus</b> and hit the spacebar to get <b>octaspire<sub>contain
     }
 
     <span style="color: #0000FF;">for</span> (<span style="color: #6434A3;">size_t</span> <span style="color: #BA36A5;">i</span> = 0;
-         i &lt; octaspire_container_vector_get_length(v);
+         i &lt; octaspire_vector_get_length(v);
          ++i)
     {
-        <span style="color: #6434A3;">octaspire_container_utf8_string_t</span> <span style="color: #0000FF;">const</span> * <span style="color: #0000FF;">const</span> <span style="color: #BA36A5;">s</span> =
-            octaspire_container_vector_get_element_at_const(
+        <span style="color: #6434A3;">octaspire_string_t</span> <span style="color: #0000FF;">const</span> * <span style="color: #0000FF;">const</span> <span style="color: #BA36A5;">s</span> =
+            octaspire_vector_get_element_at_const(
                 v,
                 i);
 
         printf(
             <span style="color: #008000;">"String %zu. is: %s\n"</span>,
             i,
-            octaspire_container_utf8_string_get_c_string(
+            octaspire_string_get_c_string(
                 s));
     }
 
-    octaspire_container_vector_release(v);
+    octaspire_vector_release(v);
     v = 0;
 
-    octaspire_memory_allocator_release(allocator);
+    octaspire_allocator_release(allocator);
     allocator = 0;
 
     <span style="color: #0000FF;">return</span> 0;
@@ -530,9 +513,8 @@ So, I can write <b>ocus</b> and hit the spacebar to get <b>octaspire<sub>contain
 </div>
 </div>
 
-
-<div id="outline-container-org86776a8" class="outline-3">
-<h3 id="org86776a8"><span class="section-number-3">3.4</span> List</h3>
+<div id="outline-container-org77df0db" class="outline-3">
+<h3 id="org77df0db"><span class="section-number-3">3.4</span> List</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 TODO
@@ -540,10 +522,8 @@ TODO
 </div>
 </div>
 
-
-
-<div id="outline-container-org0f97277" class="outline-3">
-<h3 id="org0f97277"><span class="section-number-3">3.5</span> Queue</h3>
+<div id="outline-container-orgc5d373b" class="outline-3">
+<h3 id="orgc5d373b"><span class="section-number-3">3.5</span> Queue</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 TODO
@@ -551,10 +531,8 @@ TODO
 </div>
 </div>
 
-
-
-<div id="outline-container-org1af093e" class="outline-3">
-<h3 id="org1af093e"><span class="section-number-3">3.6</span> Pair</h3>
+<div id="outline-container-orgd6d42ad" class="outline-3">
+<h3 id="orgd6d42ad"><span class="section-number-3">3.6</span> Pair</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 TODO
@@ -562,10 +540,8 @@ TODO
 </div>
 </div>
 
-
-
-<div id="outline-container-org7c0e1c4" class="outline-3">
-<h3 id="org7c0e1c4"><span class="section-number-3">3.7</span> Hash map</h3>
+<div id="outline-container-orgb74cbb4" class="outline-3">
+<h3 id="orgb74cbb4"><span class="section-number-3">3.7</span> Hash map</h3>
 <div class="outline-text-3" id="text-3-7">
 <div class="org-src-container">
 <pre class="src src-C"><span style="color: #8D8D84;">/*****************************************************</span>
@@ -580,30 +556,30 @@ TODO
 
 <span style="color: #6434A3;">int</span> <span style="color: #006699;">main</span>(<span style="color: #6434A3;">void</span>)
 {
-    <span style="color: #6434A3;">octaspire_memory_allocator_t</span> *<span style="color: #BA36A5;">allocator</span> =
-        octaspire_memory_allocator_new(0);
+    <span style="color: #6434A3;">octaspire_allocator_t</span> *<span style="color: #BA36A5;">allocator</span> =
+        octaspire_allocator_new(0);
 
-    <span style="color: #6434A3;">octaspire_container_hash_map_t</span> * <span style="color: #BA36A5;">h</span> =
-        octaspire_container_hash_map_new_with_octaspire_container_utf8_string_keys(
+    <span style="color: #6434A3;">octaspire_map_t</span> * <span style="color: #BA36A5;">h</span> =
+        octaspire_map_new_with_octaspire_string_keys(
             <span style="color: #0000FF;">sizeof</span>(<span style="color: #6434A3;">float</span>),
             <span style="color: #D0372D;">false</span>,
-            (<span style="color: #6434A3;">octaspire_container_hash_map_element_callback_function_t</span>)0,
+            (<span style="color: #6434A3;">octaspire_map_element_callback_function_t</span>)0,
             allocator);
 
 
     <span style="color: #0000FF;">for</span> (<span style="color: #6434A3;">size_t</span> <span style="color: #BA36A5;">i</span> = 0; i &lt; 10; ++i)
     {
-        <span style="color: #6434A3;">octaspire_container_utf8_string_t</span> *<span style="color: #BA36A5;">s</span> =
-            octaspire_container_utf8_string_new_format(
+        <span style="color: #6434A3;">octaspire_string_t</span> *<span style="color: #BA36A5;">s</span> =
+            octaspire_string_new_format(
                 allocator,
                 <span style="color: #008000;">"Item %zu!"</span>,
                 i);
 
         <span style="color: #6434A3;">float</span> <span style="color: #0000FF;">const</span> <span style="color: #BA36A5;">value</span> = i * 3.14;
 
-        <span style="color: #0000FF;">if</span> (!octaspire_container_hash_map_put(
+        <span style="color: #0000FF;">if</span> (!octaspire_map_put(
             h,
-            octaspire_container_utf8_string_get_hash(
+            octaspire_string_get_hash(
                 s),
             &amp;s,
             &amp;value))
@@ -614,39 +590,39 @@ TODO
     }
 
     <span style="color: #0000FF;">for</span> (<span style="color: #6434A3;">size_t</span> <span style="color: #BA36A5;">i</span> = 0;
-         i &lt; octaspire_container_hash_map_get_number_of_elements(h);
+         i &lt; octaspire_map_get_number_of_elements(h);
          ++i)
     {
-        <span style="color: #6434A3;">octaspire_container_utf8_string_t</span> *<span style="color: #BA36A5;">s</span> =
-            octaspire_container_utf8_string_new_format(
+        <span style="color: #6434A3;">octaspire_string_t</span> *<span style="color: #BA36A5;">s</span> =
+            octaspire_string_new_format(
                 allocator,
                 <span style="color: #008000;">"Item %zu!"</span>,
                 i);
 
-        <span style="color: #6434A3;">octaspire_container_hash_map_element_t</span>
+        <span style="color: #6434A3;">octaspire_map_element_t</span>
             <span style="color: #0000FF;">const</span> * <span style="color: #0000FF;">const</span> <span style="color: #BA36A5;">element</span> =
-            octaspire_container_hash_map_get_const(
+            octaspire_map_get_const(
                 h,
-                octaspire_container_utf8_string_get_hash(s),
+                octaspire_string_get_hash(s),
                 &amp;s);
 
         <span style="color: #6434A3;">float</span> <span style="color: #0000FF;">const</span> <span style="color: #BA36A5;">value</span> = *(<span style="color: #6434A3;">float</span> <span style="color: #0000FF;">const</span> * <span style="color: #0000FF;">const</span>)
-            octaspire_container_hash_map_element_get_value(
+            octaspire_map_element_get_value(
                 element);
 
         printf(
             <span style="color: #008000;">"%s -&gt; %f\n"</span>,
-            octaspire_container_utf8_string_get_c_string(s),
+            octaspire_string_get_c_string(s),
             value);
 
-        octaspire_container_utf8_string_release(s);
+        octaspire_string_release(s);
         s = 0;
     }
 
-    octaspire_container_hash_map_release(h);
+    octaspire_map_release(h);
     h = 0;
 
-    octaspire_memory_allocator_release(allocator);
+    octaspire_allocator_release(allocator);
     allocator = 0;
 
     <span style="color: #0000FF;">return</span> 0;
@@ -656,9 +632,8 @@ TODO
 </div>
 </div>
 
-
-<div id="outline-container-org824df8f" class="outline-3">
-<h3 id="org824df8f"><span class="section-number-3">3.8</span> Input streams from memory and files</h3>
+<div id="outline-container-orgdd686e5" class="outline-3">
+<h3 id="orgdd686e5"><span class="section-number-3">3.8</span> Input streams from memory and files</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 TODO
@@ -666,9 +641,8 @@ TODO
 </div>
 </div>
 
-
-<div id="outline-container-org4ac1cb2" class="outline-3">
-<h3 id="org4ac1cb2"><span class="section-number-3">3.9</span> Lower level helpers</h3>
+<div id="outline-container-org4755b83" class="outline-3">
+<h3 id="org4755b83"><span class="section-number-3">3.9</span> Lower level helpers</h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 TODO
@@ -677,13 +651,12 @@ TODO
 </div>
 </div>
 
-
-<div id="outline-container-orgeffec9d" class="outline-2">
-<h2 id="orgeffec9d"><span class="section-number-2">4</span> Building the development repository</h2>
+<div id="outline-container-org05a8690" class="outline-2">
+<h2 id="org05a8690"><span class="section-number-2">4</span> Building the development repository</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org303e8d9" class="outline-3">
-<h3 id="org303e8d9"><span class="section-number-3">4.1</span> Raspberry Pi, Debian and Ubuntu</h3>
+<div id="outline-container-orgc1f9acc" class="outline-3">
+<h3 id="orgc1f9acc"><span class="section-number-3">4.1</span> Raspberry Pi, Debian and Ubuntu</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 To build Octaspire Core from source in Raspberry Pi, Debian or Ubuntu (16.04 LTS) system:
@@ -699,9 +672,8 @@ make
 </div>
 </div>
 
-
-<div id="outline-container-orgd7e8d2e" class="outline-3">
-<h3 id="orgd7e8d2e"><span class="section-number-3">4.2</span> Arch Linux</h3>
+<div id="outline-container-org6c4e072" class="outline-3">
+<h3 id="org6c4e072"><span class="section-number-3">4.2</span> Arch Linux</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 To build on Arch Linux (Arch Linux ARM) system:
@@ -717,9 +689,8 @@ make
 </div>
 </div>
 
-
-<div id="outline-container-orge887e07" class="outline-3">
-<h3 id="orge887e07"><span class="section-number-3">4.3</span> Haiku</h3>
+<div id="outline-container-org4183daa" class="outline-3">
+<h3 id="org4183daa"><span class="section-number-3">4.3</span> Haiku</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 To build on Haiku (Version Walter (Revision hrev51127) x86<sub>gcc2</sub>):
@@ -736,9 +707,8 @@ git clone https://github.com/octaspire/core.git
 </div>
 
 
-
-<div id="outline-container-org7360de5" class="outline-3">
-<h3 id="org7360de5"><span class="section-number-3">4.4</span> FreeBSD</h3>
+<div id="outline-container-org8d662f3" class="outline-3">
+<h3 id="org8d662f3"><span class="section-number-3">4.4</span> FreeBSD</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 To build on FreeBSD (FreeBSD-11.0-RELEASE-arm-armv6-RPI2) system:
@@ -754,9 +724,8 @@ make
 </div>
 </div>
 
-
-<div id="outline-container-org019804f" class="outline-3">
-<h3 id="org019804f"><span class="section-number-3">4.5</span> MINIX 3</h3>
+<div id="outline-container-org527da0f" class="outline-3">
+<h3 id="org527da0f"><span class="section-number-3">4.5</span> MINIX 3</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 To build on MINIX 3 (minix<sub>R3.3.0</sub>-588a35b) system:
@@ -771,12 +740,13 @@ git clone git://github.com/octaspire/core
 make
 </pre>
 </div>
+</div>
+</div>
 
 
-<p>
-<code>=</code> Other systems
-</p>
-
+<div id="outline-container-orgfdad3c6" class="outline-3">
+<h3 id="orgfdad3c6"><span class="section-number-3">4.6</span> Other systems</h3>
+<div class="outline-text-3" id="text-4-6">
 <p>
 On different systems the required commands can vary. In any case, You should install
 a <b>C compiler</b> and <b>git</b>.
@@ -787,7 +757,7 @@ a <b>C compiler</b> and <b>git</b>.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: www.octaspire.com</p>
-<p class="date">Created: 2018-04-16 Mon 21:06</p>
+<p class="date">Created: 2018-04-19 Thu 22:17</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

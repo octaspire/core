@@ -24,19 +24,19 @@ limitations under the License.
 
 #include <stdio.h> // REMOVE
 
-struct octaspire_memory_allocator_t
+struct octaspire_allocator_t
 {
     size_t                                               numberOfFutureAllocationsToBeRigged;
     size_t                                               bitIndex;
     uint32_t                                             bitQueue[20];
-    octaspire_memory_allocator_custom_malloc_function_t  customMallocFunction;
-    octaspire_memory_allocator_custom_free_function_t    customFreeFunction;
-    octaspire_memory_allocator_custom_realloc_function_t customReallocFunction;
+    octaspire_allocator_custom_malloc_function_t  customMallocFunction;
+    octaspire_allocator_custom_free_function_t    customFreeFunction;
+    octaspire_allocator_custom_realloc_function_t customReallocFunction;
 };
 
-octaspire_memory_allocator_config_t octaspire_memory_allocator_config_default(void)
+octaspire_allocator_config_t octaspire_allocator_config_default(void)
 {
-    octaspire_memory_allocator_config_t result =
+    octaspire_allocator_config_t result =
     {
         .customMallocFunction  = 0,
         .customFreeFunction    = 0,
@@ -46,19 +46,19 @@ octaspire_memory_allocator_config_t octaspire_memory_allocator_config_default(vo
     return result;
 }
 
-octaspire_memory_allocator_t *octaspire_memory_allocator_new(
-    octaspire_memory_allocator_config_t const * config)
+octaspire_allocator_t *octaspire_allocator_new(
+    octaspire_allocator_config_t const * config)
 {
-    octaspire_memory_allocator_config_t defaultConfig = octaspire_memory_allocator_config_default();
+    octaspire_allocator_config_t defaultConfig = octaspire_allocator_config_default();
 
     if (!config)
     {
         config = &defaultConfig;
     }
 
-    size_t const size = sizeof(octaspire_memory_allocator_t);
+    size_t const size = sizeof(octaspire_allocator_t);
 
-    octaspire_memory_allocator_t *self = malloc(size);
+    octaspire_allocator_t *self = malloc(size);
 
     if (!self)
     {
@@ -82,7 +82,7 @@ octaspire_memory_allocator_t *octaspire_memory_allocator_new(
     return self;
 }
 
-void octaspire_memory_allocator_release(octaspire_memory_allocator_t *self)
+void octaspire_allocator_release(octaspire_allocator_t *self)
 {
     if (!self)
     {
@@ -92,9 +92,9 @@ void octaspire_memory_allocator_release(octaspire_memory_allocator_t *self)
     free(self);
 }
 
-bool octaspire_memory_allocator_private_test_bit(octaspire_memory_allocator_t const * const self);
+bool octaspire_allocator_private_test_bit(octaspire_allocator_t const * const self);
 
-bool octaspire_memory_allocator_private_test_bit(octaspire_memory_allocator_t const * const self)
+bool octaspire_allocator_private_test_bit(octaspire_allocator_t const * const self)
 {
     size_t const arrayIndex = (size_t)((float)self->bitIndex / 32.0f);
     size_t const bitIndex   = self->bitIndex % 8;
@@ -103,15 +103,15 @@ bool octaspire_memory_allocator_private_test_bit(octaspire_memory_allocator_t co
     return octaspire_helpers_test_bit(self->bitQueue[arrayIndex], bitIndex);
 }
 
-void *octaspire_memory_allocator_malloc(
-    octaspire_memory_allocator_t *self,
+void *octaspire_allocator_malloc(
+    octaspire_allocator_t *self,
     size_t const size)
 {
     if (self->numberOfFutureAllocationsToBeRigged)
     {
         --(self->numberOfFutureAllocationsToBeRigged);
 
-        if (!octaspire_memory_allocator_private_test_bit(self))
+        if (!octaspire_allocator_private_test_bit(self))
         {
             ++(self->bitIndex);
             return 0;
@@ -141,15 +141,15 @@ void *octaspire_memory_allocator_malloc(
     return result;
 }
 
-void *octaspire_memory_allocator_realloc(
-    octaspire_memory_allocator_t *self,
+void *octaspire_allocator_realloc(
+    octaspire_allocator_t *self,
     void *ptr, size_t const size)
 {
     if (self->numberOfFutureAllocationsToBeRigged)
     {
         --(self->numberOfFutureAllocationsToBeRigged);
 
-        if (!octaspire_memory_allocator_private_test_bit(self))
+        if (!octaspire_allocator_private_test_bit(self))
         {
             ++(self->bitIndex);
             return 0;
@@ -161,8 +161,8 @@ void *octaspire_memory_allocator_realloc(
     return self->customReallocFunction ? self->customReallocFunction(ptr, size) : realloc(ptr, size);
 }
 
-void octaspire_memory_allocator_free(
-    octaspire_memory_allocator_t *self,
+void octaspire_allocator_free(
+    octaspire_allocator_t *self,
     void *ptr)
 {
     assert(self);
@@ -170,8 +170,8 @@ void octaspire_memory_allocator_free(
     self->customFreeFunction ? self->customFreeFunction(ptr) : free(ptr);
 }
 
-void octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-    octaspire_memory_allocator_t *self,
+void octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
+    octaspire_allocator_t *self,
     size_t const count,
     uint32_t const bitQueue0)
 {
@@ -187,8 +187,8 @@ void octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_
     self->bitQueue[0] = bitQueue0;
 }
 
-void octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged_when_larger_than_32(
-    octaspire_memory_allocator_t *self,
+void octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged_when_larger_than_32(
+    octaspire_allocator_t *self,
     size_t const count,
     uint32_t const bitQueue0,
     uint32_t const bitQueue1,
@@ -242,8 +242,8 @@ void octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_
     self->bitQueue[19] = bitQueue19;
 }
 
-size_t octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
-    octaspire_memory_allocator_t const * const self)
+size_t octaspire_allocator_get_number_of_future_allocations_to_be_rigged(
+    octaspire_allocator_t const * const self)
 {
     return self->numberOfFutureAllocationsToBeRigged;
 }

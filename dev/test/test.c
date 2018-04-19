@@ -21,12 +21,12 @@ extern SUITE(octaspire_utf8_suite);
 extern SUITE(octaspire_memory_suite);
 extern SUITE(octaspire_stdio_suite);
 extern SUITE(octaspire_input_suite);
-extern SUITE(octaspire_container_vector_suite);
-extern SUITE(octaspire_container_list_suite);
-extern SUITE(octaspire_container_queue_suite);
-extern SUITE(octaspire_container_utf8_string_suite);
-extern SUITE(octaspire_container_pair_suite);
-extern SUITE(octaspire_container_hash_map_suite);
+extern SUITE(octaspire_vector_suite);
+extern SUITE(octaspire_list_suite);
+extern SUITE(octaspire_queue_suite);
+extern SUITE(octaspire_utf8_string_suite);
+extern SUITE(octaspire_pair_suite);
+extern SUITE(octaspire_hash_map_suite);
 
 GREATEST_MAIN_DEFS();
 
@@ -38,12 +38,12 @@ int main(int argc, char **argv)
     RUN_SUITE(octaspire_memory_suite);
     RUN_SUITE(octaspire_stdio_suite);
     RUN_SUITE(octaspire_input_suite);
-    RUN_SUITE(octaspire_container_vector_suite);
-    RUN_SUITE(octaspire_container_list_suite);
-    RUN_SUITE(octaspire_container_queue_suite);
-    RUN_SUITE(octaspire_container_utf8_string_suite);
-    RUN_SUITE(octaspire_container_pair_suite);
-    RUN_SUITE(octaspire_container_hash_map_suite);
+    RUN_SUITE(octaspire_vector_suite);
+    RUN_SUITE(octaspire_list_suite);
+    RUN_SUITE(octaspire_queue_suite);
+    RUN_SUITE(octaspire_utf8_string_suite);
+    RUN_SUITE(octaspire_pair_suite);
+    RUN_SUITE(octaspire_map_suite);
     GREATEST_MAIN_END();
 }
 

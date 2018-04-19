@@ -48,26 +48,26 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
                  $(INCDIR)octaspire_core_config.h            \
                  $(INCDIR)octaspire_utf8.h                   \
                  $(INCDIR)octaspire_memory.h                 \
-                 $(INCDIR)octaspire_container_vector.h       \
-                 $(INCDIR)octaspire_container_list.h         \
-                 $(INCDIR)octaspire_container_queue.h        \
-                 $(INCDIR)octaspire_container_utf8_string.h  \
-                 $(INCDIR)octaspire_container_pair.h         \
+                 $(INCDIR)octaspire_vector.h                 \
+                 $(INCDIR)octaspire_list.h                   \
+                 $(INCDIR)octaspire_queue.h                  \
+                 $(INCDIR)octaspire_string.h                 \
+                 $(INCDIR)octaspire_pair.h                   \
                  $(INCDIR)octaspire_stdio.h                  \
                  $(INCDIR)octaspire_input.h                  \
-                 $(INCDIR)octaspire_container_hash_map.h     \
+                 $(INCDIR)octaspire_map.h                    \
                  $(INCDIR)octaspire_helpers.h                \
                  $(ETCDIR)amalgamation_impl_head.c           \
                  $(EXTDIR)jenkins_one_at_a_time.c            \
                  $(SRCDIR)octaspire_memory.c                 \
                  $(SRCDIR)octaspire_helpers.c                \
                  $(SRCDIR)octaspire_utf8.c                   \
-                 $(SRCDIR)octaspire_container_vector.c       \
-                 $(SRCDIR)octaspire_container_list.c         \
-                 $(SRCDIR)octaspire_container_queue.c        \
-                 $(SRCDIR)octaspire_container_utf8_string.c  \
-                 $(SRCDIR)octaspire_container_pair.c         \
-                 $(SRCDIR)octaspire_container_hash_map.c     \
+                 $(SRCDIR)octaspire_vector.c                 \
+                 $(SRCDIR)octaspire_list.c                   \
+                 $(SRCDIR)octaspire_queue.c                  \
+                 $(SRCDIR)octaspire_string.c                 \
+                 $(SRCDIR)octaspire_pair.c                   \
+                 $(SRCDIR)octaspire_map.c                    \
                  $(SRCDIR)octaspire_input.c                  \
                  $(SRCDIR)octaspire_stdio.c                  \
                  $(ETCDIR)amalgamation_impl_tail.c           \
@@ -77,12 +77,12 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
                  $(TESTDR)test_memory.c                      \
                  $(TESTDR)test_stdio.c                       \
                  $(TESTDR)test_input.c                       \
-                 $(TESTDR)test_container_vector.c            \
-                 $(TESTDR)test_container_list.c              \
-                 $(TESTDR)test_container_queue.c             \
-                 $(TESTDR)test_container_utf8_string.c       \
-                 $(TESTDR)test_container_pair.c              \
-                 $(TESTDR)test_container_hash_map.c          \
+                 $(TESTDR)test_vector.c                      \
+                 $(TESTDR)test_list.c                        \
+                 $(TESTDR)test_queue.c                       \
+                 $(TESTDR)test_string.c                      \
+                 $(TESTDR)test_pair.c                        \
+                 $(TESTDR)test_map.c                         \
                  $(ETCDIR)amalgamation_impl_unit_test_tail.c
 	@echo "Creating amalgamation..."
 	@rm -rf $(AMALGAMATION)
@@ -91,26 +91,26 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
 	@$(AMALGA) $(INCDIR)octaspire_core_config.h            $(AMALGAMATION)
 	@$(AMALGA) $(INCDIR)octaspire_utf8.h                   $(AMALGAMATION)
 	@$(AMALGA) $(INCDIR)octaspire_memory.h                 $(AMALGAMATION)
-	@$(AMALGA) $(INCDIR)octaspire_container_vector.h       $(AMALGAMATION)
-	@$(AMALGA) $(INCDIR)octaspire_container_list.h         $(AMALGAMATION)
-	@$(AMALGA) $(INCDIR)octaspire_container_queue.h        $(AMALGAMATION)
-	@$(AMALGA) $(INCDIR)octaspire_container_utf8_string.h  $(AMALGAMATION)
-	@$(AMALGA) $(INCDIR)octaspire_container_pair.h         $(AMALGAMATION)
+	@$(AMALGA) $(INCDIR)octaspire_vector.h                 $(AMALGAMATION)
+	@$(AMALGA) $(INCDIR)octaspire_list.h                   $(AMALGAMATION)
+	@$(AMALGA) $(INCDIR)octaspire_queue.h                  $(AMALGAMATION)
+	@$(AMALGA) $(INCDIR)octaspire_string.h                 $(AMALGAMATION)
+	@$(AMALGA) $(INCDIR)octaspire_pair.h                   $(AMALGAMATION)
 	@$(AMALGA) $(INCDIR)octaspire_stdio.h                  $(AMALGAMATION)
 	@$(AMALGA) $(INCDIR)octaspire_input.h                  $(AMALGAMATION)
-	@$(AMALGA) $(INCDIR)octaspire_container_hash_map.h     $(AMALGAMATION)
+	@$(AMALGA) $(INCDIR)octaspire_map.h                    $(AMALGAMATION)
 	@$(AMALGA) $(INCDIR)octaspire_helpers.h                $(AMALGAMATION)
 	@$(AMALGL) $(ETCDIR)amalgamation_impl_head.c           $(AMALGAMATION)
 	@$(AMALGA) $(EXTDIR)jenkins_one_at_a_time.c            $(AMALGAMATION)
 	@$(AMALGA) $(SRCDIR)octaspire_memory.c                 $(AMALGAMATION)
 	@$(AMALGA) $(SRCDIR)octaspire_helpers.c                $(AMALGAMATION)
 	@$(AMALGA) $(SRCDIR)octaspire_utf8.c                   $(AMALGAMATION)
-	@$(AMALGA) $(SRCDIR)octaspire_container_vector.c       $(AMALGAMATION)
-	@$(AMALGA) $(SRCDIR)octaspire_container_list.c         $(AMALGAMATION)
-	@$(AMALGA) $(SRCDIR)octaspire_container_queue.c        $(AMALGAMATION)
-	@$(AMALGA) $(SRCDIR)octaspire_container_utf8_string.c  $(AMALGAMATION)
-	@$(AMALGA) $(SRCDIR)octaspire_container_pair.c         $(AMALGAMATION)
-	@$(AMALGA) $(SRCDIR)octaspire_container_hash_map.c     $(AMALGAMATION)
+	@$(AMALGA) $(SRCDIR)octaspire_vector.c                 $(AMALGAMATION)
+	@$(AMALGA) $(SRCDIR)octaspire_list.c                   $(AMALGAMATION)
+	@$(AMALGA) $(SRCDIR)octaspire_queue.c                  $(AMALGAMATION)
+	@$(AMALGA) $(SRCDIR)octaspire_string.c                 $(AMALGAMATION)
+	@$(AMALGA) $(SRCDIR)octaspire_pair.c                   $(AMALGAMATION)
+	@$(AMALGA) $(SRCDIR)octaspire_map.c                    $(AMALGAMATION)
 	@$(AMALGA) $(SRCDIR)octaspire_input.c                  $(AMALGAMATION)
 	@$(AMALGA) $(SRCDIR)octaspire_stdio.c                  $(AMALGAMATION)
 	@$(AMALGL) $(ETCDIR)amalgamation_impl_tail.c           $(AMALGAMATION)
@@ -120,12 +120,12 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
 	@$(AMALGA) $(TESTDR)test_memory.c                      $(AMALGAMATION)
 	@$(AMALGA) $(TESTDR)test_stdio.c                       $(AMALGAMATION)
 	@$(AMALGA) $(TESTDR)test_input.c                       $(AMALGAMATION)
-	@$(AMALGA) $(TESTDR)test_container_vector.c            $(AMALGAMATION)
-	@$(AMALGA) $(TESTDR)test_container_list.c              $(AMALGAMATION)
-	@$(AMALGA) $(TESTDR)test_container_queue.c             $(AMALGAMATION)
-	@$(AMALGA) $(TESTDR)test_container_utf8_string.c       $(AMALGAMATION)
-	@$(AMALGA) $(TESTDR)test_container_pair.c              $(AMALGAMATION)
-	@$(AMALGA) $(TESTDR)test_container_hash_map.c          $(AMALGAMATION)
+	@$(AMALGA) $(TESTDR)test_vector.c                      $(AMALGAMATION)
+	@$(AMALGA) $(TESTDR)test_list.c                        $(AMALGAMATION)
+	@$(AMALGA) $(TESTDR)test_queue.c                       $(AMALGAMATION)
+	@$(AMALGA) $(TESTDR)test_string.c                      $(AMALGAMATION)
+	@$(AMALGA) $(TESTDR)test_pair.c                        $(AMALGAMATION)
+	@$(AMALGA) $(TESTDR)test_map.c                         $(AMALGAMATION)
 	@$(AMALGL) $(ETCDIR)amalgamation_impl_unit_test_tail.c $(AMALGAMATION)
 
 $(RELDOCDIR)core-manual.html: $(DEVDOCDIR)book/core-manual.org

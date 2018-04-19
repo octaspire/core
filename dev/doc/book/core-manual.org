@@ -12,12 +12,9 @@ It depends only on a C99 compiler and standard library.
 Octaspire Core is licensed under the Apache License, Version 2.0. See file LICENSE
 in the source distribution for more information.
 
-Core uses
-[[http://semver.org][Semantic Versioning 2.0.0]] version numbering scheme.
-As long as the MAJOR version number is zero anything can change at any time,
-even in backwards incompatible manner.
-
-
+Core uses [[http://semver.org][Semantic Versioning 2.0.0]] version numbering scheme. As long as
+the MAJOR version number is zero anything can change at any time, even
+in backwards incompatible manner.
 
 ** Building the amalgamated source release
 
@@ -41,7 +38,6 @@ replace *YOUR_PLATFORM_NAME_HERE.XX* with *FreeBSD.sh*, *NetBSD.sh*, *OpenBSD.sh
 *SyllableDesktop.sh* or *macOS.sh*.
 More scripts for different platforms will be added later.
 
-
 *** Windows using MinGW and Git
 
 Download and install *MinGW* from
@@ -64,7 +60,6 @@ Start *Windows Command Prompt* and change directory to the same release director
 above. Run examples and programs in the *Command Prompt* window
 (NOT in the Git Bash window).
 
-
 *** Running unit tests
 
 This is all there should be to it; when make finishes, everything should be ready.
@@ -75,8 +70,6 @@ To run the unit tests:
 test/octaspire-core-test-runner
 #+END_SRC
 
-
-
 ** Quick tour of library features
 
 Here we take a quick look at the features of the library.
@@ -84,61 +77,42 @@ Here we take a quick look at the features of the library.
 *** Naming
 
 C doesn't have namespaces. To prevent name collisions, all names in the library
-are prefixed with *octaspire_*. For example, *octaspire_container_utf8_string_t*
-is the string type and *octaspire_container_utf8_string_new* is one of the functions
-that create new strings. *octaspire_container_vector_t* is the vector type and
-*octaspire_container_hash_map_t* is the hash-map type.
-
-These names can be pretty long, and quite annoying to write in the long run. I personally
-like to use the abbrevation features of vi/vim and emacs editors. You can see this setup
-in my [[https://github.com/octaspire/dotfiles.git][dotfiles]] for nvi, vim and emacs editors. Your favorite editor or IDE might have
-similar functionality also available.
-
-So, I can write *ocus* and hit the spacebar to get *octaspire_container_utf8_string_*.
+are prefixed with =octaspire_=. For example, =octaspire_string_t= is the string
+type and =octaspire_string_new= is one of the functions that create new strings.
+=octaspire_vector_t= is the vector type and =octaspire_map_t= isthe hash-map
+type.
 
 *** UTF-8 Strings
 
-#+INCLUDE: ../examples/string-example.c src C
+#+INCLUDE: ../../../release/examples/string-example.c src C
 
 *** Vector
 
-
-#+INCLUDE: ../examples/vector-example.c src C
-
+#+INCLUDE: ../../../release/examples/vector-example.c src C
 
 *** List
 
 TODO
 
-
-
 *** Queue
 
 TODO
-
-
 
 *** Pair
 
 TODO
 
-
-
 *** Hash map
 
-
-#+INCLUDE: ../examples/hash-map-example.c src C
-
+#+INCLUDE: ../../../release/examples/hash-map-example.c src C
 
 *** Input streams from memory and files
 
 TODO
 
-
 *** Lower level helpers
 
 TODO
-
 
 ** Building the development repository
 
@@ -153,7 +127,6 @@ cd core
 make
 #+END_SRC
 
-
 *** Arch Linux
 
 To build on Arch Linux (Arch Linux ARM) system:
@@ -164,7 +137,6 @@ git clone https://github.com/octaspire/core.git
 cd core
 make
 #+END_SRC
-
 
 *** Haiku
 
@@ -178,7 +150,6 @@ CC=gcc-x86 make
 #+END_SRC
 
 
-
 *** FreeBSD
 To build on FreeBSD (FreeBSD-11.0-RELEASE-arm-armv6-RPI2) system:
 
@@ -188,7 +159,6 @@ git clone https://github.com/octaspire/core.git
 cd core
 make
 #+END_SRC
-
 
 *** MINIX 3
 To build on MINIX 3 (minix_R3.3.0-588a35b) system:
@@ -203,7 +173,7 @@ make
 #+END_SRC
 
 
-=== Other systems
+*** Other systems
 
 On different systems the required commands can vary. In any case, You should install
 a *C compiler* and *git*.

@@ -31,7 +31,7 @@ bool octaspire_helpers_test_bit(uint32_t const bitSet, size_t const index)
 char *octaspire_helpers_path_to_buffer(
     char const * const path,
     size_t *octetsAllocated,
-    octaspire_memory_allocator_t *allocator,
+    octaspire_allocator_t *allocator,
     octaspire_stdio_t *stdio)
 {
     *octetsAllocated = 0;
@@ -55,7 +55,7 @@ char *octaspire_helpers_path_to_buffer(
 
     fseek(f, 0, SEEK_SET);
 
-    char *result = octaspire_memory_allocator_malloc(allocator, sizeof(char) * (size_t)length);
+    char *result = octaspire_allocator_malloc(allocator, sizeof(char) * (size_t)length);
 
     if (!result)
     {
@@ -70,7 +70,7 @@ char *octaspire_helpers_path_to_buffer(
     {
         fclose(f);
         f = 0;
-        octaspire_memory_allocator_free(allocator, result);
+        octaspire_allocator_free(allocator, result);
         result = 0;
         *octetsAllocated = 0;
         return 0;
@@ -244,13 +244,13 @@ uint8_t octaspire_helpers_get_char_or_default_from_buf(
 }
 
 size_t octaspire_helpers_measure_length_of_last_line(
-    octaspire_container_utf8_string_t const * const str)
+    octaspire_string_t const * const str)
 {
     size_t result = 0;
-    while (result < octaspire_container_utf8_string_get_length_in_ucs_characters(str))
+    while (result < octaspire_string_get_length_in_ucs_characters(str))
     {
         ++result;
-        if (octaspire_container_utf8_string_get_ucs_character_at_index(
+        if (octaspire_string_get_ucs_character_at_index(
             str,
             -(ptrdiff_t)result) == '\n')
         {
@@ -274,10 +274,10 @@ static size_t octaspire_helpers_base64_private_skip_whitespace(
     return index;
 }
 
-octaspire_container_vector_t * octaspire_helpers_base64_decode(
+octaspire_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
     int32_t const inputLenOrNegativeToMeasure,
-    octaspire_memory_allocator_t * const allocator)
+    octaspire_allocator_t * const allocator)
 {
     if (inputLenOrNegativeToMeasure < 2)
     {
@@ -286,7 +286,7 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
 
     size_t numPadding = 0;
 
-    octaspire_container_vector_t * result = octaspire_container_vector_new(
+    octaspire_vector_t * result = octaspire_vector_new(
         sizeof(char),
         false,
         0,
@@ -322,9 +322,9 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
             for (size_t j = 0; j < 3; ++j)
             {
                 char octet = (char)((num24bits >> (16 - (j * 8))) & 0xFF);
-                if (!octaspire_container_vector_push_back_element(result, &octet))
+                if (!octaspire_vector_push_back_element(result, &octet))
                 {
-                    octaspire_container_vector_release(result);
+                    octaspire_vector_release(result);
                     result = 0;
                     return result;
                 }
@@ -353,7 +353,7 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
 
         if (index == octaspire_helpers_base64_private_bad_num)
         {
-            octaspire_container_vector_release(result);
+            octaspire_vector_release(result);
             result = 0;
             return result;
         }
@@ -363,9 +363,9 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
         ++i;
     }
 
-    if (numIndices != 0 || numPadding >= octaspire_container_vector_get_length(result))
+    if (numIndices != 0 || numPadding >= octaspire_vector_get_length(result))
     {
-        octaspire_container_vector_release(result);
+        octaspire_vector_release(result);
         result = 0;
         return result;
     }
@@ -374,19 +374,19 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
     {
         while (isspace(
             (int)*(char const * const)
-            octaspire_container_vector_peek_back_element_const(result)))
+            octaspire_vector_peek_back_element_const(result)))
         {
-            if (!octaspire_container_vector_pop_back_element(result))
+            if (!octaspire_vector_pop_back_element(result))
             {
-                octaspire_container_vector_release(result);
+                octaspire_vector_release(result);
                 result = 0;
                 return result;
             }
         }
 
-        if (!octaspire_container_vector_pop_back_element(result))
+        if (!octaspire_vector_pop_back_element(result))
         {
-            octaspire_container_vector_release(result);
+            octaspire_vector_release(result);
             result = 0;
             return result;
         }
@@ -395,16 +395,16 @@ octaspire_container_vector_t * octaspire_helpers_base64_decode(
     return result;
 }
 
-octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
+octaspire_string_t * octaspire_helpers_base64_encode(
     char const * const input,
     size_t const inLen,
     size_t const lineLen,
-    octaspire_memory_allocator_t * const allocator)
+    octaspire_allocator_t * const allocator)
 {
     char const * const base64chars =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    octaspire_container_utf8_string_t * result = octaspire_container_utf8_string_new(
+    octaspire_string_t * result = octaspire_string_new(
         "",
         allocator);
 
@@ -452,11 +452,11 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
         // array of base64 characters.
         for (size_t j = 0; j < 4; ++j)
         {
-            if (!octaspire_container_utf8_string_push_back_ucs_character(
+            if (!octaspire_string_push_back_ucs_character(
                 result,
                 (uint32_t)base64chars[n[j]]))
             {
-                octaspire_container_utf8_string_release(result);
+                octaspire_string_release(result);
                 result = 0;
                 return result;
             }
@@ -465,11 +465,11 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
 
             if (lineLen && currentLineLen >= lineLen)
             {
-                if (!octaspire_container_utf8_string_push_back_ucs_character(
+                if (!octaspire_string_push_back_ucs_character(
                         result,
                         '\n'))
                 {
-                    octaspire_container_utf8_string_release(result);
+                    octaspire_string_release(result);
                     result = 0;
                     return result;
                 }
@@ -484,10 +484,10 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
         size_t numZerosRemoved = 0;
 
         for (size_t i = 0;
-            i < octaspire_container_utf8_string_get_length_in_ucs_characters(result);
+            i < octaspire_string_get_length_in_ucs_characters(result);
             ++i)
         {
-            if (octaspire_container_utf8_string_get_ucs_character_at_index(result, -1) != '\n')
+            if (octaspire_string_get_ucs_character_at_index(result, -1) != '\n')
             {
                 ++numZerosRemoved;
                 --currentLineLen;
@@ -497,9 +497,9 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
                 currentLineLen = octaspire_helpers_measure_length_of_last_line(result);
             }
 
-            if (!octaspire_container_utf8_string_pop_back_ucs_character(result))
+            if (!octaspire_string_pop_back_ucs_character(result))
             {
-                octaspire_container_utf8_string_release(result);
+                octaspire_string_release(result);
                 result = 0;
                 return result;
             }
@@ -515,11 +515,11 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
     {
         if (lineLen && currentLineLen >= lineLen)
         {
-            if (!octaspire_container_utf8_string_push_back_ucs_character(
+            if (!octaspire_string_push_back_ucs_character(
                     result,
                     '\n'))
             {
-                octaspire_container_utf8_string_release(result);
+                octaspire_string_release(result);
                 result = 0;
                 return result;
             }
@@ -527,11 +527,11 @@ octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
             currentLineLen = 0;
         }
 
-        if (!octaspire_container_utf8_string_push_back_ucs_character(
+        if (!octaspire_string_push_back_ucs_character(
                 result,
                 (uint32_t)'='))
         {
-            octaspire_container_utf8_string_release(result);
+            octaspire_string_release(result);
             result = 0;
 
             return result;

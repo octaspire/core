@@ -20,36 +20,36 @@ limitations under the License.
 #include "octaspire/core/octaspire_memory.h"
 #include "octaspire/core/octaspire_helpers.h"
 
-struct octaspire_container_pair_t
+struct octaspire_pair_t
 {
     void   *first;
     void   *second;
     size_t firstSize;
     size_t secondSize;
-    octaspire_container_pair_element_callback_t firstReleaseCallback;
-    octaspire_container_pair_element_callback_t secondReleaseCallback;
-    octaspire_memory_allocator_t *allocator;
+    octaspire_pair_element_callback_t firstReleaseCallback;
+    octaspire_pair_element_callback_t secondReleaseCallback;
+    octaspire_allocator_t *allocator;
     bool   firstIsPointer;
     bool   secondIsPointer;
     char   padding[6];
 };
 
-size_t octaspire_container_pair_t_get_sizeof(void)
+size_t octaspire_pair_t_get_sizeof(void)
 {
-    return sizeof(octaspire_container_pair_t);
+    return sizeof(octaspire_pair_t);
 }
 
-octaspire_container_pair_t *octaspire_container_pair_new(
+octaspire_pair_t *octaspire_pair_new(
     size_t const firstElementSize,
     bool const firstElementIsPointer,
     size_t const secondElementSize,
     bool const secondElementIsPointer,
-    octaspire_container_pair_element_callback_t firstElementReleaseCallback,
-    octaspire_container_pair_element_callback_t secondElementReleaseCallback,
-    octaspire_memory_allocator_t *allocator)
+    octaspire_pair_element_callback_t firstElementReleaseCallback,
+    octaspire_pair_element_callback_t secondElementReleaseCallback,
+    octaspire_allocator_t *allocator)
 {
-    octaspire_container_pair_t *self =
-        octaspire_memory_allocator_malloc(allocator, sizeof(octaspire_container_pair_t));
+    octaspire_pair_t *self =
+        octaspire_allocator_malloc(allocator, sizeof(octaspire_pair_t));
 
     if (!self)
     {
@@ -66,20 +66,20 @@ octaspire_container_pair_t *octaspire_container_pair_new(
     self->firstReleaseCallback  = firstElementReleaseCallback;
     self->secondReleaseCallback = secondElementReleaseCallback;
 
-    self->first = octaspire_memory_allocator_malloc(self->allocator, self->firstSize);
+    self->first = octaspire_allocator_malloc(self->allocator, self->firstSize);
 
     if (!self->first)
     {
-        octaspire_container_pair_release(self);
+        octaspire_pair_release(self);
         self = 0;
         return 0;
     }
 
-    self->second = octaspire_memory_allocator_malloc(self->allocator, self->secondSize);
+    self->second = octaspire_allocator_malloc(self->allocator, self->secondSize);
 
     if (!self->second)
     {
-        octaspire_container_pair_release(self);
+        octaspire_pair_release(self);
         self = 0;
         return 0;
     }
@@ -87,12 +87,12 @@ octaspire_container_pair_t *octaspire_container_pair_new(
     return self;
 }
 
-octaspire_container_pair_t *octaspire_container_pair_new_shallow_copy(
-    octaspire_container_pair_t   *other,
-    octaspire_memory_allocator_t *allocator)
+octaspire_pair_t *octaspire_pair_new_shallow_copy(
+    octaspire_pair_t   *other,
+    octaspire_allocator_t *allocator)
 {
-    octaspire_container_pair_t *self =
-        octaspire_memory_allocator_malloc(allocator, sizeof(octaspire_container_pair_t));
+    octaspire_pair_t *self =
+        octaspire_allocator_malloc(allocator, sizeof(octaspire_pair_t));
 
     if (!self)
     {
@@ -109,34 +109,34 @@ octaspire_container_pair_t *octaspire_container_pair_new_shallow_copy(
     self->firstReleaseCallback  = other->firstReleaseCallback;
     self->secondReleaseCallback = other->secondReleaseCallback;
 
-    self->first  = octaspire_memory_allocator_malloc(self->allocator, self->firstSize);
+    self->first  = octaspire_allocator_malloc(self->allocator, self->firstSize);
 
     if (!self->first)
     {
-        octaspire_container_pair_release(self);
+        octaspire_pair_release(self);
         self = 0;
         return 0;
     }
 
-    self->second = octaspire_memory_allocator_malloc(self->allocator, self->secondSize);
+    self->second = octaspire_allocator_malloc(self->allocator, self->secondSize);
 
     if (!self->second)
     {
-        octaspire_container_pair_release(self);
+        octaspire_pair_release(self);
         self = 0;
         return 0;
     }
 
     if (self->first != memcpy(self->first,  other->first,  self->firstSize))
     {
-        octaspire_container_pair_release(self);
+        octaspire_pair_release(self);
         self = 0;
         return 0;
     }
 
     if (self->second != memcpy(self->second, other->second, self->secondSize))
     {
-        octaspire_container_pair_release(self);
+        octaspire_pair_release(self);
         self = 0;
         return 0;
     }
@@ -144,7 +144,7 @@ octaspire_container_pair_t *octaspire_container_pair_new_shallow_copy(
     return self;
 }
 
-void octaspire_container_pair_release(octaspire_container_pair_t *self)
+void octaspire_pair_release(octaspire_pair_t *self)
 {
     if (!self)
     {
@@ -168,7 +168,7 @@ void octaspire_container_pair_release(octaspire_container_pair_t *self)
 
     if (self->first)
     {
-        octaspire_memory_allocator_free(self->allocator, self->first);
+        octaspire_allocator_free(self->allocator, self->first);
         self->first = 0;
     }
 
@@ -189,56 +189,56 @@ void octaspire_container_pair_release(octaspire_container_pair_t *self)
 
     if (self->second)
     {
-        octaspire_memory_allocator_free(self->allocator, self->second);
+        octaspire_allocator_free(self->allocator, self->second);
         self->second = 0;
     }
 
-    octaspire_memory_allocator_free(self->allocator, self);
+    octaspire_allocator_free(self->allocator, self);
 }
 
-void *octaspire_container_pair_get_first(octaspire_container_pair_t *self)
+void *octaspire_pair_get_first(octaspire_pair_t *self)
 {
     return self->firstIsPointer ? (*(void**)self->first) : self->first;
 }
 
-void const *octaspire_container_pair_get_first_const(octaspire_container_pair_t const * const self)
+void const *octaspire_pair_get_first_const(octaspire_pair_t const * const self)
 {
     return self->firstIsPointer ? (*(void const **)self->first) : self->first;
 }
 
-void *octaspire_container_pair_get_second(octaspire_container_pair_t *self)
+void *octaspire_pair_get_second(octaspire_pair_t *self)
 {
     return self->secondIsPointer ? (*(void**)self->second) : self->second;
 }
 
-void const *octaspire_container_pair_get_second_const(octaspire_container_pair_t const * const self)
+void const *octaspire_pair_get_second_const(octaspire_pair_t const * const self)
 {
     return self->secondIsPointer ? (*(void const **)self->second) : self->second;
 }
 
-size_t octaspire_container_pair_get_size_of_first_element_in_octets(
-    octaspire_container_pair_t const * const self)
+size_t octaspire_pair_get_size_of_first_element_in_octets(
+    octaspire_pair_t const * const self)
 {
     return self->firstSize;
 }
 
-size_t octaspire_container_pair_get_size_of_second_element_in_octets(
-    octaspire_container_pair_t const * const self)
+size_t octaspire_pair_get_size_of_second_element_in_octets(
+    octaspire_pair_t const * const self)
 {
     return self->secondSize;
 }
 
-void octaspire_container_pair_set(
-    octaspire_container_pair_t *self,
+void octaspire_pair_set(
+    octaspire_pair_t *self,
     void const *first,
     void const *second)
 {
-    octaspire_container_pair_set_first( self, first);
-    octaspire_container_pair_set_second(self, second);
+    octaspire_pair_set_first( self, first);
+    octaspire_pair_set_second(self, second);
 }
 
-void octaspire_container_pair_set_first(
-    octaspire_container_pair_t *self,
+void octaspire_pair_set_first(
+    octaspire_pair_t *self,
     void const *first)
 {
     octaspire_helpers_verify_not_null(self);
@@ -249,8 +249,8 @@ void octaspire_container_pair_set_first(
     }
 }
 
-void octaspire_container_pair_set_second(
-    octaspire_container_pair_t *self,
+void octaspire_pair_set_second(
+    octaspire_pair_t *self,
     void const *second)
 {
     if (self->second != memcpy(self->second, second, self->secondSize))
@@ -259,8 +259,8 @@ void octaspire_container_pair_set_second(
     }
 }
 
-bool octaspire_container_pair_set_first_to_void_pointer(
-    octaspire_container_pair_t *self,
+bool octaspire_pair_set_first_to_void_pointer(
+    octaspire_pair_t *self,
     void *element)
 {
     if (self->firstSize != sizeof(element))
@@ -268,13 +268,13 @@ bool octaspire_container_pair_set_first_to_void_pointer(
         return false;
     }
 
-    octaspire_container_pair_set_first(self, &element);
+    octaspire_pair_set_first(self, &element);
 
     return true;
 }
 
-bool octaspire_container_pair_set_second_to_void_pointer(
-    octaspire_container_pair_t *self,
+bool octaspire_pair_set_second_to_void_pointer(
+    octaspire_pair_t *self,
     void *element)
 {
     if (self->secondSize != sizeof(element))
@@ -282,13 +282,13 @@ bool octaspire_container_pair_set_second_to_void_pointer(
         return false;
     }
 
-    octaspire_container_pair_set_second(self, &element);
+    octaspire_pair_set_second(self, &element);
 
     return true;
 }
 
-void octaspire_container_pair_clear(
-    octaspire_container_pair_t * const self)
+void octaspire_pair_clear(
+    octaspire_pair_t * const self)
 {
     if (self->first != memset(self->first,  0, self->firstSize))
     {

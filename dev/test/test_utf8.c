@@ -21,7 +21,7 @@ limitations under the License.
 #include "octaspire/core/octaspire_container_vector.h"
 #include "octaspire/core/octaspire_core_config.h"
 
-static octaspire_memory_allocator_t *octaspireUtf8TestAllocator = 0;
+static octaspire_allocator_t *octaspireUtf8TestAllocator = 0;
 
 TEST octaspire_utf8_private_rangeof_test(void)
 {
@@ -631,8 +631,8 @@ TEST octaspire_utf8_decode_character_empty_string_test(void)
 // Now return value is different when decoded from c-string and buffer.
 TEST octaspire_utf8_decode_character_from_buffer_empty_string_test(void)
 {
-    octaspire_container_vector_t *buffer =
-        octaspire_container_vector_new(sizeof(char), false, 0, octaspireUtf8TestAllocator);
+    octaspire_vector_t *buffer =
+        octaspire_vector_new(sizeof(char), false, 0, octaspireUtf8TestAllocator);
 
     size_t const currentIndex = 0;
     uint32_t result = 0;
@@ -641,8 +641,8 @@ TEST octaspire_utf8_decode_character_from_buffer_empty_string_test(void)
     ASSERT_EQ(
         OCTASPIRE_UTF8_DECODE_STATUS_INPUT_IS_NULL,
         octaspire_utf8_decode_character_from_buffer(
-            octaspire_container_vector_get_element_at(buffer, 0),
-            octaspire_container_vector_get_length_in_octets(buffer),
+            octaspire_vector_get_element_at(buffer, 0),
+            octaspire_vector_get_length_in_octets(buffer),
             currentIndex,
             &result,
             &numoctets));
@@ -650,7 +650,7 @@ TEST octaspire_utf8_decode_character_from_buffer_empty_string_test(void)
     ASSERT_EQ(0, result);
     ASSERT_EQ(0, numoctets);
 
-    octaspire_container_vector_release(buffer);
+    octaspire_vector_release(buffer);
     buffer = 0;
 
     PASS();
@@ -674,10 +674,10 @@ TEST octaspire_utf8_decode_character_a_test(void)
 
 TEST octaspire_utf8_decode_character_from_buffer_a_test(void)
 {
-    octaspire_container_vector_t *buffer =
-        octaspire_container_vector_new(sizeof(char), false, 0, octaspireUtf8TestAllocator);
+    octaspire_vector_t *buffer =
+        octaspire_vector_new(sizeof(char), false, 0, octaspireUtf8TestAllocator);
 
-    octaspire_container_vector_push_back_char(buffer, 'a');
+    octaspire_vector_push_back_char(buffer, 'a');
     size_t const currentIndex = 0;
     uint32_t result = 0;
     int numoctets = 0;
@@ -685,8 +685,8 @@ TEST octaspire_utf8_decode_character_from_buffer_a_test(void)
     ASSERT_EQ(
         OCTASPIRE_UTF8_DECODE_STATUS_OK,
         octaspire_utf8_decode_character_from_buffer(
-            octaspire_container_vector_get_element_at(buffer, 0),
-            octaspire_container_vector_get_length_in_octets(buffer),
+            octaspire_vector_get_element_at(buffer, 0),
+            octaspire_vector_get_length_in_octets(buffer),
             currentIndex,
             &result,
             &numoctets));
@@ -694,7 +694,7 @@ TEST octaspire_utf8_decode_character_from_buffer_a_test(void)
     ASSERT_EQ(97, result);
     ASSERT_EQ(1, numoctets);
 
-    octaspire_container_vector_release(buffer);
+    octaspire_vector_release(buffer);
     buffer = 0;
 
     PASS();
@@ -927,10 +927,10 @@ TEST octaspire_utf8_decode_character_illegal_octet_0x80_test(void)
 
 TEST octaspire_utf8_decode_character_from_buffer_illegal_octet_0x80_test(void)
 {
-    octaspire_container_vector_t *buffer =
-        octaspire_container_vector_new(sizeof(char), false, 0, octaspireUtf8TestAllocator);
+    octaspire_vector_t *buffer =
+        octaspire_vector_new(sizeof(char), false, 0, octaspireUtf8TestAllocator);
 
-    octaspire_container_vector_push_back_char(buffer, '\x80');
+    octaspire_vector_push_back_char(buffer, '\x80');
     size_t const currentIndex = 0;
     uint32_t result = 0;
     int numoctets = 0;
@@ -938,8 +938,8 @@ TEST octaspire_utf8_decode_character_from_buffer_illegal_octet_0x80_test(void)
     ASSERT_EQ(
         OCTASPIRE_UTF8_DECODE_STATUS_ILLEGAL_NUMBER_OF_OCTETS,
         octaspire_utf8_decode_character_from_buffer(
-            octaspire_container_vector_get_element_at(buffer, 0),
-            octaspire_container_vector_get_length_in_octets(buffer),
+            octaspire_vector_get_element_at(buffer, 0),
+            octaspire_vector_get_length_in_octets(buffer),
             currentIndex,
             &result,
             &numoctets));
@@ -947,7 +947,7 @@ TEST octaspire_utf8_decode_character_from_buffer_illegal_octet_0x80_test(void)
     ASSERT_EQ(0,  result);
     ASSERT_EQ(-1, numoctets);
 
-    octaspire_container_vector_release(buffer);
+    octaspire_vector_release(buffer);
     buffer = 0;
 
     PASS();
@@ -1243,7 +1243,7 @@ TEST octaspire_utf8_decode_character_illegal_octet_sequence_0xF0_0x80_0x80_0xAF_
 
 GREATEST_SUITE(octaspire_utf8_suite)
 {
-    octaspireUtf8TestAllocator = octaspire_memory_allocator_new(0);
+    octaspireUtf8TestAllocator = octaspire_allocator_new(0);
     assert(octaspireUtf8TestAllocator);
 
     RUN_TEST(octaspire_utf8_private_rangeof_test);
@@ -1319,6 +1319,6 @@ GREATEST_SUITE(octaspire_utf8_suite)
     RUN_TEST(octaspire_utf8_decode_character_illegal_octet_sequence_0xE0_0x80_0xAF_test);
     RUN_TEST(octaspire_utf8_decode_character_illegal_octet_sequence_0xF0_0x80_0x80_0xAF_test);
 
-    octaspire_memory_allocator_release(octaspireUtf8TestAllocator);
+    octaspire_allocator_release(octaspireUtf8TestAllocator);
     octaspireUtf8TestAllocator = 0;
 }

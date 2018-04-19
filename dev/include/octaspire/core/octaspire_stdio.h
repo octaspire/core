@@ -29,7 +29,7 @@ extern "C"       {
 
 typedef struct octaspire_stdio_t octaspire_stdio_t;
 
-octaspire_stdio_t *octaspire_stdio_new(octaspire_memory_allocator_t *allocator);
+octaspire_stdio_t *octaspire_stdio_new(octaspire_allocator_t *allocator);
 
 void octaspire_stdio_release(octaspire_stdio_t *self);
 
@@ -48,7 +48,7 @@ void octaspire_stdio_set_number_and_type_of_future_reads_to_be_rigged(
 size_t octaspire_stdio_get_number_of_future_reads_to_be_rigged(
     octaspire_stdio_t const * const self);
 
-octaspire_container_utf8_string_t *octaspire_stdio_read_line(octaspire_stdio_t *self, FILE *stream);
+octaspire_string_t *octaspire_stdio_read_line(octaspire_stdio_t *self, FILE *stream);
 
 #ifdef __cplusplus
 /* extern "C" */ }

@@ -24,47 +24,47 @@ limitations under the License.
 extern "C"       {
 #endif
 
-typedef void *(*octaspire_memory_allocator_custom_malloc_function_t)(size_t size);
-typedef void  (*octaspire_memory_allocator_custom_free_function_t)(void *ptr);
-typedef void *(*octaspire_memory_allocator_custom_realloc_function_t)(void *ptr, size_t size);
+typedef void *(*octaspire_allocator_custom_malloc_function_t)(size_t size);
+typedef void  (*octaspire_allocator_custom_free_function_t)(void *ptr);
+typedef void *(*octaspire_allocator_custom_realloc_function_t)(void *ptr, size_t size);
 
-typedef struct octaspire_memory_allocator_config_t
+typedef struct octaspire_allocator_config_t
 {
-    octaspire_memory_allocator_custom_malloc_function_t  customMallocFunction;
-    octaspire_memory_allocator_custom_free_function_t    customFreeFunction;
-    octaspire_memory_allocator_custom_realloc_function_t customReallocFunction;
+    octaspire_allocator_custom_malloc_function_t  customMallocFunction;
+    octaspire_allocator_custom_free_function_t    customFreeFunction;
+    octaspire_allocator_custom_realloc_function_t customReallocFunction;
 }
-octaspire_memory_allocator_config_t;
+octaspire_allocator_config_t;
 
-octaspire_memory_allocator_config_t octaspire_memory_allocator_config_default(void);
+octaspire_allocator_config_t octaspire_allocator_config_default(void);
 
 
-typedef struct octaspire_memory_allocator_t octaspire_memory_allocator_t;
+typedef struct octaspire_allocator_t octaspire_allocator_t;
 
-octaspire_memory_allocator_t *octaspire_memory_allocator_new(
-    octaspire_memory_allocator_config_t const * config);
+octaspire_allocator_t *octaspire_allocator_new(
+    octaspire_allocator_config_t const * config);
 
-void octaspire_memory_allocator_release(octaspire_memory_allocator_t *self);
+void octaspire_allocator_release(octaspire_allocator_t *self);
 
-void *octaspire_memory_allocator_malloc(
-    octaspire_memory_allocator_t *self,
+void *octaspire_allocator_malloc(
+    octaspire_allocator_t *self,
     size_t const size);
 
-void *octaspire_memory_allocator_realloc(
-    octaspire_memory_allocator_t *self,
+void *octaspire_allocator_realloc(
+    octaspire_allocator_t *self,
     void *ptr, size_t const size);
 
-void octaspire_memory_allocator_free(
-    octaspire_memory_allocator_t *self,
+void octaspire_allocator_free(
+    octaspire_allocator_t *self,
     void *ptr);
 
-void octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
-    octaspire_memory_allocator_t *self,
+void octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
+    octaspire_allocator_t *self,
     size_t const count,
     uint32_t const bitQueue0);
 
-void octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged_when_larger_than_32(
-    octaspire_memory_allocator_t *self,
+void octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged_when_larger_than_32(
+    octaspire_allocator_t *self,
     size_t const count,
     uint32_t const bitQueue0,
     uint32_t const bitQueue1,
@@ -87,8 +87,8 @@ void octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_
     uint32_t const bitQueue18,
     uint32_t const bitQueue19);
 
-size_t octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(
-    octaspire_memory_allocator_t const * const self);
+size_t octaspire_allocator_get_number_of_future_allocations_to_be_rigged(
+    octaspire_allocator_t const * const self);
 
 #ifdef __cplusplus
 /* extern "C" */ }

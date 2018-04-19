@@ -20,7 +20,7 @@ limitations under the License.
 #include "octaspire/core/octaspire_stdio.h"
 #include "octaspire/core/octaspire_core_config.h"
 
-static octaspire_memory_allocator_t *octaspireStdioTestAllocator = 0;
+static octaspire_allocator_t *octaspireStdioTestAllocator = 0;
 
 TEST octaspire_stdio_new_test(void)
 {
@@ -41,14 +41,14 @@ TEST octaspire_stdio_new_test(void)
 
 TEST octaspire_stdio_new_allocation_failure_test(void)
 {
-    octaspire_memory_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
+    octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
         octaspireStdioTestAllocator,
         1,
         0);
 
     ASSERT_EQ(
         1,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireStdioTestAllocator));
+        octaspire_allocator_get_number_of_future_allocations_to_be_rigged(octaspireStdioTestAllocator));
 
     octaspire_stdio_t *stdio = octaspire_stdio_new(octaspireStdioTestAllocator);
 
@@ -56,7 +56,7 @@ TEST octaspire_stdio_new_allocation_failure_test(void)
 
     ASSERT_EQ(
         0,
-        octaspire_memory_allocator_get_number_of_future_allocations_to_be_rigged(octaspireStdioTestAllocator));
+        octaspire_allocator_get_number_of_future_allocations_to_be_rigged(octaspireStdioTestAllocator));
 
     octaspire_stdio_release(stdio);
     stdio = 0;
@@ -139,7 +139,7 @@ TEST octaspire_stdio_fread_rigging_and_failure_test(void)
 
 GREATEST_SUITE(octaspire_stdio_suite)
 {
-    octaspireStdioTestAllocator = octaspire_memory_allocator_new(0);
+    octaspireStdioTestAllocator = octaspire_allocator_new(0);
 
     assert(octaspireStdioTestAllocator);
 
@@ -148,7 +148,7 @@ GREATEST_SUITE(octaspire_stdio_suite)
     RUN_TEST(octaspire_stdio_fread_test);
     RUN_TEST(octaspire_stdio_fread_rigging_and_failure_test);
 
-    octaspire_memory_allocator_release(octaspireStdioTestAllocator);
+    octaspire_allocator_release(octaspireStdioTestAllocator);
     octaspireStdioTestAllocator = 0;
 }
 

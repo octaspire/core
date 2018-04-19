@@ -29,16 +29,16 @@ typedef struct octaspire_input_t octaspire_input_t;
 
 octaspire_input_t *octaspire_input_new_from_c_string(
     char const * const str,
-    octaspire_memory_allocator_t *allocator);
+    octaspire_allocator_t *allocator);
 
 octaspire_input_t *octaspire_input_new_from_buffer(
     char const * const buffer,
     size_t const lengthInOctets,
-    octaspire_memory_allocator_t *allocator);
+    octaspire_allocator_t *allocator);
 
 octaspire_input_t *octaspire_input_new_from_path(
     char const * const path,
-    octaspire_memory_allocator_t *octaspireAllocator,
+    octaspire_allocator_t *octaspireAllocator,
     octaspire_stdio_t *octaspireStdio);
 
 void octaspire_input_release(octaspire_input_t *self);
@@ -58,7 +58,7 @@ bool octaspire_input_is_good(octaspire_input_t const * const self);
 
 bool octaspire_input_push_back_from_string(
     octaspire_input_t * const self,
-    octaspire_container_utf8_string_t const * const str);
+    octaspire_string_t const * const str);
 
 bool octaspire_input_push_back_from_c_string(octaspire_input_t * const self, char const * const str);
 

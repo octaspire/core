@@ -34,7 +34,7 @@ bool  octaspire_helpers_test_bit(uint32_t const bitSet, size_t const index);
 char *octaspire_helpers_path_to_buffer(
     char const * const path,
     size_t *octetsAllocated,
-    octaspire_memory_allocator_t *allocator,
+    octaspire_allocator_t *allocator,
     octaspire_stdio_t *stdio);
 
 uint32_t octaspire_helpers_calculate_hash_for_size_t_argument(size_t const value);
@@ -72,18 +72,18 @@ uint8_t octaspire_helpers_get_char_or_default_from_buf(
     uint8_t const defaultChar);
 
 size_t octaspire_helpers_measure_length_of_last_line(
-    octaspire_container_utf8_string_t const * const str);
+    octaspire_string_t const * const str);
 
-octaspire_container_vector_t * octaspire_helpers_base64_decode(
+octaspire_vector_t * octaspire_helpers_base64_decode(
     char const * const input,
     int32_t const inputLenOrNegativeToMeasure,
-    octaspire_memory_allocator_t * const allocator);
+    octaspire_allocator_t * const allocator);
 
-octaspire_container_utf8_string_t * octaspire_helpers_base64_encode(
+octaspire_string_t * octaspire_helpers_base64_encode(
     char const * const input,
     size_t const inLen,
     size_t const lineLen,
-    octaspire_memory_allocator_t * const allocator);
+    octaspire_allocator_t * const allocator);
 
 #ifdef __cplusplus
 /* extern "C" */ }

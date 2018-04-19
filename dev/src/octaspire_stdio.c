@@ -23,18 +23,18 @@ limitations under the License.
 
 struct octaspire_stdio_t
 {
-    octaspire_memory_allocator_t *allocator;
+    octaspire_allocator_t *allocator;
     size_t   numberOfFutureReadsToBeRigged;
     size_t   bitIndex;
     uint32_t bitQueue;
     char     padding[4];
 };
 
-octaspire_stdio_t *octaspire_stdio_new(octaspire_memory_allocator_t *allocator)
+octaspire_stdio_t *octaspire_stdio_new(octaspire_allocator_t *allocator)
 {
     size_t const size = sizeof(octaspire_stdio_t);
 
-    octaspire_stdio_t *self = octaspire_memory_allocator_malloc(allocator, size);
+    octaspire_stdio_t *self = octaspire_allocator_malloc(allocator, size);
 
     if (!self)
     {
@@ -55,7 +55,7 @@ void octaspire_stdio_release(octaspire_stdio_t *self)
         return;
     }
 
-    octaspire_memory_allocator_free(self->allocator, self);
+    octaspire_allocator_free(self->allocator, self);
 }
 
 size_t octaspire_stdio_fread(
@@ -97,9 +97,9 @@ size_t octaspire_stdio_get_number_of_future_reads_to_be_rigged(
     return self->numberOfFutureReadsToBeRigged;
 }
 
-octaspire_container_utf8_string_t *octaspire_stdio_read_line(octaspire_stdio_t *self, FILE *stream)
+octaspire_string_t *octaspire_stdio_read_line(octaspire_stdio_t *self, FILE *stream)
 {
-    octaspire_container_vector_t *vec = octaspire_container_vector_new(
+    octaspire_vector_t *vec = octaspire_vector_new(
         sizeof(char),
         false,
         0,
@@ -112,24 +112,24 @@ octaspire_container_utf8_string_t *octaspire_stdio_read_line(octaspire_stdio_t *
 
         if (c == EOF)
         {
-            octaspire_container_vector_release(vec);
+            octaspire_vector_release(vec);
             return 0;
         }
         else if (c == '\n')
         {
-            octaspire_container_vector_push_back_element(vec, &ch);
+            octaspire_vector_push_back_element(vec, &ch);
             break;
         }
 
-        octaspire_container_vector_push_back_element(vec, &ch);
+        octaspire_vector_push_back_element(vec, &ch);
     }
 
-    octaspire_container_utf8_string_t* result = octaspire_container_utf8_string_new_from_buffer(
-        octaspire_container_vector_get_element_at_const(vec, 0),
-        octaspire_container_vector_get_length_in_octets(vec),
+    octaspire_string_t* result = octaspire_string_new_from_buffer(
+        octaspire_vector_get_element_at_const(vec, 0),
+        octaspire_vector_get_length_in_octets(vec),
         self->allocator);
 
-    octaspire_container_vector_release(vec);
+    octaspire_vector_release(vec);
     vec = 0;
     return result;
 }
