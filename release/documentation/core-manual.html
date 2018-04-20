@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-04-19 Thu 22:17 -->
+<!-- 2018-04-20 Fri 23:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Octaspire Core Manual</title>
@@ -236,43 +236,44 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb2617c9">1. About</a></li>
-<li><a href="#org888af08">2. Building the amalgamated source release</a>
+<li><a href="#orgf1fbbe6">1. About</a></li>
+<li><a href="#org4a3ec43">2. Building the amalgamated source release</a>
 <ul>
-<li><a href="#orgc9a80d3">2.1. Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, Syllable Desktop, macOS</a></li>
-<li><a href="#org093b888">2.2. Windows using MinGW and Git</a></li>
-<li><a href="#orgf473b0b">2.3. Running unit tests</a></li>
+<li><a href="#org7e16ff0">2.1. Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, macOS, Termux, AROS</a></li>
+<li><a href="#org066ebc9">2.2. Windows using MinGW and Git</a></li>
+<li><a href="#org0c10a2d">2.3. AmigaOS 4.x</a></li>
+<li><a href="#org89dcab8">2.4. Running unit tests</a></li>
 </ul>
 </li>
-<li><a href="#orgae9de91">3. Quick tour of library features</a>
+<li><a href="#org31b3370">3. Quick tour of library features</a>
 <ul>
-<li><a href="#orgd4f6f76">3.1. Naming</a></li>
-<li><a href="#orga09cf85">3.2. UTF-8 Strings</a></li>
-<li><a href="#org6a41e56">3.3. Vector</a></li>
-<li><a href="#org77df0db">3.4. List</a></li>
-<li><a href="#orgc5d373b">3.5. Queue</a></li>
-<li><a href="#orgd6d42ad">3.6. Pair</a></li>
-<li><a href="#orgb74cbb4">3.7. Hash map</a></li>
-<li><a href="#orgdd686e5">3.8. Input streams from memory and files</a></li>
-<li><a href="#org4755b83">3.9. Lower level helpers</a></li>
+<li><a href="#orgb39ebfc">3.1. Naming</a></li>
+<li><a href="#org944258e">3.2. UTF-8 Strings</a></li>
+<li><a href="#orgd20fc23">3.3. Vector</a></li>
+<li><a href="#orgb6b152a">3.4. List</a></li>
+<li><a href="#org8f1f1ef">3.5. Queue</a></li>
+<li><a href="#orga2dcef7">3.6. Pair</a></li>
+<li><a href="#orgc458cab">3.7. Hash map</a></li>
+<li><a href="#orgeb8814e">3.8. Input streams from memory and files</a></li>
+<li><a href="#org9f8a82c">3.9. Lower level helpers</a></li>
 </ul>
 </li>
-<li><a href="#org05a8690">4. Building the development repository</a>
+<li><a href="#org6b8980d">4. Building the development repository</a>
 <ul>
-<li><a href="#orgc1f9acc">4.1. Raspberry Pi, Debian and Ubuntu</a></li>
-<li><a href="#org6c4e072">4.2. Arch Linux</a></li>
-<li><a href="#org4183daa">4.3. Haiku</a></li>
-<li><a href="#org8d662f3">4.4. FreeBSD</a></li>
-<li><a href="#org527da0f">4.5. MINIX 3</a></li>
-<li><a href="#orgfdad3c6">4.6. Other systems</a></li>
+<li><a href="#orgf633406">4.1. Raspberry Pi, Debian and Ubuntu</a></li>
+<li><a href="#orgdcba08e">4.2. Arch Linux</a></li>
+<li><a href="#org712ac11">4.3. Haiku</a></li>
+<li><a href="#org5538915">4.4. FreeBSD</a></li>
+<li><a href="#org0e6f95b">4.5. MINIX 3</a></li>
+<li><a href="#org6338e01">4.6. Other systems</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgb2617c9" class="outline-2">
-<h2 id="orgb2617c9"><span class="section-number-2">1</span> About</h2>
+<div id="outline-container-orgf1fbbe6" class="outline-2">
+<h2 id="orgf1fbbe6"><span class="section-number-2">1</span> About</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <b>Octaspire Core</b> is a container, utf-8 and utility library written in standard <b>C99</b>.
@@ -292,40 +293,51 @@ in backwards incompatible manner.
 </div>
 </div>
 
-<div id="outline-container-org888af08" class="outline-2">
-<h2 id="org888af08"><span class="section-number-2">2</span> Building the amalgamated source release</h2>
+
+
+
+
+
+
+
+
+
+
+
+<div id="outline-container-org4a3ec43" class="outline-2">
+<h2 id="org4a3ec43"><span class="section-number-2">2</span> Building the amalgamated source release</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The amalgamated source release is the recommended way of using Core, if you don&rsquo;t need to
-modify Core itself. To use the amalgamated release, you will need only a C compiler and
-C standard library supporting C99.
+modify Core library itself. To use the amalgamated release, you will need only a C compiler and
+C standard library supporting a subset of C99.
 </p>
 </div>
 
-<div id="outline-container-orgc9a80d3" class="outline-3">
-<h3 id="orgc9a80d3"><span class="section-number-3">2.1</span> Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, Syllable Desktop, macOS</h3>
+<div id="outline-container-org7e16ff0" class="outline-3">
+<h3 id="org7e16ff0"><span class="section-number-3">2.1</span> Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, macOS, Termux, AROS</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
-<pre class="src src-sh">curl -O octaspire.com/core/release.tar.bz2
-tar jxf release.tar.bz2
-<span style="color: #006FE0;">cd</span> release/*
-curl -O https://octaspire.github.io/core/checksums
-sha512sum -c checksums
+<pre class="src src-sh">curl -O octaspire.com/core.tar.bz2
+curl -O https://octaspire.io/core.tar.bz2.sha512
+sha512sum -c core.tar.bz2.sha512
+tar jxf core.tar.bz2
+<span style="color: #006FE0;">cd</span> core
 sh how-to-build/YOUR_PLATFORM_NAME_HERE.XX
 </pre>
 </div>
 
 <p>
-replace <b>YOUR<sub>PLATFORM</sub><sub>NAME</sub><sub>HERE.XX</sub></b> with <b>FreeBSD.sh</b>, <b>NetBSD.sh</b>, <b>OpenBSD.sh</b>, <b>OpenIndiana.sh</b>,
-<b>DragonFlyBSD.sh</b>, <b>MidnightBSD</b>, <b>linux.sh</b>, <b>minix3.sh</b>, <b>haiku.sh</b>,
-<b>SyllableDesktop.sh</b> or <b>macOS.sh</b>.
+replace <b>YOUR<sub>PLATFORM</sub><sub>NAME</sub><sub>HERE.XX</sub></b> with <b>FreeBSD.sh</b>, <b>NetBSD.sh</b>, <b>OpenBSD.sh</b>,
+<b>OpenIndiana.sh</b>, <b>DragonFlyBSD.sh</b>, <b>MidnightBSD</b>, <b>linux.sh</b>, <b>minix3.sh</b>,
+<b>haiku.sh</b>, <b>macOS.sh</b>, <b>termux.sh</b> or <b>AROS.sh</b>.
 More scripts for different platforms will be added later.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org093b888" class="outline-3">
-<h3 id="org093b888"><span class="section-number-3">2.2</span> Windows using MinGW and Git</h3>
+<div id="outline-container-org066ebc9" class="outline-3">
+<h3 id="org066ebc9"><span class="section-number-3">2.2</span> Windows using MinGW and Git</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Download and install <b>MinGW</b> from
@@ -358,9 +370,39 @@ above. Run examples and programs in the <b>Command Prompt</b> window
 </div>
 </div>
 
-<div id="outline-container-orgf473b0b" class="outline-3">
-<h3 id="orgf473b0b"><span class="section-number-3">2.3</span> Running unit tests</h3>
+<div id="outline-container-org0c10a2d" class="outline-3">
+<h3 id="org0c10a2d"><span class="section-number-3">2.3</span> AmigaOS 4.x</h3>
 <div class="outline-text-3" id="text-2-3">
+<p>
+Download and install
+<a href="http://www.hyperion-entertainment.biz/index.php/downloads?view=download&amp;layout=form&amp;file=82">AmigaOS SDK</a>
+Download and extract
+<a href="http://aminet.net/util/arc/bzip2.lha">bzip2</a> to get `bzip2<sub>68k</sub>` executable.
+Download the
+<a href="http://octaspire.com/core.tar.bz2">amalgamated Core source release</a>.
+</p>
+
+<p>
+Open Shell window and run the following commands:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bzip2_68k -dk core.tar.bz2
+tar xf core.tar
+<span style="color: #006FE0;">cd</span> core
+sh how-to-build/AmigaOS41.sh
+</pre>
+</div>
+</div>
+</div>
+
+
+
+
+
+<div id="outline-container-org89dcab8" class="outline-3">
+<h3 id="org89dcab8"><span class="section-number-3">2.4</span> Running unit tests</h3>
+<div class="outline-text-3" id="text-2-4">
 <p>
 This is all there should be to it; when make finishes, everything should be ready.
 </p>
@@ -377,16 +419,16 @@ To run the unit tests:
 </div>
 </div>
 
-<div id="outline-container-orgae9de91" class="outline-2">
-<h2 id="orgae9de91"><span class="section-number-2">3</span> Quick tour of library features</h2>
+<div id="outline-container-org31b3370" class="outline-2">
+<h2 id="org31b3370"><span class="section-number-2">3</span> Quick tour of library features</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Here we take a quick look at the features of the library.
 </p>
 </div>
 
-<div id="outline-container-orgd4f6f76" class="outline-3">
-<h3 id="orgd4f6f76"><span class="section-number-3">3.1</span> Naming</h3>
+<div id="outline-container-orgb39ebfc" class="outline-3">
+<h3 id="orgb39ebfc"><span class="section-number-3">3.1</span> Naming</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 C doesn&rsquo;t have namespaces. To prevent name collisions, all names in the library
@@ -398,8 +440,8 @@ type.
 </div>
 </div>
 
-<div id="outline-container-orga09cf85" class="outline-3">
-<h3 id="orga09cf85"><span class="section-number-3">3.2</span> UTF-8 Strings</h3>
+<div id="outline-container-org944258e" class="outline-3">
+<h3 id="org944258e"><span class="section-number-3">3.2</span> UTF-8 Strings</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
 <pre class="src src-C"><span style="color: #8D8D84;">/****************************************************</span>
@@ -440,8 +482,8 @@ type.
 </div>
 </div>
 
-<div id="outline-container-org6a41e56" class="outline-3">
-<h3 id="org6a41e56"><span class="section-number-3">3.3</span> Vector</h3>
+<div id="outline-container-orgd20fc23" class="outline-3">
+<h3 id="orgd20fc23"><span class="section-number-3">3.3</span> Vector</h3>
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
 <pre class="src src-C"><span style="color: #8D8D84;">/***************************************************</span>
@@ -513,8 +555,8 @@ type.
 </div>
 </div>
 
-<div id="outline-container-org77df0db" class="outline-3">
-<h3 id="org77df0db"><span class="section-number-3">3.4</span> List</h3>
+<div id="outline-container-orgb6b152a" class="outline-3">
+<h3 id="orgb6b152a"><span class="section-number-3">3.4</span> List</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 TODO
@@ -522,8 +564,8 @@ TODO
 </div>
 </div>
 
-<div id="outline-container-orgc5d373b" class="outline-3">
-<h3 id="orgc5d373b"><span class="section-number-3">3.5</span> Queue</h3>
+<div id="outline-container-org8f1f1ef" class="outline-3">
+<h3 id="org8f1f1ef"><span class="section-number-3">3.5</span> Queue</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 TODO
@@ -531,8 +573,8 @@ TODO
 </div>
 </div>
 
-<div id="outline-container-orgd6d42ad" class="outline-3">
-<h3 id="orgd6d42ad"><span class="section-number-3">3.6</span> Pair</h3>
+<div id="outline-container-orga2dcef7" class="outline-3">
+<h3 id="orga2dcef7"><span class="section-number-3">3.6</span> Pair</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 TODO
@@ -540,8 +582,8 @@ TODO
 </div>
 </div>
 
-<div id="outline-container-orgb74cbb4" class="outline-3">
-<h3 id="orgb74cbb4"><span class="section-number-3">3.7</span> Hash map</h3>
+<div id="outline-container-orgc458cab" class="outline-3">
+<h3 id="orgc458cab"><span class="section-number-3">3.7</span> Hash map</h3>
 <div class="outline-text-3" id="text-3-7">
 <div class="org-src-container">
 <pre class="src src-C"><span style="color: #8D8D84;">/*****************************************************</span>
@@ -632,8 +674,8 @@ TODO
 </div>
 </div>
 
-<div id="outline-container-orgdd686e5" class="outline-3">
-<h3 id="orgdd686e5"><span class="section-number-3">3.8</span> Input streams from memory and files</h3>
+<div id="outline-container-orgeb8814e" class="outline-3">
+<h3 id="orgeb8814e"><span class="section-number-3">3.8</span> Input streams from memory and files</h3>
 <div class="outline-text-3" id="text-3-8">
 <p>
 TODO
@@ -641,8 +683,8 @@ TODO
 </div>
 </div>
 
-<div id="outline-container-org4755b83" class="outline-3">
-<h3 id="org4755b83"><span class="section-number-3">3.9</span> Lower level helpers</h3>
+<div id="outline-container-org9f8a82c" class="outline-3">
+<h3 id="org9f8a82c"><span class="section-number-3">3.9</span> Lower level helpers</h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 TODO
@@ -651,12 +693,12 @@ TODO
 </div>
 </div>
 
-<div id="outline-container-org05a8690" class="outline-2">
-<h2 id="org05a8690"><span class="section-number-2">4</span> Building the development repository</h2>
+<div id="outline-container-org6b8980d" class="outline-2">
+<h2 id="org6b8980d"><span class="section-number-2">4</span> Building the development repository</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgc1f9acc" class="outline-3">
-<h3 id="orgc1f9acc"><span class="section-number-3">4.1</span> Raspberry Pi, Debian and Ubuntu</h3>
+<div id="outline-container-orgf633406" class="outline-3">
+<h3 id="orgf633406"><span class="section-number-3">4.1</span> Raspberry Pi, Debian and Ubuntu</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 To build Octaspire Core from source in Raspberry Pi, Debian or Ubuntu (16.04 LTS) system:
@@ -672,8 +714,8 @@ make
 </div>
 </div>
 
-<div id="outline-container-org6c4e072" class="outline-3">
-<h3 id="org6c4e072"><span class="section-number-3">4.2</span> Arch Linux</h3>
+<div id="outline-container-orgdcba08e" class="outline-3">
+<h3 id="orgdcba08e"><span class="section-number-3">4.2</span> Arch Linux</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 To build on Arch Linux (Arch Linux ARM) system:
@@ -689,8 +731,8 @@ make
 </div>
 </div>
 
-<div id="outline-container-org4183daa" class="outline-3">
-<h3 id="org4183daa"><span class="section-number-3">4.3</span> Haiku</h3>
+<div id="outline-container-org712ac11" class="outline-3">
+<h3 id="org712ac11"><span class="section-number-3">4.3</span> Haiku</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 To build on Haiku (Version Walter (Revision hrev51127) x86<sub>gcc2</sub>):
@@ -707,8 +749,8 @@ git clone https://github.com/octaspire/core.git
 </div>
 
 
-<div id="outline-container-org8d662f3" class="outline-3">
-<h3 id="org8d662f3"><span class="section-number-3">4.4</span> FreeBSD</h3>
+<div id="outline-container-org5538915" class="outline-3">
+<h3 id="org5538915"><span class="section-number-3">4.4</span> FreeBSD</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 To build on FreeBSD (FreeBSD-11.0-RELEASE-arm-armv6-RPI2) system:
@@ -724,8 +766,8 @@ make
 </div>
 </div>
 
-<div id="outline-container-org527da0f" class="outline-3">
-<h3 id="org527da0f"><span class="section-number-3">4.5</span> MINIX 3</h3>
+<div id="outline-container-org0e6f95b" class="outline-3">
+<h3 id="org0e6f95b"><span class="section-number-3">4.5</span> MINIX 3</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 To build on MINIX 3 (minix<sub>R3.3.0</sub>-588a35b) system:
@@ -744,8 +786,8 @@ make
 </div>
 
 
-<div id="outline-container-orgfdad3c6" class="outline-3">
-<h3 id="orgfdad3c6"><span class="section-number-3">4.6</span> Other systems</h3>
+<div id="outline-container-org6338e01" class="outline-3">
+<h3 id="org6338e01"><span class="section-number-3">4.6</span> Other systems</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 On different systems the required commands can vary. In any case, You should install
@@ -757,7 +799,7 @@ a <b>C compiler</b> and <b>git</b>.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: www.octaspire.com</p>
-<p class="date">Created: 2018-04-19 Thu 22:17</p>
+<p class="date">Created: 2018-04-20 Fri 23:59</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

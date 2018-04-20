@@ -16,26 +16,37 @@ Core uses [[http://semver.org][Semantic Versioning 2.0.0]] version numbering sch
 the MAJOR version number is zero anything can change at any time, even
 in backwards incompatible manner.
 
+
+
+
+
+
+
+
+
+
+
+
 ** Building the amalgamated source release
 
 The amalgamated source release is the recommended way of using Core, if you don't need to
-modify Core itself. To use the amalgamated release, you will need only a C compiler and
-C standard library supporting C99.
+modify Core library itself. To use the amalgamated release, you will need only a C compiler and
+C standard library supporting a subset of C99.
 
-*** Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, Syllable Desktop, macOS
+*** Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, macOS, Termux, AROS
 
 #+BEGIN_SRC sh
-curl -O octaspire.com/core/release.tar.bz2
-tar jxf release.tar.bz2
-cd release/*
-curl -O https://octaspire.github.io/core/checksums
-sha512sum -c checksums
+curl -O octaspire.com/core.tar.bz2
+curl -O https://octaspire.io/core.tar.bz2.sha512
+sha512sum -c core.tar.bz2.sha512
+tar jxf core.tar.bz2
+cd core
 sh how-to-build/YOUR_PLATFORM_NAME_HERE.XX
 #+END_SRC
 
-replace *YOUR_PLATFORM_NAME_HERE.XX* with *FreeBSD.sh*, *NetBSD.sh*, *OpenBSD.sh*, *OpenIndiana.sh*,
-*DragonFlyBSD.sh*, *MidnightBSD*, *linux.sh*, *minix3.sh*, *haiku.sh*,
-*SyllableDesktop.sh* or *macOS.sh*.
+replace *YOUR_PLATFORM_NAME_HERE.XX* with *FreeBSD.sh*, *NetBSD.sh*, *OpenBSD.sh*,
+*OpenIndiana.sh*, *DragonFlyBSD.sh*, *MidnightBSD*, *linux.sh*, *minix3.sh*,
+*haiku.sh*, *macOS.sh*, *termux.sh* or *AROS.sh*.
 More scripts for different platforms will be added later.
 
 *** Windows using MinGW and Git
@@ -59,6 +70,28 @@ how-to-build/windows.sh
 Start *Windows Command Prompt* and change directory to the same release directory, as
 above. Run examples and programs in the *Command Prompt* window
 (NOT in the Git Bash window).
+
+*** AmigaOS 4.x
+
+Download and install
+[[http://www.hyperion-entertainment.biz/index.php/downloads?view=download&layout=form&file=82][AmigaOS SDK]]
+Download and extract
+[[http://aminet.net/util/arc/bzip2.lha][bzip2]] to get `bzip2_68k` executable.
+Download the
+[[http://octaspire.com/core.tar.bz2][amalgamated Core source release]].
+
+Open Shell window and run the following commands:
+
+#+BEGIN_SRC sh
+bzip2_68k -dk core.tar.bz2
+tar xf core.tar
+cd core
+sh how-to-build/AmigaOS41.sh
+#+END_SRC
+
+
+
+
 
 *** Running unit tests
 

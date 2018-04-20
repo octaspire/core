@@ -24,21 +24,21 @@ EMACSFLAGS=
 $(RELDIR)octaspire-core-unit-test-runner: $(AMALGAMATION)
 	@echo "Building for $(UNAME)..."
 	@if [ "$(UNAME)" = "Linux" ]; then\
-            cd release && sh how-to-build/linux.sh > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/linux.sh   > /dev/null           && echo "Done.";\
         elif [ "$(UNAME)" = "Darwin" ]; then\
-            cd release && sh how-to-build/macOS.sh > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/macOS.sh   > /dev/null           && echo "Done.";\
         elif [ "$(UNAME)" = "OpenBSD" ]; then\
-            cd release && sh how-to-build/OpenBSD.sh > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/OpenBSD.sh > /dev/null           && echo "Done.";\
         elif [ "$(UNAME)" = "FreeBSD" ]; then\
-            cd release && sh how-to-build/FreeBSD.sh > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/FreeBSD.sh > /dev/null           && echo "Done.";\
         elif [ "$(UNAME)" = "NetBSD" ]; then\
-            cd release && sh how-to-build/NetBSD.sh > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/NetBSD.sh  > /dev/null           && echo "Done.";\
         elif [ "$(UNAME)" = "Minix" ]; then\
-            cd release && sh how-to-build/minix3.sh > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/minix3.sh  > /dev/null           && echo "Done.";\
         elif [ "$(UNAME)" = "DragonFly" ]; then\
-            cd release && sh how-to-build/DragonFlyBSD.sh > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/DragonFlyBSD.sh > /dev/null      && echo "Done.";\
         elif [ "$(UNAME)" = "Haiku" ]; then\
-            cd release && sh how-to-build/haiku.sh > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/haiku.sh   > /dev/null           && echo "Done.";\
         else\
             echo "This platform is not handled by Makefile at the moment. Please build using a script from 'release/how-to-build'.";\
         fi;
@@ -145,7 +145,12 @@ clean:
                 octaspire_helpers_path_to_buffer_failure_on_empty_file_test           \
                 octaspire_helpers_path_to_buffer_test                                 \
                 octaspire_input_new_from_path_test                                    \
-                octaspire_stdio_fread_test
+                octaspire_stdio_fread_test                                            \
+                $(RELDIR)example                                                      \
+                $(RELDIR)octaspire_helpers_path_to_buffer_failure_on_empty_file_test  \
+                $(RELDIR)octaspire_helpers_path_to_buffer_test                        \
+                $(RELDIR)octaspire_input_new_from_path_test                           \
+                $(RELDIR)octaspire_stdio_fread_test
 
 codestyle:
 	@vera++ --root dev/external/vera --profile octaspire --error $(wildcard $(SRCDIR)*.[ch])
@@ -162,21 +167,21 @@ test: $(RELDIR)octaspire-core-unit-test-runner
 coverage: $(AMALGAMATION)
 	@echo "Building for $(UNAME) with coverage enabled..."
 	@if [ "$(UNAME)" = "Linux" ]; then\
-            cd release && sh how-to-build/linux.sh gcc --coverage > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/linux.sh gcc --coverage   > /dev/null      && echo "Done.";\
         elif [ "$(UNAME)" = "Darwin" ]; then\
-            cd release && sh how-to-build/macOS.sh gcc --coverage > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/macOS.sh gcc --coverage   > /dev/null      && echo "Done.";\
         elif [ "$(UNAME)" = "OpenBSD" ]; then\
-            cd release && sh how-to-build/OpenBSD.sh gcc --coverage > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/OpenBSD.sh gcc --coverage > /dev/null      && echo "Done.";\
         elif [ "$(UNAME)" = "FreeBSD" ]; then\
-            cd release && sh how-to-build/FreeBSD.sh gcc --coverage > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/FreeBSD.sh gcc --coverage > /dev/null      && echo "Done.";\
         elif [ "$(UNAME)" = "NetBSD" ]; then\
-            cd release && sh how-to-build/NetBSD.sh gcc --coverage > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/NetBSD.sh gcc --coverage  > /dev/null      && echo "Done.";\
         elif [ "$(UNAME)" = "Minix" ]; then\
-            cd release && sh how-to-build/minix3.sh gcc --coverage > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/minix3.sh gcc --coverage  > /dev/null      && echo "Done.";\
         elif [ "$(UNAME)" = "DragonFly" ]; then\
-            cd release && sh how-to-build/DragonFlyBSD.sh gcc --coverage > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/DragonFlyBSD.sh gcc --coverage > /dev/null && echo "Done.";\
         elif [ "$(UNAME)" = "Haiku" ]; then\
-            cd release && sh how-to-build/haiku.sh gcc --coverage > /dev/null 2>&1 && echo "Done.";\
+            cd release && sh how-to-build/haiku.sh gcc --coverage   > /dev/null      && echo "Done.";\
         else\
             echo "This platform is not handled by Makefile at the moment. Please build using a script from 'release/how-to-build'.";\
         fi;
