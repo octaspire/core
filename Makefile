@@ -19,10 +19,21 @@ UNAME=$(shell uname -s)
 #EMACSFLAGS=--load dev/external/octaspire_dotfiles/emacs/.emacs.d/init.el --batch
 EMACSFLAGS=
 
-.PHONY: clean codestyle cppcheck valgrind test coverage
+.PHONY: submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage
 
 $(RELDIR)octaspire-core-unit-test-runner: $(AMALGAMATION)
 	@sh $(ETCDIR)build_amalgamation.sh
+
+submodules-init:
+	@echo "Initializing submodules..."
+	@git submodule init
+	@git submodule update
+	@echo "Done."
+
+submodules-pull:
+	@echo "Pulling submodules..."
+	@git submodule update --recursive --remote
+	@echo "Done."
 
 $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
                  $(EXTDIR)jenkins_one_at_a_time.h            \
