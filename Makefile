@@ -26,7 +26,7 @@ $(RELDIR)octaspire-core-unit-test-runner: $(DOTDIR)LICENSE $(AMALGAMATION)
 	@sh $(ETCDIR)build_amalgamation.sh
 
 $(DOTDIR)LICENSE:
-	make submodules-init
+	@make submodules-init --silent
 
 submodules-init:
 	@echo "Initializing submodules..."
