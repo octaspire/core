@@ -5,6 +5,7 @@ INCDIR=dev/include/octaspire/core/
 SRCDIR=dev/src/
 TESTDR=dev/test/
 EXTDIR=dev/external/
+DOTDIR=$(EXTDIR)octaspire_dotfiles/
 DEVDOCDIR=dev/doc/
 RELDIR=release/
 RELDOCDIR=$(RELDIR)documentation/
@@ -21,8 +22,11 @@ EMACSFLAGS=
 
 .PHONY: submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage
 
-$(RELDIR)octaspire-core-unit-test-runner: $(AMALGAMATION)
+$(RELDIR)octaspire-core-unit-test-runner: $(DOTDIR)LICENSE $(AMALGAMATION)
 	@sh $(ETCDIR)build_amalgamation.sh
+
+$(DOTDIR)LICENSE:
+	make submodules-init
 
 submodules-init:
 	@echo "Initializing submodules..."
