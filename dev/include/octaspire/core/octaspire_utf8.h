@@ -52,7 +52,7 @@ octaspire_utf8_character_t;
 
 octaspire_utf8_encode_status_t octaspire_utf8_encode_character(
     uint32_t const character,
-    octaspire_utf8_character_t *result);
+    octaspire_utf8_character_t * const result);
 
 octaspire_utf8_decode_status_t octaspire_utf8_decode_character(
     char const * const text,
