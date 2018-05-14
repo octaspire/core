@@ -166,3 +166,6 @@ coverage: $(AMALGAMATION)
 	@lcov --no-external --capture --directory release --output-file $(RELDIR)coverage.info
 	@genhtml $(RELDIR)coverage.info --output-directory coverage
 	@xdg-open coverage/index.html &
+
+dev/TAGS: $(SRCDIR)*.c $(INCDIR)*.h
+	@etags -o $@ $^
