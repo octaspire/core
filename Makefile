@@ -20,7 +20,7 @@ UNAME=$(shell uname -s)
 #EMACSFLAGS=--load dev/external/octaspire_dotfiles/emacs/.emacs.d/init.el --batch
 EMACSFLAGS=
 
-.PHONY: submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage
+.PHONY: submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage major minor patch push
 
 $(RELDIR)octaspire-core-unit-test-runner: $(DOTDIR)LICENSE $(AMALGAMATION)
 	@sh $(ETCDIR)build_amalgamation.sh
@@ -169,3 +169,17 @@ coverage: $(AMALGAMATION)
 
 dev/TAGS: $(SRCDIR)*.c $(INCDIR)*.h
 	@etags -o $@ $^
+
+major:
+	@sh dev/etc/bump-version.sh major
+
+minor:
+	@sh dev/etc/bump-version.sh minor
+
+patch:
+	@sh dev/etc/bump-version.sh patch
+
+push:
+	@git push origin-gitlab
+	@git push origin-github
+	@git push origin-bitbucket
