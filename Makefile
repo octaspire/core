@@ -11,6 +11,8 @@ RELDIR=release/
 RELDOCDIR=$(RELDIR)documentation/
 AMALGAMATION=$(RELDIR)octaspire-core-amalgamated.c
 UNAME=$(shell uname -s)
+CFLAGS=-std=c99 -Wall -Wextra -g -O2
+LDFLAGS=
 
 # In batch mode Emacs doesn't load the usual initialization file. To get the correct
 # settings and styles in the batch mode, the initialization file must be loaded manually.
@@ -20,7 +22,91 @@ UNAME=$(shell uname -s)
 #EMACSFLAGS=--load dev/external/octaspire_dotfiles/emacs/.emacs.d/init.el --batch
 EMACSFLAGS=
 
-.PHONY: submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage major minor patch push
+TESTOBJS := $(TESTDR)test.o              \
+            $(TESTDR)test_helpers.o      \
+            $(TESTDR)test_input.o        \
+            $(TESTDR)test_list.o         \
+            $(TESTDR)test_map.o          \
+            $(TESTDR)test_memory.o       \
+            $(TESTDR)test_pair.o         \
+            $(TESTDR)test_queue.o        \
+            $(TESTDR)test_stdio.o        \
+            $(TESTDR)test_string.o       \
+            $(TESTDR)test_utf8.o         \
+            $(TESTDR)test_vector.o
+
+.PHONY: development submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage major minor patch push
+
+
+all: development
+
+###############################################################################
+####### Development part: build using separate implementation files ###########
+###############################################################################
+
+development: octaspire-core-unit-test-runner
+
+octaspire-core-unit-test-runner: $(TESTOBJS) $(EXTDIR)jenkins_one_at_a_time.o
+	$(info LD  $@)
+	@$(CC) $(CFLAGS) $(TESTOBJS) $(EXTDIR)jenkins_one_at_a_time.o -o $@ $(LDFLAGS)
+
+$(TESTDR)test.o: $(TESTDR)test.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_helpers.o: $(TESTDR)test_helpers.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_input.o: $(TESTDR)test_input.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_list.o: $(TESTDR)test_list.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_map.o: $(TESTDR)test_map.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_memory.o: $(TESTDR)test_memory.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_pair.o: $(TESTDR)test_pair.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_queue.o: $(TESTDR)test_queue.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_stdio.o: $(TESTDR)test_stdio.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_string.o: $(TESTDR)test_string.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_utf8.o: $(TESTDR)test_utf8.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_vector.o: $(TESTDR)test_vector.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(EXTDIR)jenkins_one_at_a_time.o: $(EXTDIR)jenkins_one_at_a_time.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/external $< -o $@ $(LDFLAGS)
+
+
+
+###############################################################################
+####### Release part: build using amalgamation ################################
+###############################################################################
 
 $(RELDIR)octaspire-core-unit-test-runner: $(DOTDIR)LICENSE $(AMALGAMATION)
 	@sh $(ETCDIR)build_amalgamation.sh
@@ -146,7 +232,12 @@ clean:
                 $(RELDIR)octaspire_helpers_path_to_buffer_failure_on_empty_file_test  \
                 $(RELDIR)octaspire_helpers_path_to_buffer_test                        \
                 $(RELDIR)octaspire_input_new_from_path_test                           \
-                $(RELDIR)octaspire_stdio_fread_test
+                $(RELDIR)octaspire_stdio_fread_test                                   \
+                $(SRCDIR)*.o                                                          \
+                $(TESTDR)*.o                                                          \
+                $(EXTDIR)*.o                                                          \
+                octaspire-core-unit-test-runner
+
 
 codestyle:
 	@vera++ --root dev/external/vera --profile octaspire --error $(wildcard $(SRCDIR)*.[ch])

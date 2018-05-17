@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
-#include "octaspire/core/octaspire_container_pair.h"
+#include "octaspire/core/octaspire_pair.h"
 #include <string.h>
 #include <stdlib.h>
 #include "octaspire/core/octaspire_memory.h"

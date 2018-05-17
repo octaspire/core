@@ -20,7 +20,7 @@ limitations under the License.
 #include <stdbool.h>
 #include <stddef.h>
 #include "octaspire_memory.h"
-#include "octaspire_container_list.h"
+#include "octaspire_list.h"
 
 #ifdef __cplusplus
 extern "C"

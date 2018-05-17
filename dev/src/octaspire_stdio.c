@@ -18,7 +18,7 @@ limitations under the License.
 #include <string.h>
 #include <wchar.h>
 #include <stdlib.h>
-#include "octaspire/core/octaspire_container_vector.h"
+#include "octaspire/core/octaspire_vector.h"
 #include "octaspire/core/octaspire_helpers.h"
 
 struct octaspire_stdio_t

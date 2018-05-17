@@ -14,13 +14,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
-#include "octaspire/core/octaspire_hash_map.h"
+#include "octaspire/core/octaspire_map.h"
 #include "external/jenkins_one_at_a_time.h"
 #include <assert.h>
 #include <inttypes.h>
 #include <string.h>
 #include <stdlib.h>
-#include "octaspire/core/octaspire_utf8_string.h"
+#include "octaspire/core/octaspire_string.h"
 #include "octaspire/core/octaspire_vector.h"
 #include "octaspire/core/octaspire_pair.h"
 

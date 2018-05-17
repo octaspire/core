@@ -14,10 +14,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
-#include "octaspire/core/octaspire_container_queue.h"
-#include "octaspire/core/octaspire_container_list.h"
-#include "octaspire/core/octaspire_memory.h"
-#include "octaspire/core/octaspire_helpers.h"
+#include <octaspire/core/octaspire_queue.h>
+#include <octaspire/core/octaspire_list.h>
+#include <octaspire/core/octaspire_memory.h>
+#include <octaspire/core/octaspire_helpers.h>
 
 struct octaspire_queue_t
 {

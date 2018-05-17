@@ -18,7 +18,7 @@ limitations under the License.
 #include <math.h>
 #include "external/greatest.h"
 #include "octaspire/core/octaspire_utf8.h"
-#include "octaspire/core/octaspire_container_vector.h"
+#include "octaspire/core/octaspire_vector.h"
 #include "octaspire/core/octaspire_core_config.h"
 
 static octaspire_allocator_t *octaspireUtf8TestAllocator = 0;
@@ -58,42 +58,6 @@ TEST octaspire_utf8_private_high_order_bits_test(void)
     ASSERT_EQ(((uint32_t)0xE08080),   octaspire_utf8_private_high_order_bits(OCTASPIRE_UTF8_CHARACTER_RANGE_THIRD));
     ASSERT_EQ(((uint32_t)0xF0808080), octaspire_utf8_private_high_order_bits(OCTASPIRE_UTF8_CHARACTER_RANGE_FOURTH));
     ASSERT_EQ(((uint32_t)0xFFFFFFFF), octaspire_utf8_private_high_order_bits(OCTASPIRE_UTF8_CHARACTER_RANGE_ILLEGAL));
-
-    PASS();
-}
-
-TEST octaspire_utf8_private_set_bit_test(void)
-{
-    uint32_t bitset = 0;
-
-    for (size_t i = 0; i < 32; ++i)
-    {
-        octaspire_utf8_private_set_bit(&bitset, i, true);
-        ASSERT_EQ(pow(2, i), bitset);
-        octaspire_utf8_private_set_bit(&bitset, i, false);
-        ASSERT_EQ(0, bitset);
-    }
-
-    PASS();
-}
-
-TEST octaspire_utf8_private_get_bit_test(void)
-{
-    uint32_t bitset = 0;
-
-    for (size_t i = 0; i < 32; ++i)
-    {
-        octaspire_utf8_private_set_bit(&bitset, i, true);
-        ASSERT_EQ(pow(2, i), bitset);
-
-        for (size_t j = 0; j < 32; ++j)
-        {
-            ASSERT_EQ((j == i) ? true : false, octaspire_utf8_private_get_bit(bitset, j));
-        }
-
-        octaspire_utf8_private_set_bit(&bitset, i, false);
-        ASSERT_EQ(0, bitset);
-    }
 
     PASS();
 }
@@ -1248,8 +1212,6 @@ GREATEST_SUITE(octaspire_utf8_suite)
 
     RUN_TEST(octaspire_utf8_private_rangeof_test);
     RUN_TEST(octaspire_utf8_private_high_order_bits_test);
-    RUN_TEST(octaspire_utf8_private_set_bit_test);
-    RUN_TEST(octaspire_utf8_private_get_bit_test);
     RUN_TEST(octaspire_utf8_encode_character_NUL_test);
     RUN_TEST(octaspire_utf8_encode_character_SOH_test);
     RUN_TEST(octaspire_utf8_encode_character_space_test);

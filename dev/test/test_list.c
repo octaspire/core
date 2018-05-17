@@ -14,11 +14,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
-#include "../src/octaspire_container_list.c"
+#include "../src/octaspire_list.c"
 #include <assert.h>
 #include <stdint.h>
 #include "external/greatest.h"
-#include "octaspire/core/octaspire_container_list.h"
+#include "octaspire/core/octaspire_list.h"
 #include "octaspire/core/octaspire_helpers.h"
 #include "octaspire/core/octaspire_core_config.h"
 

@@ -14,13 +14,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
-#include "../src/octaspire_container_hash_map.c"
+#include "../src/octaspire_map.c"
 #include <assert.h>
 #include <inttypes.h>
 #include "external/greatest.h"
-#include "octaspire/core/octaspire_container_hash_map.h"
+#include "octaspire/core/octaspire_map.h"
 #include "octaspire/core/octaspire_memory.h"
-#include "octaspire/core/octaspire_container_utf8_string.h"
+#include "octaspire/core/octaspire_string.h"
 #include "octaspire/core/octaspire_helpers.h"
 #include "octaspire/core/octaspire_core_config.h"
 

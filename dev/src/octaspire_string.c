@@ -181,6 +181,7 @@ octaspire_string_t *octaspire_string_new_vformat(
 
     if (!self)
     {
+        va_end(copyOfVarArgs);
         return self;
     }
 

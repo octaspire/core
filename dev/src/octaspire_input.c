@@ -17,7 +17,7 @@ limitations under the License.
 #include "octaspire/core/octaspire_input.h"
 #include <assert.h>
 #include <string.h>
-#include "octaspire/core/octaspire_container_utf8_string.h"
+#include "octaspire/core/octaspire_string.h"
 #include "octaspire/core/octaspire_helpers.h"
 
 struct octaspire_input_t

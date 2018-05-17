@@ -21,7 +21,7 @@ limitations under the License.
 #include <stdio.h>
 #include <stdint.h>
 #include "octaspire_memory.h"
-#include "octaspire_container_utf8_string.h"
+#include "octaspire_string.h"
 
 #ifdef __cplusplus
 extern "C"       {

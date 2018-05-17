@@ -35,12 +35,6 @@ octaspire_utf8_character_range_t;
 
 static octaspire_utf8_character_range_t octaspire_utf8_private_rangeof(uint32_t const character);
 static uint32_t octaspire_utf8_private_high_order_bits  (octaspire_utf8_character_range_t const range);
-static void     octaspire_utf8_private_set_bit          (uint32_t *bitset, size_t const index, bool const on);
-
-static void octaspire_utf8_private_set_bit_of_char(unsigned char *bitset, size_t const index, bool const on);
-
-static bool     octaspire_utf8_private_get_bit          (uint32_t const bitset, size_t const index);
-static bool     octaspire_utf8_private_get_bit_of_uint8 (char const bitset, size_t const index);
 
 static int octaspire_utf8_private_octets_in_next(char const * const text, size_t const textLengthInOctets);
 
@@ -99,47 +93,6 @@ static uint32_t octaspire_utf8_private_high_order_bits(octaspire_utf8_character_
 
     // Error, illegal range. Should there be another/better way of reporting it?
     return ((uint32_t)0xFFFFFFFF);
-}
-
-static void octaspire_utf8_private_set_bit(uint32_t *bitset, size_t const index, bool const on)
-{
-    assert(index < 32);
-
-    // INVALID_READ_OF_1
-    if (on)
-    {
-        (*bitset) |= (uint32_t)1 << index;
-    }
-    else
-    {
-        (*bitset) &= ~((uint32_t)1 << index);
-    }
-}
-
-static void octaspire_utf8_private_set_bit_of_char(unsigned char *bitset, size_t const index, bool const on)
-{
-    assert(index < CHAR_BIT);
-
-    if (on)
-    {
-        (*bitset) |= (unsigned char)(1 << index);
-    }
-    else
-    {
-        (*bitset) &= (unsigned char)(~(1 << index));
-    }
-}
-
-static bool octaspire_utf8_private_get_bit(uint32_t const bitset, size_t const index)
-{
-    assert(index < 32);
-    return (bitset >> index) & 1;
-}
-
-static bool octaspire_utf8_private_get_bit_of_uint8(char const bitset, size_t const index)
-{
-    assert(index < 8);
-    return (((uint8_t)bitset) >> index) & 1;
 }
 
 octaspire_utf8_encode_status_t octaspire_utf8_encode_character(
@@ -278,22 +231,21 @@ static int octaspire_utf8_private_octets_in_next_from_buffer(
 
     size_t const octetsAvailable = lengthInOctets - currentIndex;
 
-    if (!octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 7))
+    uint8_t const octet0 = buffer[currentIndex];
+    if (((octet0 >> 7) & 1) == 0) // If 0xxxxxx
     {
         return 1;
     }
 
-    if ( octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 7) &&
-         octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 6) &&
-        !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 5))
+    if (((octet0 >> 5) & 7) == 6) // If 110xxxxx
     {
         if (octetsAvailable < 2)
         {
             return -1;
         }
 
-        if ( octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 1], 7) &&
-            !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 1], 6))
+        uint8_t const octet1 = buffer[currentIndex + 1];
+        if (((octet1 >> 6) & 3) == 2) // If 10xxxxxx
         {
             return 2;
         }
@@ -301,20 +253,17 @@ static int octaspire_utf8_private_octets_in_next_from_buffer(
         return -1;
     }
 
-    if ( octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 7) &&
-         octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 6) &&
-         octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 5) &&
-        !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 4))
+    if (((octet0 >> 4) & 15) == 14) // If 1110xxxx
     {
         if (octetsAvailable < 3)
         {
             return -1;
         }
 
-        if ( octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 1], 7) &&
-            !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 1], 6) &&
-             octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 2], 7) &&
-            !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 2], 6))
+        uint8_t const octet1 = buffer[currentIndex + 1];
+        uint8_t const octet2 = buffer[currentIndex + 2];
+
+        if ((((octet1 >> 6) & 3) == 2) && (((octet2 >> 6) & 3) == 2)) // If 10xxxxxx && 10xxxxxx
         {
             return 3;
         }
@@ -322,23 +271,19 @@ static int octaspire_utf8_private_octets_in_next_from_buffer(
         return -1;
     }
 
-    if ( octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 7) &&
-         octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 6) &&
-         octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 5) &&
-         octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 4) &&
-        !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 0], 3))
+    if (((octet0 >> 3) & 31) == 30) // If 11110xxx
     {
         if (octetsAvailable < 4)
         {
             return -1;
         }
 
-        if ( octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 1], 7) &&
-            !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 1], 6) &&
-             octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 2], 7) &&
-            !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 2], 6) &&
-             octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 3], 7) &&
-            !octaspire_utf8_private_get_bit_of_uint8(buffer[currentIndex + 3], 6))
+        uint8_t const octet1 = buffer[currentIndex + 1];
+        uint8_t const octet2 = buffer[currentIndex + 2];
+        uint8_t const octet3 = buffer[currentIndex + 3];
+
+        // If 10xxxxxx && 10xxxxxx && 10xxxxxx
+        if ((((octet1 >> 6) & 3) == 2) && (((octet2 >> 6) & 3) == 2) && (((octet3 >> 6) & 3) == 2))
         {
             return 4;
         }
@@ -457,29 +402,31 @@ octaspire_utf8_decode_status_t octaspire_utf8_decode_character(
     uint32_t *result,
     int *numoctets)
 {
-    if (!text || textLengthInOctets == 0 || text[0] == '\0')
-    {
-        *result = 0;
-        *numoctets = 0;
-        return OCTASPIRE_UTF8_DECODE_STATUS_INPUT_IS_NULL;
-    }
-
     *result = 0;
     *numoctets = octaspire_utf8_private_octets_in_next(text, textLengthInOctets);
 
-    if (*numoctets <= 0 || *numoctets > 4)
+    size_t const numoctetsRef = *numoctets;
+
+    if (numoctetsRef <= 0 || numoctetsRef > 4)
     {
+        if (!text || textLengthInOctets == 0 || text[0] == '\0')
+        {
+            return OCTASPIRE_UTF8_DECODE_STATUS_INPUT_IS_NULL;
+        }
+
         return OCTASPIRE_UTF8_DECODE_STATUS_ILLEGAL_NUMBER_OF_OCTETS;
     }
 
-    if ((size_t)(*numoctets) > textLengthInOctets)
+    if (numoctetsRef > textLengthInOctets)
     {
         return OCTASPIRE_UTF8_DECODE_STATUS_ILLEGAL_NUMBER_OF_OCTETS;
     }
 
     size_t numOctetsAvailable = 0;
 
-    for (size_t i = 0; i < octaspire_helpers_min_size_t(4, textLengthInOctets); ++i)
+    size_t const iLim = octaspire_helpers_min_size_t(4, textLengthInOctets);
+
+    for (size_t i = 0; i < iLim; ++i)
     {
         if (text[i] == '\0')
         {
@@ -491,7 +438,7 @@ octaspire_utf8_decode_status_t octaspire_utf8_decode_character(
         }
     }
 
-    return octaspire_utf8_private_decode_helper(text, (size_t)*numoctets, numOctetsAvailable, result);
+    return octaspire_utf8_private_decode_helper(text, numoctetsRef, numOctetsAvailable, result);
 }
 
 octaspire_utf8_decode_status_t octaspire_utf8_decode_character_from_buffer(

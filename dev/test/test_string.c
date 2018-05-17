@@ -14,10 +14,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
-#include "../src/octaspire_container_utf8_string.c"
+#include "../src/octaspire_string.c"
 #include <wchar.h> // For WEOF
 #include "external/greatest.h"
-#include "octaspire/core/octaspire_container_utf8_string.h"
+#include "octaspire/core/octaspire_string.h"
 #include "octaspire/core/octaspire_core_config.h"
 
 static octaspire_allocator_t *octaspireContainerUtf8StringTestAllocator = 0;
