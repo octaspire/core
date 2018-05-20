@@ -294,12 +294,13 @@ static octaspire_vector_private_index_t octaspire_vector_private_is_index_valid(
 {
     octaspire_vector_private_index_t result = {.isValid=false, .index=0};
 
+    size_t const selfLen = octaspire_vector_get_length(self);
+
     if (possiblyNegativeIndex < 0)
     {
-        ptrdiff_t tmpIndex =
-            (ptrdiff_t)octaspire_vector_get_length(self) + possiblyNegativeIndex;
+        ptrdiff_t tmpIndex = (ptrdiff_t)selfLen + possiblyNegativeIndex;
 
-        if (tmpIndex >= 0 && (size_t)tmpIndex < octaspire_vector_get_length(self))
+        if (tmpIndex >= 0 && (size_t)tmpIndex < selfLen)
         {
             result.index   = (size_t)tmpIndex;
             result.isValid = true;
@@ -308,7 +309,7 @@ static octaspire_vector_private_index_t octaspire_vector_private_is_index_valid(
         }
     }
 
-    if ((size_t)possiblyNegativeIndex < octaspire_vector_get_length(self))
+    if ((size_t)possiblyNegativeIndex < selfLen)
     {
         result.index   = (size_t)possiblyNegativeIndex;
         result.isValid = true;

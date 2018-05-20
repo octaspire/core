@@ -422,23 +422,7 @@ octaspire_utf8_decode_status_t octaspire_utf8_decode_character(
         return OCTASPIRE_UTF8_DECODE_STATUS_ILLEGAL_NUMBER_OF_OCTETS;
     }
 
-    size_t numOctetsAvailable = 0;
-
-    size_t const iLim = octaspire_helpers_min_size_t(4, textLengthInOctets);
-
-    for (size_t i = 0; i < iLim; ++i)
-    {
-        if (text[i] == '\0')
-        {
-            break;
-        }
-        else
-        {
-            ++numOctetsAvailable;
-        }
-    }
-
-    return octaspire_utf8_private_decode_helper(text, numoctetsRef, numOctetsAvailable, result);
+    return octaspire_utf8_private_decode_helper(text, numoctetsRef, numoctetsRef, result);
 }
 
 octaspire_utf8_decode_status_t octaspire_utf8_decode_character_from_buffer(
