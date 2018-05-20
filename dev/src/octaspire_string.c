@@ -117,7 +117,7 @@ octaspire_string_t *octaspire_string_new_from_buffer(
         while (index < lengthInOctets)
         {
             // TODO XXX is (lengthInOctets - index) correct?
-            octaspire_utf8_decode_status_t status = octaspire_utf8_decode_character(
+            octaspire_utf8_decode_status_t const status = octaspire_utf8_decode_character(
                 buffer + index,
                 (lengthInOctets - index),
                 &ucsChar,
