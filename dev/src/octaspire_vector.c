@@ -535,15 +535,13 @@ bool octaspire_vector_insert_element_at(
         }
     }
 
-    for (size_t i = originalNumElements; i < index; ++i)
-    {
-        void *s = octaspire_vector_private_index_to_pointer(self, i);
+    // octaspire_vector_private_grow initializes new memory into zero,
+    // so no need do it here again.
 
-        if (s != memset(s, 0, self->elementSize))
-        {
-            abort();
-        }
-        ++(self->numElements);
+    long const numAdded = (index - originalNumElements);
+    if (numAdded > 0)
+    {
+        self->numElements += numAdded;
     }
 
     void *target = octaspire_vector_private_index_to_pointer(self, index);
