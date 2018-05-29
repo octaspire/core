@@ -16,11 +16,7 @@ LDFLAGS=
 
 # In batch mode Emacs doesn't load the usual initialization file. To get the correct
 # settings and styles in the batch mode, the initialization file must be loaded manually.
-# However, there are still some small problems with the Org export when running in batch
-# mode using the default version of Org mode, so the export is run without batch mode at
-# the moment.
-#EMACSFLAGS=--load dev/external/octaspire_dotfiles/emacs/.emacs.d/init.el --batch
-EMACSFLAGS=
+EMACSFLAGS=--load dev/external/octaspire_dotfiles/emacs/.emacs.d/init.el --batch
 
 TESTOBJS := $(TESTDR)test.o              \
             $(TESTDR)test_helpers.o      \
