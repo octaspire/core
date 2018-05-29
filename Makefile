@@ -119,7 +119,7 @@ submodules-init:
 submodules-pull:
 	@echo "Pulling submodules..."
 	@git submodule update --recursive --remote
-	@make -s dev/TAGS
+	@make -s TAGS
 	@echo "Done."
 
 $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
@@ -255,22 +255,22 @@ coverage: $(AMALGAMATION)
 	@genhtml $(RELDIR)coverage.info --output-directory coverage
 	@xdg-open coverage/index.html &
 
-dev/TAGS: $(SRCDIR)*.c $(INCDIR)*.h
+TAGS: $(SRCDIR)*.c $(INCDIR)*.h
 	@etags -o $@ $^
 
 major:
 	@sh dev/etc/bump-version.sh major
-	@make -s dev/TAGS
+	@make -s TAGS
 	@echo "Done."
 
 minor:
 	@sh dev/etc/bump-version.sh minor
-	@make -s dev/TAGS
+	@make -s TAGS
 	@echo "Done."
 
 patch:
 	@sh dev/etc/bump-version.sh patch
-	@make -s dev/TAGS
+	@make -s TAGS
 	@echo "Done."
 
 push:
