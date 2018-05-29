@@ -333,8 +333,8 @@ TEST octaspire_map_new_keys_ostring_t_and_values_ostring_t_test(void)
         true,
         octaspire_map_new_test_key_compare_function_for_ostring_t_keys,
         octaspire_map_new_test_key_hash_function_for_ostring_t_keys,
-        (octaspire_map_element_callback_function_t)octaspire_string_release,
-        (octaspire_map_element_callback_function_t)octaspire_string_release,
+        (octaspire_map_element_callback_t)octaspire_string_release,
+        (octaspire_map_element_callback_t)octaspire_string_release,
         octaspireContainerHashMapTestAllocator);
 
     size_t const numElements = 32;
@@ -393,7 +393,7 @@ TEST octaspire_map_new_with_octaspire_string_keys_test(void)
         octaspire_map_new_with_octaspire_string_keys(
             sizeof(octaspire_string_t *),
             true,
-            (octaspire_map_element_callback_function_t)
+            (octaspire_map_element_callback_t)
                 octaspire_string_release,
             octaspireContainerHashMapTestAllocator);
 
@@ -453,7 +453,7 @@ TEST octaspire_map_new_with_size_t_keys_test(void)
         octaspire_map_new_with_size_t_keys(
             sizeof(octaspire_string_t *),
             true,
-            (octaspire_map_element_callback_function_t)
+            (octaspire_map_element_callback_t)
                 octaspire_string_release,
             octaspireContainerHashMapTestAllocator);
 

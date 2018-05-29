@@ -17,7 +17,7 @@ int main(void)
         octaspire_map_new_with_octaspire_string_keys(
             sizeof(float),
             false,
-            (octaspire_map_element_callback_function_t)0,
+            (octaspire_map_element_callback_t)0,
             allocator);
 
 
@@ -39,7 +39,7 @@ int main(void)
             &value))
         {
             printf(
-                "Cannot insert element to hash map\n");
+                "Cannot insert element\n");
         }
     }
 

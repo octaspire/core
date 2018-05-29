@@ -34,7 +34,7 @@ int main(void)
                 v,
                 &s))
         {
-            printf("Cannot insert string to vector\n");
+            printf("Cannot insert string\n");
         }
     }
 

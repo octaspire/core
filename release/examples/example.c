@@ -9,7 +9,7 @@ void map_example()
     octaspire_map_t * h = octaspire_map_new_with_octaspire_string_keys(
         sizeof(float),
         false,
-        (octaspire_map_element_callback_function_t)0,
+        (octaspire_map_element_callback_t)0,
         allocator);
 
     for (size_t i = 0; i < 10; ++i)

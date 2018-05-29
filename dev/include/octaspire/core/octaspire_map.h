@@ -68,7 +68,7 @@ typedef bool (*octaspire_map_key_compare_function_t)(
 typedef uint32_t (*octaspire_map_key_hash_function_t)(
     void const * const key);
 
-typedef void (*octaspire_map_element_callback_function_t)(
+typedef void (*octaspire_map_element_callback_t)(
     void * element);
 
 octaspire_map_t *octaspire_map_new(
@@ -78,20 +78,20 @@ octaspire_map_t *octaspire_map_new(
     bool const valueIsPointer,
     octaspire_map_key_compare_function_t keyCompareFunction,
     octaspire_map_key_hash_function_t keyHashFunction,
-    octaspire_map_element_callback_function_t keyReleaseCallback,
-    octaspire_map_element_callback_function_t valueReleaseCallback,
+    octaspire_map_element_callback_t keyReleaseCallback,
+    octaspire_map_element_callback_t valueReleaseCallback,
     octaspire_allocator_t *allocator);
 
 octaspire_map_t *octaspire_map_new_with_octaspire_string_keys(
     size_t const valueSizeInOctets,
     bool const valueIsPointer,
-    octaspire_map_element_callback_function_t valueReleaseCallback,
+    octaspire_map_element_callback_t valueReleaseCallback,
     octaspire_allocator_t *allocator);
 
 octaspire_map_t *octaspire_map_new_with_size_t_keys(
     size_t const valueSizeInOctets,
     bool const valueIsPointer,
-    octaspire_map_element_callback_function_t valueReleaseCallback,
+    octaspire_map_element_callback_t valueReleaseCallback,
     octaspire_allocator_t *allocator);
 
 void octaspire_map_release(octaspire_map_t *self);
