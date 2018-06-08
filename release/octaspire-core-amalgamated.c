@@ -137,7 +137,7 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "103"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "104"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_STR "Octaspire Core version " \
@@ -3094,31 +3094,28 @@ static octaspire_vector_private_index_t octaspire_vector_private_is_index_valid(
     octaspire_vector_t const * const self,
     ptrdiff_t const possiblyNegativeIndex)
 {
-    octaspire_vector_private_index_t result = {.isValid=false, .index=0};
+    octaspire_vector_private_index_t result = {.isValid=true, .index=(size_t)possiblyNegativeIndex};
 
     size_t const selfLen = octaspire_vector_get_length(self);
 
     if (possiblyNegativeIndex < 0)
     {
-        ptrdiff_t tmpIndex = (ptrdiff_t)selfLen + possiblyNegativeIndex;
+        ptrdiff_t const tmpIndex = (ptrdiff_t)selfLen + possiblyNegativeIndex;
 
         if (tmpIndex >= 0 && (size_t)tmpIndex < selfLen)
         {
-            result.index   = (size_t)tmpIndex;
-            result.isValid = true;
-
+            result.index = (size_t)tmpIndex;
             return result;
         }
     }
 
     if ((size_t)possiblyNegativeIndex < selfLen)
     {
-        result.index   = (size_t)possiblyNegativeIndex;
-        result.isValid = true;
-
         return result;
     }
 
+    result.isValid = false;
+    result.index   = 0;
     return result;
 }
 
@@ -3175,7 +3172,7 @@ void *octaspire_vector_get_element_at(
     octaspire_vector_t * const self,
     ptrdiff_t const possiblyNegativeIndex)
 {
-    void *result =
+    void * const result =
         octaspire_vector_get_raw_data_for_element_at(
             self,
             possiblyNegativeIndex);
@@ -3187,7 +3184,6 @@ void *octaspire_vector_get_element_at(
 
     if (self->elementIsPointer)
     {
-        octaspire_helpers_verify_not_null(result);
         return *(void**)result;
     }
 
