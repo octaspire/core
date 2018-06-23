@@ -28,6 +28,7 @@ extern SUITE(octaspire_queue_suite);
 extern SUITE(octaspire_string_suite);
 extern SUITE(octaspire_pair_suite);
 extern SUITE(octaspire_map_suite);
+extern SUITE(octaspire_semver_suite);
 
 void octaspire_core_amalgamated_write_test_file(
     char const * const name,
@@ -231,5 +232,6 @@ int main(int argc, char **argv)
     RUN_SUITE(octaspire_string_suite);
     RUN_SUITE(octaspire_pair_suite);
     RUN_SUITE(octaspire_map_suite);
+    RUN_SUITE(octaspire_semver_suite);
     GREATEST_MAIN_END();
 }

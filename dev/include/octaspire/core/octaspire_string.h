@@ -198,6 +198,10 @@ bool octaspire_string_contains_only_these_chars(
     octaspire_string_t const * const self,
     octaspire_string_t const * const chars);
 
+bool octaspire_string_contains_only_these_chars_c_string(
+    octaspire_string_t const * const self,
+    char const * const chars);
+
 octaspire_vector_t *octaspire_string_find_char(
     octaspire_string_t const * const self,
     octaspire_string_t const * const character,

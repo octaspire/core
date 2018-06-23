@@ -198,6 +198,7 @@ int main(int argc, char **argv)
     RUN_SUITE(octaspire_list_suite);
     RUN_SUITE(octaspire_queue_suite);
     RUN_SUITE(octaspire_string_suite);
+    RUN_SUITE(octaspire_semver_suite);
     RUN_SUITE(octaspire_pair_suite);
     RUN_SUITE(octaspire_map_suite);
     GREATEST_MAIN_END();

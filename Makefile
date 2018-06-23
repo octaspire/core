@@ -11,8 +11,8 @@ RELDIR=release/
 RELDOCDIR=$(RELDIR)documentation/
 AMALGAMATION=$(RELDIR)octaspire-core-amalgamated.c
 UNAME=$(shell uname -s)
-CFLAGS=-std=c99 -Wall -Wextra -g -O2
-LDFLAGS=
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -g -O2
+LDFLAGS=-lm
 
 # In batch mode Emacs doesn't load the usual initialization file. To get the correct
 # settings and styles in the batch mode, the initialization file must be loaded manually.
@@ -29,7 +29,8 @@ TESTOBJS := $(TESTDR)test.o              \
             $(TESTDR)test_stdio.o        \
             $(TESTDR)test_string.o       \
             $(TESTDR)test_utf8.o         \
-            $(TESTDR)test_vector.o
+            $(TESTDR)test_vector.o       \
+            $(TESTDR)test_semver.o
 
 .PHONY: development submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage major minor patch push
 
@@ -50,47 +51,51 @@ $(TESTDR)test.o: $(TESTDR)test.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_helpers.o: $(TESTDR)test_helpers.c
+$(TESTDR)test_helpers.o: $(TESTDR)test_helpers.c $(SRCDIR)octaspire_helpers.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_input.o: $(TESTDR)test_input.c
+$(TESTDR)test_input.o: $(TESTDR)test_input.c $(SRCDIR)octaspire_input.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_list.o: $(TESTDR)test_list.c
+$(TESTDR)test_list.o: $(TESTDR)test_list.c $(SRCDIR)octaspire_list.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_map.o: $(TESTDR)test_map.c
+$(TESTDR)test_map.o: $(TESTDR)test_map.c $(SRCDIR)octaspire_map.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_memory.o: $(TESTDR)test_memory.c
+$(TESTDR)test_memory.o: $(TESTDR)test_memory.c $(SRCDIR)octaspire_memory.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_pair.o: $(TESTDR)test_pair.c
+$(TESTDR)test_pair.o: $(TESTDR)test_pair.c $(SRCDIR)octaspire_pair.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_queue.o: $(TESTDR)test_queue.c
+$(TESTDR)test_queue.o: $(TESTDR)test_queue.c $(SRCDIR)octaspire_queue.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_stdio.o: $(TESTDR)test_stdio.c
+$(TESTDR)test_stdio.o: $(TESTDR)test_stdio.c $(SRCDIR)octaspire_stdio.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_string.o: $(TESTDR)test_string.c
+$(TESTDR)test_string.o: $(TESTDR)test_string.c $(SRCDIR)octaspire_string.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_utf8.o: $(TESTDR)test_utf8.c
+$(TESTDR)test_utf8.o: $(TESTDR)test_utf8.c $(SRCDIR)octaspire_utf8.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
-$(TESTDR)test_vector.o: $(TESTDR)test_vector.c
+$(TESTDR)test_vector.o: $(TESTDR)test_vector.c $(SRCDIR)octaspire_vector.c
+	$(info CC  $<)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+
+$(TESTDR)test_semver.o: $(TESTDR)test_semver.c $(SRCDIR)octaspire_semver.c
 	$(info CC  $<)
 	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
 
@@ -136,6 +141,7 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
                  $(INCDIR)octaspire_input.h                  \
                  $(INCDIR)octaspire_map.h                    \
                  $(INCDIR)octaspire_helpers.h                \
+                 $(INCDIR)octaspire_semver.h                 \
                  $(ETCDIR)amalgamation_impl_head.c           \
                  $(EXTDIR)jenkins_one_at_a_time.c            \
                  $(SRCDIR)octaspire_memory.c                 \
@@ -149,10 +155,12 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
                  $(SRCDIR)octaspire_map.c                    \
                  $(SRCDIR)octaspire_input.c                  \
                  $(SRCDIR)octaspire_stdio.c                  \
+                 $(SRCDIR)octaspire_semver.c                 \
                  $(ETCDIR)amalgamation_impl_tail.c           \
                  $(EXTDIR)greatest.h                         \
                  $(TESTDR)test_helpers.c                     \
                  $(TESTDR)test_utf8.c                        \
+                 $(TESTDR)test_semver.c                      \
                  $(TESTDR)test_memory.c                      \
                  $(TESTDR)test_stdio.c                       \
                  $(TESTDR)test_input.c                       \
@@ -179,6 +187,7 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
 	@$(AMALGA) $(INCDIR)octaspire_input.h                  $(AMALGAMATION)
 	@$(AMALGA) $(INCDIR)octaspire_map.h                    $(AMALGAMATION)
 	@$(AMALGA) $(INCDIR)octaspire_helpers.h                $(AMALGAMATION)
+	@$(AMALGA) $(INCDIR)octaspire_semver.h                 $(AMALGAMATION)
 	@$(AMALGL) $(ETCDIR)amalgamation_impl_head.c           $(AMALGAMATION)
 	@$(AMALGA) $(EXTDIR)jenkins_one_at_a_time.c            $(AMALGAMATION)
 	@$(AMALGA) $(SRCDIR)octaspire_memory.c                 $(AMALGAMATION)
@@ -192,6 +201,7 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
 	@$(AMALGA) $(SRCDIR)octaspire_map.c                    $(AMALGAMATION)
 	@$(AMALGA) $(SRCDIR)octaspire_input.c                  $(AMALGAMATION)
 	@$(AMALGA) $(SRCDIR)octaspire_stdio.c                  $(AMALGAMATION)
+	@$(AMALGA) $(SRCDIR)octaspire_semver.c                 $(AMALGAMATION)
 	@$(AMALGL) $(ETCDIR)amalgamation_impl_tail.c           $(AMALGAMATION)
 	@$(AMALGL) $(EXTDIR)greatest.h                         $(AMALGAMATION)
 	@$(AMALGA) $(TESTDR)test_helpers.c                     $(AMALGAMATION)
@@ -205,6 +215,7 @@ $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
 	@$(AMALGA) $(TESTDR)test_string.c                      $(AMALGAMATION)
 	@$(AMALGA) $(TESTDR)test_pair.c                        $(AMALGAMATION)
 	@$(AMALGA) $(TESTDR)test_map.c                         $(AMALGAMATION)
+	@$(AMALGA) $(TESTDR)test_semver.c                      $(AMALGAMATION)
 	@$(AMALGL) $(ETCDIR)amalgamation_impl_unit_test_tail.c $(AMALGAMATION)
 
 $(RELDOCDIR)core-manual.html: $(DEVDOCDIR)book/core-manual.org

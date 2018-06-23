@@ -1397,6 +1397,24 @@ bool octaspire_string_contains_only_these_chars(
     return true;
 }
 
+bool octaspire_string_contains_only_these_chars_c_string(
+    octaspire_string_t const * const self,
+    char const * const chars)
+{
+    // TODO maybe a more efficient implementation.
+
+    octaspire_string_t * const str =
+        octaspire_string_new(chars, self->allocator);
+
+    octaspire_helpers_verify_not_null(str);
+
+    bool const result =
+        octaspire_string_contains_only_these_chars(self, str);
+
+    octaspire_string_release(str);
+    return result;
+}
+
 octaspire_vector_t *octaspire_string_find_char(
     octaspire_string_t const * const self,
     octaspire_string_t const * const character,
