@@ -105,6 +105,57 @@ octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_new(
     return self;
 }
 
+octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_new_copy(
+    octaspire_semver_pre_release_elem_t const * const other,
+    octaspire_allocator_t * const allocator)
+{
+    octaspire_helpers_verify_not_null(other);
+    octaspire_helpers_verify_not_null(allocator);
+
+    octaspire_semver_pre_release_elem_t *self =
+        octaspire_allocator_malloc(allocator, sizeof(octaspire_semver_pre_release_elem_t));
+
+    if (!self)
+    {
+        return 0;
+    }
+
+    self->allocator = allocator;
+    self->type      = other->type;
+
+    switch (self->type)
+    {
+        case OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL:
+        {
+            self->value.numerical = other->value.numerical;
+        }
+        break;
+
+        case OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL:
+        {
+            octaspire_string_t * copyStr =
+                octaspire_string_new_copy(other->value.lexical, self->allocator);
+
+            if (!copyStr)
+            {
+            octaspire_semver_pre_release_elem_release(self);
+            self = 0;
+            return 0;
+            }
+
+            self->value.lexical = copyStr;
+        }
+        break;
+
+        default:
+        {
+            abort();
+        }
+    }
+
+    return self;
+}
+
 octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_numerical_new(
     size_t                  const value,
     octaspire_allocator_t * const allocator)
@@ -228,6 +279,121 @@ octaspire_semver_t *octaspire_semver_new(
             octaspire_string_t * str =
                 octaspire_string_new_copy(
                     octaspire_vector_get_element_at_const(buildMetadata, i),
+                    self->allocator);
+
+            if (!str)
+            {
+                octaspire_semver_release(self);
+                self = 0;
+                return 0;
+            }
+
+            if (!octaspire_vector_push_back_element(self->buildMetadata, &str))
+            {
+                octaspire_string_release(str);
+                str  = 0;
+                octaspire_semver_release(self);
+                self = 0;
+                return 0;
+            }
+        }
+    }
+
+    return self;
+}
+
+octaspire_semver_t *octaspire_semver_new_copy(
+    octaspire_semver_t    const * const other,
+    octaspire_allocator_t       * const allocator)
+{
+    octaspire_helpers_verify_not_null(other);
+
+    if (!allocator)
+    {
+        return 0;
+    }
+
+    octaspire_semver_t *self =
+        octaspire_allocator_malloc(allocator, sizeof(octaspire_semver_t));
+
+    if (!self)
+    {
+        return 0;
+    }
+
+    self->allocator = allocator;
+    self->major     = other->major;
+    self->minor     = other->minor;
+    self->patch     = other->patch;
+
+    self->preRelease = octaspire_vector_new(
+        sizeof(octaspire_semver_pre_release_elem_t*),
+        true,
+        (octaspire_vector_element_callback_t)octaspire_semver_pre_release_elem_release,
+        self->allocator);
+
+    if (!self->preRelease)
+    {
+        octaspire_semver_release(self);
+        self = 0;
+        return 0;
+    }
+
+    self->buildMetadata = octaspire_vector_new(
+        sizeof(octaspire_string_t*),
+        true,
+        (octaspire_vector_element_callback_t)octaspire_string_release,
+        self->allocator);
+
+    if (!self->buildMetadata)
+    {
+        octaspire_semver_release(self);
+        self = 0;
+        return 0;
+    }
+
+    if (other->preRelease)
+    {
+        for (size_t i = 0; i < octaspire_vector_get_length(other->preRelease); ++i)
+        {
+            octaspire_semver_pre_release_elem_t * preReleaseElem =
+                octaspire_vector_get_element_at(other->preRelease, i);
+
+            octaspire_helpers_verify_not_null(preReleaseElem);
+
+            octaspire_semver_pre_release_elem_t * const copyOfPreReleaseElem =
+                octaspire_semver_pre_release_elem_new_copy(
+                    preReleaseElem,
+                    self->allocator);
+
+            if (!copyOfPreReleaseElem)
+            {
+                octaspire_semver_release(self);
+                self = 0;
+                return 0;
+            }
+
+            if (!octaspire_vector_push_back_element(
+                    self->preRelease,
+                    &copyOfPreReleaseElem))
+            {
+                octaspire_semver_pre_release_elem_release(preReleaseElem);
+                preReleaseElem = 0;
+
+                octaspire_semver_release(self);
+                self = 0;
+                return 0;
+            }
+        }
+    }
+
+    if (other->buildMetadata)
+    {
+        for (size_t i = 0; i < octaspire_vector_get_length(other->buildMetadata); ++i)
+        {
+            octaspire_string_t * str =
+                octaspire_string_new_copy(
+                    octaspire_vector_get_element_at_const(other->buildMetadata, i),
                     self->allocator);
 
             if (!str)
@@ -749,6 +915,18 @@ bool octaspire_semver_is_equal_to(
     return (octaspire_semver_compare(self, other) == 0);
 }
 
+bool octaspire_semver_is_equal_to_c_string(
+    octaspire_semver_t const * const self,
+    char const * const str)
+{
+    octaspire_string_t * selfAsStr = octaspire_semver_to_string(self);
+    octaspire_helpers_verify_not_null(selfAsStr);
+    bool const result = octaspire_string_is_equal_to_c_string(selfAsStr, str);
+    octaspire_string_release(selfAsStr);
+    selfAsStr = 0;
+    return result;
+}
+
 bool octaspire_semver_is_unequal_to(
     octaspire_semver_t const * const self,
     octaspire_semver_t const * const other)
@@ -906,3 +1084,4 @@ bool octaspire_semver_add_or_subtract(
 
     return true;
 }
+

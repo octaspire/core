@@ -101,6 +101,53 @@ TEST octaspire_semver_new_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test(v
     PASS();
 }
 
+TEST octaspire_semver_new_copy_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test(void)
+{
+    octaspire_semver_t * semver1 =
+        octaspire_semver_new_prerelease(
+            0,
+            1,
+            2,
+            octaspireSemverTestAllocator,
+            "alpha",
+            "3",
+            "");
+
+    ASSERT(semver1);
+
+    ASSERT(octaspire_semver_add_buildmetadata(semver1, "sha"));
+    ASSERT(octaspire_semver_add_buildmetadata(semver1, "5214f"));
+
+    octaspire_semver_t * semver2 = octaspire_semver_new_copy(
+        semver1,
+        octaspireSemverTestAllocator);
+
+    ASSERT(semver2);
+    ASSERT(octaspire_semver_is_equal_to(semver1, semver2));
+
+    octaspire_string_t * str1 = octaspire_semver_to_string(semver1);
+    ASSERT(str1);
+    ASSERT(octaspire_string_is_equal_to_c_string(str1, "0.1.2-alpha.3+sha.5214f"));
+
+    octaspire_string_t * str2 = octaspire_semver_to_string(semver2);
+    ASSERT(str2);
+    ASSERT(octaspire_string_is_equal(str1, str2));
+
+    octaspire_string_release(str1);
+    str1 = 0;
+
+    octaspire_string_release(str2);
+    str2 = 0;
+
+    octaspire_semver_release(semver1);
+    semver1 = 0;
+
+    octaspire_semver_release(semver2);
+    semver2 = 0;
+
+    PASS();
+}
+
 TEST octaspire_semver_compare_0_1_2_alpha_3_metadata_sha_5214f_test(void)
 {
     // First
@@ -1053,6 +1100,33 @@ TEST octaspire_semver_comparison_operators_called_with_1_9_0_and_1_10_0_test(voi
     PASS();
 }
 
+TEST octaspire_semver_is_equal_to_c_string_called_with_1_9_0_and_same_and_five_different_test(void)
+{
+    // First
+    octaspire_semver_t * semver1 =
+        octaspire_semver_new(
+            1,
+            9,
+            0,
+            0,
+            0,
+            octaspireSemverTestAllocator);
+
+    ASSERT(semver1);
+
+    ASSERT(octaspire_semver_is_equal_to_c_string(semver1, "1.9.0"));
+    ASSERT_FALSE(octaspire_semver_is_equal_to_c_string(semver1, "1.9.1"));
+    ASSERT_FALSE(octaspire_semver_is_equal_to_c_string(semver1, "1.10.0"));
+    ASSERT_FALSE(octaspire_semver_is_equal_to_c_string(semver1, "2.9.0"));
+    ASSERT_FALSE(octaspire_semver_is_equal_to_c_string(semver1, "1.9.0-rc"));
+    ASSERT_FALSE(octaspire_semver_is_equal_to_c_string(semver1, "1.9.0-rc.1"));
+
+    octaspire_semver_release(semver1);
+    semver1 = 0;
+
+    PASS();
+}
+
 TEST octaspire_semver_add_or_subtract_called_with_1_0_0_rc_1_and_0_0_1_and_true_test(void)
 {
     // Target.
@@ -1829,6 +1903,7 @@ GREATEST_SUITE(octaspire_semver_suite)
 
     RUN_TEST(octaspire_semver_new_called_with_null_allocator_test);
     RUN_TEST(octaspire_semver_new_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test);
+    RUN_TEST(octaspire_semver_new_copy_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test);
     RUN_TEST(octaspire_semver_compare_0_1_2_alpha_3_metadata_sha_5214f_test);
     RUN_TEST(octaspire_semver_compare_0_1_2_alpha_3_sha_5214f_and_0_1_2_alpha_3_sha_5214g_test);
     RUN_TEST(octaspire_semver_compare_0_1_2_alpha_3_sha_5214f_and_0_1_2_alpha_4_sha_5214f_test);
@@ -1852,6 +1927,8 @@ GREATEST_SUITE(octaspire_semver_suite)
 
     RUN_TEST(octaspire_semver_comparison_operators_called_with_3_0_1_rc_1_and_3_0_1_rc_1_test);
     RUN_TEST(octaspire_semver_comparison_operators_called_with_1_9_0_and_1_10_0_test);
+
+    RUN_TEST(octaspire_semver_is_equal_to_c_string_called_with_1_9_0_and_same_and_five_different_test);
 
     RUN_TEST(octaspire_semver_add_or_subtract_called_with_1_0_0_rc_1_and_0_0_1_and_true_test);
     RUN_TEST(octaspire_semver_add_or_subtract_called_with_1_0_1_rc_1_and_0_1_0_and_true_test);

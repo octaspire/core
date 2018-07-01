@@ -47,6 +47,10 @@ octaspire_semver_t *octaspire_semver_new(
     octaspire_vector_t    const * const buildMetadata,
     octaspire_allocator_t       * const allocator);
 
+octaspire_semver_t *octaspire_semver_new_copy(
+    octaspire_semver_t    const * const other,
+    octaspire_allocator_t       * const allocator);
+
 octaspire_semver_t *octaspire_semver_new_prerelease(
     size_t                const         major,
     size_t                const         minor,
@@ -111,6 +115,10 @@ bool octaspire_semver_is_greater_than(
 bool octaspire_semver_is_greater_or_equal_to(
     octaspire_semver_t const * const self,
     octaspire_semver_t const * const other);
+
+bool octaspire_semver_is_equal_to_c_string(
+    octaspire_semver_t const * const self,
+    char const * const str);
 
 bool octaspire_semver_is_equal_to(
     octaspire_semver_t const * const self,
