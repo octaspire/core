@@ -23,6 +23,170 @@ limitations under the License.
 
 static octaspire_allocator_t *octaspireSemverTestAllocator = 0;
 
+TEST octaspire_semver_pre_release_elem_type_accessors_called_on_lexical_type_test(void)
+{
+    char const * const expected = "qwerty";
+
+    octaspire_semver_pre_release_elem_t * elem =
+        octaspire_semver_pre_release_elem_new_from_c_string(
+            expected,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL,
+        octaspire_semver_pre_release_elem_get_type(elem));
+
+    ASSERT_STR_EQ(
+        expected,
+        octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(elem));
+
+    ASSERT_FALSE(octaspire_semver_pre_release_elem_is_numerical_type(elem));
+    ASSERT(octaspire_semver_pre_release_elem_is_lexical_type(elem));
+
+    octaspire_semver_pre_release_elem_release(elem);
+    elem = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pre_release_elem_type_accessors_called_on_numerical_type_test(void)
+{
+    size_t const expected = 123;
+
+    octaspire_semver_pre_release_elem_t * elem =
+        octaspire_semver_pre_release_elem_numerical_new(
+            expected,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL,
+        octaspire_semver_pre_release_elem_get_type(elem));
+
+    ASSERT_EQ(
+        expected,
+        octaspire_semver_pre_release_elem_get_numerical_value(elem));
+
+    ASSERT(octaspire_semver_pre_release_elem_is_numerical_type(elem));
+    ASSERT_FALSE(octaspire_semver_pre_release_elem_is_lexical_type(elem));
+
+    octaspire_semver_pre_release_elem_release(elem);
+    elem = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pre_release_elem_new_copy_called_with_numerical_type_test(void)
+{
+    size_t const expected = 321;
+
+    octaspire_semver_pre_release_elem_t * elem1 =
+        octaspire_semver_pre_release_elem_numerical_new(
+            expected,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem1);
+
+    octaspire_semver_pre_release_elem_t * elem2 =
+        octaspire_semver_pre_release_elem_new_copy(
+            elem1,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem2);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL,
+        octaspire_semver_pre_release_elem_get_type(elem2));
+
+    ASSERT_EQ(
+        expected,
+        octaspire_semver_pre_release_elem_get_numerical_value(elem2));
+
+    octaspire_semver_pre_release_elem_release(elem1);
+    elem1 = 0;
+
+    octaspire_semver_pre_release_elem_release(elem2);
+    elem2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pre_release_elem_new_copy_called_with_lexcal_type_test(void)
+{
+     char const * const expected = "ytrewq";
+
+    octaspire_semver_pre_release_elem_t * elem1 =
+        octaspire_semver_pre_release_elem_new_from_c_string(
+            expected,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem1);
+
+    octaspire_semver_pre_release_elem_t * elem2 =
+        octaspire_semver_pre_release_elem_new_copy(
+            elem1,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem2);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL,
+        octaspire_semver_pre_release_elem_get_type(elem2));
+
+    ASSERT_STR_EQ(
+        expected,
+        octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(elem2));
+
+    octaspire_semver_pre_release_elem_release(elem1);
+    elem1 = 0;
+
+    octaspire_semver_pre_release_elem_release(elem2);
+    elem2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pre_release_elem_make_numerical_and_lexical_test(void)
+{
+    octaspire_semver_pre_release_elem_t * elem =
+        octaspire_semver_pre_release_elem_new_from_c_string(
+            "qwerty",
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem);
+
+    size_t const expectedNum = 123;
+
+    octaspire_semver_pre_release_elem_make_numerical(elem, expectedNum);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL,
+        octaspire_semver_pre_release_elem_get_type(elem));
+
+    ASSERT_EQ(expectedNum, octaspire_semver_pre_release_elem_get_numerical_value(elem));
+
+    char const * const expectedStr = "abc";
+
+    ASSERT(octaspire_semver_pre_release_elem_make_lexical(elem, expectedStr));
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL,
+        octaspire_semver_pre_release_elem_get_type(elem));
+
+    ASSERT_STR_EQ(
+        expectedStr,
+        octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(elem));
+
+    octaspire_semver_pre_release_elem_release(elem);
+    elem = 0;
+
+    PASS();
+}
+
+
 TEST octaspire_semver_new_called_with_null_allocator_test(void)
 {
     octaspire_vector_t * preRelease =
@@ -1901,6 +2065,14 @@ GREATEST_SUITE(octaspire_semver_suite)
 
     assert(octaspireSemverTestAllocator);
 
+    // Pre release element
+    RUN_TEST(octaspire_semver_pre_release_elem_type_accessors_called_on_lexical_type_test);
+    RUN_TEST(octaspire_semver_pre_release_elem_type_accessors_called_on_numerical_type_test);
+    RUN_TEST(octaspire_semver_pre_release_elem_new_copy_called_with_numerical_type_test);
+    RUN_TEST(octaspire_semver_pre_release_elem_new_copy_called_with_lexcal_type_test);
+    RUN_TEST(octaspire_semver_pre_release_elem_make_numerical_and_lexical_test);
+
+    // Semantic version number
     RUN_TEST(octaspire_semver_new_called_with_null_allocator_test);
     RUN_TEST(octaspire_semver_new_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test);
     RUN_TEST(octaspire_semver_new_copy_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test);

@@ -137,7 +137,7 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "106"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "107"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_STR "Octaspire Core version " \
@@ -1565,6 +1565,54 @@ typedef enum octaspire_semver_pre_release_elem_type_t
 }
 octaspire_semver_pre_release_elem_type_t;
 
+typedef struct octaspire_semver_pre_release_elem_t
+    octaspire_semver_pre_release_elem_t;
+
+void octaspire_semver_pre_release_elem_release(
+    octaspire_semver_pre_release_elem_t *self);
+
+octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_new(
+  octaspire_string_t      const * const str,
+  octaspire_allocator_t * const allocator);
+
+octaspire_semver_pre_release_elem_t *
+octaspire_semver_pre_release_elem_new_copy(
+    octaspire_semver_pre_release_elem_t const * const other,
+    octaspire_allocator_t * const allocator);
+
+octaspire_semver_pre_release_elem_t *
+octaspire_semver_pre_release_elem_numerical_new(
+    size_t                  const value,
+    octaspire_allocator_t * const allocator);
+
+octaspire_semver_pre_release_elem_type_t
+octaspire_semver_pre_release_elem_get_type(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+bool octaspire_semver_pre_release_elem_is_lexical_type(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+bool octaspire_semver_pre_release_elem_is_numerical_type(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+size_t octaspire_semver_pre_release_elem_get_numerical_value(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+void octaspire_semver_pre_release_elem_make_numerical(
+    octaspire_semver_pre_release_elem_t * const self,
+    size_t const value);
+
+bool octaspire_semver_pre_release_elem_make_lexical(
+    octaspire_semver_pre_release_elem_t * const self,
+    char const * const value);
+
+octaspire_string_t const * octaspire_semver_pre_release_elem_get_lexical_value(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+char const * octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+
 typedef struct octaspire_semver_t octaspire_semver_t;
 
 octaspire_semver_t *octaspire_semver_new(
@@ -1574,6 +1622,11 @@ octaspire_semver_t *octaspire_semver_new(
     octaspire_vector_t    const * const preRelease,
     octaspire_vector_t    const * const buildMetadata,
     octaspire_allocator_t       * const allocator);
+
+octaspire_semver_pre_release_elem_t *
+octaspire_semver_pre_release_elem_new_from_c_string(
+    char            const * const str,
+    octaspire_allocator_t * const allocator);
 
 octaspire_semver_t *octaspire_semver_new_copy(
     octaspire_semver_t    const * const other,
@@ -8215,7 +8268,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ******************************************************************************/
 
-typedef struct octaspire_semver_pre_release_elem_t
+struct octaspire_semver_pre_release_elem_t
 {
     octaspire_semver_pre_release_elem_type_t  type;
     octaspire_allocator_t                    *allocator;
@@ -8225,8 +8278,7 @@ typedef struct octaspire_semver_pre_release_elem_t
         size_t               numerical;
         octaspire_string_t * lexical;
     } value;
-}
-octaspire_semver_pre_release_elem_t;
+};
 
 void octaspire_semver_pre_release_elem_release(octaspire_semver_pre_release_elem_t *self)
 {
@@ -8302,6 +8354,28 @@ octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_new(
     return self;
 }
 
+octaspire_semver_pre_release_elem_t *
+octaspire_semver_pre_release_elem_new_from_c_string(
+    char            const * const str,
+    octaspire_allocator_t * const allocator)
+{
+    octaspire_helpers_verify_not_null(str);
+    octaspire_helpers_verify_not_null(allocator);
+
+    octaspire_string_t * tmpStr =
+        octaspire_string_new(str, allocator);
+
+    octaspire_helpers_verify_not_null(tmpStr);
+
+    octaspire_semver_pre_release_elem_t * const result =
+        octaspire_semver_pre_release_elem_new(tmpStr, allocator);
+
+    octaspire_string_release(tmpStr);
+    tmpStr = 0;
+
+    return result;
+}
+
 octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_new_copy(
     octaspire_semver_pre_release_elem_t const * const other,
     octaspire_allocator_t * const allocator)
@@ -8374,6 +8448,97 @@ octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_numerical
 
     return self;
 }
+
+octaspire_semver_pre_release_elem_type_t
+octaspire_semver_pre_release_elem_get_type(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    return self->type;
+}
+
+bool octaspire_semver_pre_release_elem_is_lexical_type(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    return octaspire_semver_pre_release_elem_get_type(self) ==
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL;
+}
+
+bool octaspire_semver_pre_release_elem_is_numerical_type(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    return octaspire_semver_pre_release_elem_get_type(self) ==
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL;
+}
+
+size_t octaspire_semver_pre_release_elem_get_numerical_value(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    octaspire_helpers_verify_true(
+        octaspire_semver_pre_release_elem_is_numerical_type(self));
+
+    return self->value.numerical;
+}
+
+void octaspire_semver_pre_release_elem_make_numerical(
+    octaspire_semver_pre_release_elem_t * const self,
+    size_t const value)
+{
+    if (octaspire_semver_pre_release_elem_is_lexical_type(self))
+    {
+        octaspire_helpers_verify_not_null(self->value.lexical);
+        octaspire_string_release(self->value.lexical);
+        self->value.lexical = 0;
+    }
+
+    self->type = OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL;
+    self->value.numerical = value;
+}
+
+bool octaspire_semver_pre_release_elem_make_lexical(
+    octaspire_semver_pre_release_elem_t * const self,
+    char const * const value)
+{
+    octaspire_string_t * const tmpStr = octaspire_string_new(
+        value,
+        self->allocator);
+
+    if (!tmpStr)
+    {
+        return false;
+    }
+
+    if (octaspire_semver_pre_release_elem_is_lexical_type(self))
+    {
+        octaspire_helpers_verify_not_null(self->value.lexical);
+        octaspire_string_release(self->value.lexical);
+        self->value.lexical = 0;
+    }
+
+    self->type = OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL;
+    self->value.lexical = tmpStr;
+    return true;
+}
+
+
+octaspire_string_t const * octaspire_semver_pre_release_elem_get_lexical_value(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    octaspire_helpers_verify_true(
+        octaspire_semver_pre_release_elem_is_lexical_type(self));
+
+    return self->value.lexical;
+}
+
+char const * octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    octaspire_helpers_verify_true(
+        octaspire_semver_pre_release_elem_is_lexical_type(self));
+
+    return octaspire_string_get_c_string(
+        octaspire_semver_pre_release_elem_get_lexical_value(self));
+}
+
 
 struct octaspire_semver_t
 {
@@ -22704,6 +22869,170 @@ limitations under the License.
 
 static octaspire_allocator_t *octaspireSemverTestAllocator = 0;
 
+TEST octaspire_semver_pre_release_elem_type_accessors_called_on_lexical_type_test(void)
+{
+    char const * const expected = "qwerty";
+
+    octaspire_semver_pre_release_elem_t * elem =
+        octaspire_semver_pre_release_elem_new_from_c_string(
+            expected,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL,
+        octaspire_semver_pre_release_elem_get_type(elem));
+
+    ASSERT_STR_EQ(
+        expected,
+        octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(elem));
+
+    ASSERT_FALSE(octaspire_semver_pre_release_elem_is_numerical_type(elem));
+    ASSERT(octaspire_semver_pre_release_elem_is_lexical_type(elem));
+
+    octaspire_semver_pre_release_elem_release(elem);
+    elem = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pre_release_elem_type_accessors_called_on_numerical_type_test(void)
+{
+    size_t const expected = 123;
+
+    octaspire_semver_pre_release_elem_t * elem =
+        octaspire_semver_pre_release_elem_numerical_new(
+            expected,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL,
+        octaspire_semver_pre_release_elem_get_type(elem));
+
+    ASSERT_EQ(
+        expected,
+        octaspire_semver_pre_release_elem_get_numerical_value(elem));
+
+    ASSERT(octaspire_semver_pre_release_elem_is_numerical_type(elem));
+    ASSERT_FALSE(octaspire_semver_pre_release_elem_is_lexical_type(elem));
+
+    octaspire_semver_pre_release_elem_release(elem);
+    elem = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pre_release_elem_new_copy_called_with_numerical_type_test(void)
+{
+    size_t const expected = 321;
+
+    octaspire_semver_pre_release_elem_t * elem1 =
+        octaspire_semver_pre_release_elem_numerical_new(
+            expected,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem1);
+
+    octaspire_semver_pre_release_elem_t * elem2 =
+        octaspire_semver_pre_release_elem_new_copy(
+            elem1,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem2);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL,
+        octaspire_semver_pre_release_elem_get_type(elem2));
+
+    ASSERT_EQ(
+        expected,
+        octaspire_semver_pre_release_elem_get_numerical_value(elem2));
+
+    octaspire_semver_pre_release_elem_release(elem1);
+    elem1 = 0;
+
+    octaspire_semver_pre_release_elem_release(elem2);
+    elem2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pre_release_elem_new_copy_called_with_lexcal_type_test(void)
+{
+     char const * const expected = "ytrewq";
+
+    octaspire_semver_pre_release_elem_t * elem1 =
+        octaspire_semver_pre_release_elem_new_from_c_string(
+            expected,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem1);
+
+    octaspire_semver_pre_release_elem_t * elem2 =
+        octaspire_semver_pre_release_elem_new_copy(
+            elem1,
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem2);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL,
+        octaspire_semver_pre_release_elem_get_type(elem2));
+
+    ASSERT_STR_EQ(
+        expected,
+        octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(elem2));
+
+    octaspire_semver_pre_release_elem_release(elem1);
+    elem1 = 0;
+
+    octaspire_semver_pre_release_elem_release(elem2);
+    elem2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pre_release_elem_make_numerical_and_lexical_test(void)
+{
+    octaspire_semver_pre_release_elem_t * elem =
+        octaspire_semver_pre_release_elem_new_from_c_string(
+            "qwerty",
+            octaspireSemverTestAllocator);
+
+    ASSERT(elem);
+
+    size_t const expectedNum = 123;
+
+    octaspire_semver_pre_release_elem_make_numerical(elem, expectedNum);
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL,
+        octaspire_semver_pre_release_elem_get_type(elem));
+
+    ASSERT_EQ(expectedNum, octaspire_semver_pre_release_elem_get_numerical_value(elem));
+
+    char const * const expectedStr = "abc";
+
+    ASSERT(octaspire_semver_pre_release_elem_make_lexical(elem, expectedStr));
+
+    ASSERT_EQ(
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL,
+        octaspire_semver_pre_release_elem_get_type(elem));
+
+    ASSERT_STR_EQ(
+        expectedStr,
+        octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(elem));
+
+    octaspire_semver_pre_release_elem_release(elem);
+    elem = 0;
+
+    PASS();
+}
+
+
 TEST octaspire_semver_new_called_with_null_allocator_test(void)
 {
     octaspire_vector_t * preRelease =
@@ -24582,6 +24911,14 @@ GREATEST_SUITE(octaspire_semver_suite)
 
     assert(octaspireSemverTestAllocator);
 
+    // Pre release element
+    RUN_TEST(octaspire_semver_pre_release_elem_type_accessors_called_on_lexical_type_test);
+    RUN_TEST(octaspire_semver_pre_release_elem_type_accessors_called_on_numerical_type_test);
+    RUN_TEST(octaspire_semver_pre_release_elem_new_copy_called_with_numerical_type_test);
+    RUN_TEST(octaspire_semver_pre_release_elem_new_copy_called_with_lexcal_type_test);
+    RUN_TEST(octaspire_semver_pre_release_elem_make_numerical_and_lexical_test);
+
+    // Semantic version number
     RUN_TEST(octaspire_semver_new_called_with_null_allocator_test);
     RUN_TEST(octaspire_semver_new_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test);
     RUN_TEST(octaspire_semver_new_copy_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test);

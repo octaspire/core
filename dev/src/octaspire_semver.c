@@ -18,7 +18,7 @@ limitations under the License.
 #include <string.h>
 #include "octaspire/core/octaspire_helpers.h"
 
-typedef struct octaspire_semver_pre_release_elem_t
+struct octaspire_semver_pre_release_elem_t
 {
     octaspire_semver_pre_release_elem_type_t  type;
     octaspire_allocator_t                    *allocator;
@@ -28,8 +28,7 @@ typedef struct octaspire_semver_pre_release_elem_t
         size_t               numerical;
         octaspire_string_t * lexical;
     } value;
-}
-octaspire_semver_pre_release_elem_t;
+};
 
 void octaspire_semver_pre_release_elem_release(octaspire_semver_pre_release_elem_t *self)
 {
@@ -105,6 +104,28 @@ octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_new(
     return self;
 }
 
+octaspire_semver_pre_release_elem_t *
+octaspire_semver_pre_release_elem_new_from_c_string(
+    char            const * const str,
+    octaspire_allocator_t * const allocator)
+{
+    octaspire_helpers_verify_not_null(str);
+    octaspire_helpers_verify_not_null(allocator);
+
+    octaspire_string_t * tmpStr =
+        octaspire_string_new(str, allocator);
+
+    octaspire_helpers_verify_not_null(tmpStr);
+
+    octaspire_semver_pre_release_elem_t * const result =
+        octaspire_semver_pre_release_elem_new(tmpStr, allocator);
+
+    octaspire_string_release(tmpStr);
+    tmpStr = 0;
+
+    return result;
+}
+
 octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_new_copy(
     octaspire_semver_pre_release_elem_t const * const other,
     octaspire_allocator_t * const allocator)
@@ -177,6 +198,97 @@ octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_numerical
 
     return self;
 }
+
+octaspire_semver_pre_release_elem_type_t
+octaspire_semver_pre_release_elem_get_type(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    return self->type;
+}
+
+bool octaspire_semver_pre_release_elem_is_lexical_type(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    return octaspire_semver_pre_release_elem_get_type(self) ==
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL;
+}
+
+bool octaspire_semver_pre_release_elem_is_numerical_type(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    return octaspire_semver_pre_release_elem_get_type(self) ==
+        OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL;
+}
+
+size_t octaspire_semver_pre_release_elem_get_numerical_value(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    octaspire_helpers_verify_true(
+        octaspire_semver_pre_release_elem_is_numerical_type(self));
+
+    return self->value.numerical;
+}
+
+void octaspire_semver_pre_release_elem_make_numerical(
+    octaspire_semver_pre_release_elem_t * const self,
+    size_t const value)
+{
+    if (octaspire_semver_pre_release_elem_is_lexical_type(self))
+    {
+        octaspire_helpers_verify_not_null(self->value.lexical);
+        octaspire_string_release(self->value.lexical);
+        self->value.lexical = 0;
+    }
+
+    self->type = OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL;
+    self->value.numerical = value;
+}
+
+bool octaspire_semver_pre_release_elem_make_lexical(
+    octaspire_semver_pre_release_elem_t * const self,
+    char const * const value)
+{
+    octaspire_string_t * const tmpStr = octaspire_string_new(
+        value,
+        self->allocator);
+
+    if (!tmpStr)
+    {
+        return false;
+    }
+
+    if (octaspire_semver_pre_release_elem_is_lexical_type(self))
+    {
+        octaspire_helpers_verify_not_null(self->value.lexical);
+        octaspire_string_release(self->value.lexical);
+        self->value.lexical = 0;
+    }
+
+    self->type = OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL;
+    self->value.lexical = tmpStr;
+    return true;
+}
+
+
+octaspire_string_t const * octaspire_semver_pre_release_elem_get_lexical_value(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    octaspire_helpers_verify_true(
+        octaspire_semver_pre_release_elem_is_lexical_type(self));
+
+    return self->value.lexical;
+}
+
+char const * octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(
+    octaspire_semver_pre_release_elem_t const * const self)
+{
+    octaspire_helpers_verify_true(
+        octaspire_semver_pre_release_elem_is_lexical_type(self));
+
+    return octaspire_string_get_c_string(
+        octaspire_semver_pre_release_elem_get_lexical_value(self));
+}
+
 
 struct octaspire_semver_t
 {

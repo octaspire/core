@@ -37,6 +37,54 @@ typedef enum octaspire_semver_pre_release_elem_type_t
 }
 octaspire_semver_pre_release_elem_type_t;
 
+typedef struct octaspire_semver_pre_release_elem_t
+    octaspire_semver_pre_release_elem_t;
+
+void octaspire_semver_pre_release_elem_release(
+    octaspire_semver_pre_release_elem_t *self);
+
+octaspire_semver_pre_release_elem_t *octaspire_semver_pre_release_elem_new(
+  octaspire_string_t      const * const str,
+  octaspire_allocator_t * const allocator);
+
+octaspire_semver_pre_release_elem_t *
+octaspire_semver_pre_release_elem_new_copy(
+    octaspire_semver_pre_release_elem_t const * const other,
+    octaspire_allocator_t * const allocator);
+
+octaspire_semver_pre_release_elem_t *
+octaspire_semver_pre_release_elem_numerical_new(
+    size_t                  const value,
+    octaspire_allocator_t * const allocator);
+
+octaspire_semver_pre_release_elem_type_t
+octaspire_semver_pre_release_elem_get_type(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+bool octaspire_semver_pre_release_elem_is_lexical_type(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+bool octaspire_semver_pre_release_elem_is_numerical_type(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+size_t octaspire_semver_pre_release_elem_get_numerical_value(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+void octaspire_semver_pre_release_elem_make_numerical(
+    octaspire_semver_pre_release_elem_t * const self,
+    size_t const value);
+
+bool octaspire_semver_pre_release_elem_make_lexical(
+    octaspire_semver_pre_release_elem_t * const self,
+    char const * const value);
+
+octaspire_string_t const * octaspire_semver_pre_release_elem_get_lexical_value(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+char const * octaspire_semver_pre_release_elem_get_lexical_value_as_c_string(
+    octaspire_semver_pre_release_elem_t const * const self);
+
+
 typedef struct octaspire_semver_t octaspire_semver_t;
 
 octaspire_semver_t *octaspire_semver_new(
@@ -46,6 +94,11 @@ octaspire_semver_t *octaspire_semver_new(
     octaspire_vector_t    const * const preRelease,
     octaspire_vector_t    const * const buildMetadata,
     octaspire_allocator_t       * const allocator);
+
+octaspire_semver_pre_release_elem_t *
+octaspire_semver_pre_release_elem_new_from_c_string(
+    char            const * const str,
+    octaspire_allocator_t * const allocator);
 
 octaspire_semver_t *octaspire_semver_new_copy(
     octaspire_semver_t    const * const other,
