@@ -748,6 +748,8 @@ bool octaspire_semver_add_buildmetadata(
 
     if (!octaspire_vector_push_back_element(self->buildMetadata, &str))
     {
+        octaspire_string_release(str);
+        str = 0;
         return false;
     }
 
@@ -873,7 +875,7 @@ octaspire_string_t * octaspire_semver_to_string(
                 result,
                 "%s%s",
                 octaspire_string_get_c_string(elem),
-                ((i+1) < octaspire_vector_get_length(self->preRelease))
+                ((i+1) < octaspire_vector_get_length(self->buildMetadata))
                 ? "." : ""))
         {
             octaspire_string_release(result);
@@ -1192,6 +1194,38 @@ bool octaspire_semver_add_or_subtract(
         }
         break;
         }
+    }
+
+    return true;
+}
+
+bool octaspire_semver_pop_back(
+    octaspire_semver_t * const self)
+{
+    if (!octaspire_vector_is_empty(self->buildMetadata))
+    {
+        return octaspire_vector_pop_back_element(self->buildMetadata);
+    }
+
+    if (!octaspire_vector_is_empty(self->preRelease))
+    {
+        return octaspire_vector_pop_back_element(self->preRelease);
+    }
+
+    return true;
+}
+
+bool octaspire_semver_pop_front(
+    octaspire_semver_t * const self)
+{
+    if (!octaspire_vector_is_empty(self->buildMetadata))
+    {
+        return octaspire_vector_pop_front_element(self->buildMetadata);
+    }
+
+    if (!octaspire_vector_is_empty(self->preRelease))
+    {
+        return octaspire_vector_pop_front_element(self->preRelease);
     }
 
     return true;

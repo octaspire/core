@@ -654,7 +654,10 @@ bool octaspire_vector_pop_back_element(
         return false;
     }
 
-    --(self->numElements);
+    if (!octaspire_vector_remove_element_at(self, -1))
+    {
+        return false;
+    }
 
     return octaspire_vector_private_compact(self);
 }
@@ -693,17 +696,9 @@ bool octaspire_vector_pop_front_element(
         return false;
     }
 
-    --(self->numElements);
-
-    if (self->numElements > 0)
+    if (!octaspire_vector_remove_element_at(self, 0))
     {
-        void *dest = octaspire_vector_private_index_to_pointer(self, 0);
-        void *src  = octaspire_vector_private_index_to_pointer(self, 1);
-
-        if (dest != memmove(dest, src, (self->elementSize * self->numElements)))
-        {
-            abort();
-        }
+        return false;
     }
 
     return octaspire_vector_private_compact(self);
@@ -745,7 +740,13 @@ bool octaspire_vector_clear(
         return true;
     }
 
-    self->numElements = 0;
+    while (!octaspire_vector_is_empty(self))
+    {
+        if (!octaspire_vector_remove_element_at(self, -1))
+        {
+            return false;
+        }
+    }
 
     return octaspire_vector_private_compact(self);
 }

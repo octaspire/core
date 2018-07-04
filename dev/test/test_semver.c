@@ -2059,6 +2059,135 @@ TEST octaspire_semver_add_or_subtract_called_with_1_1_1_rc_1_and_0_0_0_2_and_fal
     PASS();
 }
 
+TEST octaspire_semver_pop_back_called_on_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test(void)
+{
+    octaspire_semver_t * semver =
+        octaspire_semver_new_prerelease(
+            0,
+            1,
+            2,
+            octaspireSemverTestAllocator,
+            "alpha",
+            "3",
+            "");
+
+    ASSERT(semver);
+
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "sha"));
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "5214f"));
+
+    ASSERT(octaspire_semver_pop_back(semver));
+
+    octaspire_string_t * str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2-alpha.3+sha"));
+    octaspire_string_release(str);
+    str = 0;
+
+    ASSERT(octaspire_semver_pop_back(semver));
+
+    str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2-alpha.3"));
+    octaspire_string_release(str);
+    str = 0;
+
+    ASSERT(octaspire_semver_pop_back(semver));
+
+    str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2-alpha"));
+    octaspire_string_release(str);
+    str = 0;
+
+    ASSERT(octaspire_semver_pop_back(semver));
+
+    str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2"));
+    octaspire_string_release(str);
+    str = 0;
+
+    // This should not have any effect anymore.
+    ASSERT(octaspire_semver_pop_back(semver));
+
+    str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2"));
+    octaspire_string_release(str);
+    str = 0;
+
+    octaspire_semver_release(semver);
+    semver = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_pop_front_called_on_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test(void)
+{
+    octaspire_semver_t * semver =
+        octaspire_semver_new_prerelease(
+            0,
+            1,
+            2,
+            octaspireSemverTestAllocator,
+            "alpha",
+            "3",
+            "");
+
+    ASSERT(semver);
+
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "sha"));
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "5214f"));
+
+    ASSERT(octaspire_semver_pop_front(semver));
+
+    octaspire_string_t * str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2-alpha.3+5214f"));
+    octaspire_string_release(str);
+    str = 0;
+
+    ASSERT(octaspire_semver_pop_front(semver));
+
+    str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2-alpha.3"));
+    octaspire_string_release(str);
+    str = 0;
+
+    ASSERT(octaspire_semver_pop_front(semver));
+
+    str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2-3"));
+    octaspire_string_release(str);
+    str = 0;
+
+    ASSERT(octaspire_semver_pop_front(semver));
+
+    str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2"));
+    octaspire_string_release(str);
+    str = 0;
+
+    // This should not have any effect anymore.
+    ASSERT(octaspire_semver_pop_front(semver));
+
+    str = octaspire_semver_to_string(semver);
+    ASSERT(str);
+    ASSERT(octaspire_string_is_equal_to_c_string(str, "0.1.2"));
+    octaspire_string_release(str);
+    str = 0;
+
+    octaspire_semver_release(semver);
+    semver = 0;
+
+    PASS();
+}
+
+
 GREATEST_SUITE(octaspire_semver_suite)
 {
     octaspireSemverTestAllocator = octaspire_allocator_new(0);
@@ -2121,6 +2250,9 @@ GREATEST_SUITE(octaspire_semver_suite)
     RUN_TEST(octaspire_semver_add_or_subtract_called_with_1_1_1_rc_1_and_0_0_0_rc_1_and_false_test);
     RUN_TEST(octaspire_semver_add_or_subtract_called_with_1_1_1_rc_1_and_0_0_0_ra_and_false_test);
     RUN_TEST(octaspire_semver_add_or_subtract_called_with_1_1_1_rc_1_and_0_0_0_2_and_false_test);
+
+    RUN_TEST(octaspire_semver_pop_back_called_on_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test);
+    RUN_TEST(octaspire_semver_pop_front_called_on_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test);
 
     octaspire_allocator_release(octaspireSemverTestAllocator);
     octaspireSemverTestAllocator = 0;

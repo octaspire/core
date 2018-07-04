@@ -192,6 +192,12 @@ bool octaspire_semver_add_or_subtract(
     octaspire_semver_t const * const other,
     bool                       const add);
 
+bool octaspire_semver_pop_back(
+    octaspire_semver_t * const self);
+
+bool octaspire_semver_pop_front(
+    octaspire_semver_t * const self);
+
 #ifdef __cplusplus
 /* extern "C" */ }
 #endif
