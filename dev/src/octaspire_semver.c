@@ -782,6 +782,19 @@ octaspire_semver_pre_release_elem_type_t octaspire_semver_get_prerelease_at(
     return OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL;
 }
 
+char const * octaspire_semver_get_build_metadata_at(
+    octaspire_semver_t const * const self,
+    size_t const index)
+{
+    if (index >= octaspire_semver_get_num_build_metadata_identifiers(self))
+    {
+        return 0;
+    }
+
+    return octaspire_string_get_c_string(
+        octaspire_vector_get_element_at(self->buildMetadata, index));
+}
+
 octaspire_string_t * octaspire_semver_to_string(
     octaspire_semver_t const * const self)
 {
@@ -1058,6 +1071,14 @@ size_t octaspire_semver_get_num_build_metadata_identifiers(
     octaspire_semver_t const * const self)
 {
     return octaspire_vector_get_length(self->buildMetadata);
+}
+
+size_t octaspire_semver_get_length(octaspire_semver_t const * const self)
+{
+    return
+        3 +
+        octaspire_semver_get_num_pre_release_identifiers(self) +
+        octaspire_semver_get_num_build_metadata_identifiers(self);
 }
 
 bool octaspire_semver_add_or_subtract(

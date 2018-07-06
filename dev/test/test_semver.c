@@ -312,6 +312,113 @@ TEST octaspire_semver_new_copy_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_
     PASS();
 }
 
+TEST octaspire_semver_get_build_metadata_at_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test(void)
+{
+    octaspire_semver_t * semver =
+        octaspire_semver_new_prerelease(
+            0,
+            1,
+            2,
+            octaspireSemverTestAllocator,
+            "alpha",
+            "3",
+            "");
+
+    ASSERT(semver);
+
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "sha"));
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "5214f"));
+
+    ASSERT_EQ(0,           octaspire_semver_get_build_metadata_at(semver, 3));
+    ASSERT_EQ(0,           octaspire_semver_get_build_metadata_at(semver, 2));
+    ASSERT_STR_EQ("5214f", octaspire_semver_get_build_metadata_at(semver, 1));
+    ASSERT_STR_EQ("sha",   octaspire_semver_get_build_metadata_at(semver, 0));
+
+    octaspire_semver_release(semver);
+    semver = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_get_prerelease_at_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test(void)
+{
+    octaspire_semver_t * semver =
+        octaspire_semver_new_prerelease(
+            0,
+            1,
+            2,
+            octaspireSemverTestAllocator,
+            "alpha",
+            "3",
+            "");
+
+    ASSERT(semver);
+
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "sha"));
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "5214f"));
+
+    size_t       numerical = 0;
+    char const * lexical   = 0;
+
+    octaspire_semver_pre_release_elem_type_t elemType =
+        octaspire_semver_get_prerelease_at(semver, 0, &numerical, &lexical);
+
+    ASSERT_EQ(OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_LEXICAL, elemType);
+    ASSERT(lexical);
+    ASSERT_EQ(0, numerical);
+    ASSERT_STR_EQ("alpha", lexical);
+
+    numerical = 0;
+    lexical   = 0;
+
+    elemType =
+        octaspire_semver_get_prerelease_at(semver, 1, &numerical, &lexical);
+
+    ASSERT_EQ(OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_NUMERICAL, elemType);
+    ASSERT_EQ(0, lexical);
+    ASSERT_EQ(3, numerical);
+
+    numerical = 0;
+    lexical   = 0;
+
+    elemType =
+        octaspire_semver_get_prerelease_at(semver, 2, &numerical, &lexical);
+
+    ASSERT_EQ(OCTASPIRE_SEMVER_PRE_RELEASE_ELEM_TYPE_UNKNOWN, elemType);
+    ASSERT_EQ(0, lexical);
+    ASSERT_EQ(0, numerical);
+
+    octaspire_semver_release(semver);
+    semver = 0;
+
+    PASS();
+}
+
+TEST octaspire_semver_get_length_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test(void)
+{
+    octaspire_semver_t * semver =
+        octaspire_semver_new_prerelease(
+            0,
+            1,
+            2,
+            octaspireSemverTestAllocator,
+            "alpha",
+            "3",
+            "");
+
+    ASSERT(semver);
+
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "sha"));
+    ASSERT(octaspire_semver_add_buildmetadata(semver, "5214f"));
+
+    ASSERT_EQ(7, octaspire_semver_get_length(semver));
+
+    octaspire_semver_release(semver);
+    semver = 0;
+
+    PASS();
+}
+
 TEST octaspire_semver_compare_0_1_2_alpha_3_metadata_sha_5214f_test(void)
 {
     // First
@@ -2205,6 +2312,9 @@ GREATEST_SUITE(octaspire_semver_suite)
     RUN_TEST(octaspire_semver_new_called_with_null_allocator_test);
     RUN_TEST(octaspire_semver_new_prerelease_0_1_2_alpha_3_and_metadata_sha_5214f_test);
     RUN_TEST(octaspire_semver_new_copy_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test);
+    RUN_TEST(octaspire_semver_get_build_metadata_at_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test);
+    RUN_TEST(octaspire_semver_get_prerelease_at_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test);
+    RUN_TEST(octaspire_semver_get_length_called_with_0_1_2_alpha_3_and_metadata_sha_5214f_test);
     RUN_TEST(octaspire_semver_compare_0_1_2_alpha_3_metadata_sha_5214f_test);
     RUN_TEST(octaspire_semver_compare_0_1_2_alpha_3_sha_5214f_and_0_1_2_alpha_3_sha_5214g_test);
     RUN_TEST(octaspire_semver_compare_0_1_2_alpha_3_sha_5214f_and_0_1_2_alpha_4_sha_5214f_test);

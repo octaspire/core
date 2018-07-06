@@ -142,6 +142,10 @@ octaspire_semver_pre_release_elem_type_t octaspire_semver_get_prerelease_at(
     size_t * outNumerical,
     char const ** outLexical);
 
+char const * octaspire_semver_get_build_metadata_at(
+    octaspire_semver_t const * const self,
+    size_t const index);
+
 bool octaspire_semver_add_buildmetadata(
     octaspire_semver_t * const self,
     char const * const buildMetaData);
@@ -186,6 +190,8 @@ size_t octaspire_semver_get_num_pre_release_identifiers(
 
 size_t octaspire_semver_get_num_build_metadata_identifiers(
     octaspire_semver_t const * const self);
+
+size_t octaspire_semver_get_length(octaspire_semver_t const * const self);
 
 bool octaspire_semver_add_or_subtract(
     octaspire_semver_t       * const self,
