@@ -1061,6 +1061,24 @@ bool octaspire_semver_is_unequal_to(
     return (!octaspire_semver_is_equal_to(self, other));
 }
 
+size_t octaspire_semver_get_major(
+    octaspire_semver_t const * const self)
+{
+    return self->major;
+}
+
+size_t octaspire_semver_get_minor(
+    octaspire_semver_t const * const self)
+{
+    return self->minor;
+}
+
+size_t octaspire_semver_get_patch(
+    octaspire_semver_t const * const self)
+{
+    return self->patch;
+}
+
 size_t octaspire_semver_get_num_pre_release_identifiers(
     octaspire_semver_t const * const self)
 {

@@ -185,6 +185,15 @@ bool octaspire_semver_is_unequal_to(
     octaspire_semver_t const * const self,
     octaspire_semver_t const * const other);
 
+size_t octaspire_semver_get_major(
+    octaspire_semver_t const * const self);
+
+size_t octaspire_semver_get_minor(
+    octaspire_semver_t const * const self);
+
+size_t octaspire_semver_get_patch(
+    octaspire_semver_t const * const self);
+
 size_t octaspire_semver_get_num_pre_release_identifiers(
     octaspire_semver_t const * const self);
 
