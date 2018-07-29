@@ -349,13 +349,9 @@
       <h1>Octaspire Core Manual</h1>
     </div>
 
-<h2>Table of Contents</h2>
-<a href="#1">About</a><br/>
-<a href="#2">Building the amalgamated source release</a><br/>
-<a href="#3">Quick tour of library features</a><br/>
-<a href="#4">Using the development repository</a><br/>
+  .TOC: here
 
-  <h2><a id="1"></a>1. About</h2>
+  <h2>About</h2>
 
   <p>
     Octaspire Core is a container, UTF-8 and utility library written in
@@ -378,7 +374,7 @@
     change at any time, even in backwards incompatible manner.
   </p>
 
-  <h2><a id="2"></a>2. Building the amalgamated source release</h2>
+  <h2>Building the amalgamated source release</h2>
 
   <p>
     The amalgamated source release is the recommended way of using Core,
@@ -387,19 +383,9 @@
     a subset of C99.
   </p>
 
-    <h3>2.1 Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, macOS, Termux, AROS</h3>
+  <h3>Linux, FreeBSD, OpenBSD, NetBSD, OpenIndiana, DragonFly BSD, MidnightBSD, MINIX 3, Haiku, macOS, Termux, AROS</h3>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">curl -O octaspire</span><span class="symbol">.</span><span class="normal">com/core</span><span class="symbol">.</span><span class="normal">tar</span><span class="symbol">.</span><span class="normal">bz2</span>
-<span class="normal">curl -O https</span><span class="symbol">:</span><span class="normal">//octaspire</span><span class="symbol">.</span><span class="normal">io/core</span><span class="symbol">.</span><span class="normal">sha512</span>
-<span class="normal">sha512sum -c core</span><span class="symbol">.</span><span class="normal">sha512</span>
-<span class="normal">tar jxf core</span><span class="symbol">.</span><span class="normal">tar</span><span class="symbol">.</span><span class="normal">bz2</span>
-<span class="normal">cd core</span>
-<span class="normal">sh how-to-build/YOUR_PLATFORM_NAME_HERE</span><span class="symbol">.</span><span class="normal">XX</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/unixLike.sh
 
   <p>
     Replace <i>YOUR_PLATFORM_NAME_HERE.XX</i> with <i>FreeBSD.sh</i>,
@@ -410,7 +396,7 @@ http://www.gnu.org/software/src-highlite -->
     added later.
   </p>
 
-    <h3>2.2 Windows using MinGW and Git</h3>
+  <h3>Windows using MinGW and Git</h3>
 
   <p>
     Download and install <a href="http://www.mingw.org">MinGW</a> into
@@ -429,14 +415,7 @@ http://www.gnu.org/software/src-highlite -->
     Start <b>Git Bash</b> and run the following commands:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">git clone https</span><span class="symbol">:</span><span class="normal">//github</span><span class="symbol">.</span><span class="normal">com/octaspire/core</span><span class="symbol">.</span><span class="normal">git</span>
-<span class="normal">cd core/release</span>
-<span class="normal">how-to-build/windows</span><span class="symbol">.</span><span class="normal">sh</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/windows.sh
 
   <p>
     Start <b>Windows Command Prompt</b> and change directory to the same
@@ -444,7 +423,7 @@ http://www.gnu.org/software/src-highlite -->
     in the <b>Command Prompt</b> window (NOT in the Git Bash window).
   </p>
 
-    <h3>2.3 AmigaOS 4.x</h3>
+  <h3>AmigaOS 4.x</h3>
 
   <p>
     Download and install
@@ -460,17 +439,9 @@ http://www.gnu.org/software/src-highlite -->
     Open Shell window and run the following commands:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">bzip2_68k -dk core</span><span class="symbol">.</span><span class="normal">tar</span><span class="symbol">.</span><span class="normal">bz2</span>
-<span class="normal">tar xf core</span><span class="symbol">.</span><span class="normal">tar</span>
-<span class="normal">cd core</span>
-<span class="normal">sh how-to-build/AmigaOS</span><span class="number">41</span><span class="symbol">.</span><span class="normal">sh</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/amiga.sh
 
-    <h3>2.4 Running unit tests</h3>
+  <h3>Running unit tests</h3>
 
   <p>
     This is all there should be to it; when make finishes, everything should be ready.
@@ -480,20 +451,15 @@ http://www.gnu.org/software/src-highlite -->
     To run the unit tests:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">test/octaspire-core-test-runner</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/runUnitTest.sh
 
-  <h2><a id="3"></a>3. Quick tour of library features</h2>
+  <h2>Quick tour of library features</h2>
 
   <p>
       Here we take a quick look at the features of the library.
   </p>
 
-    <h3>3.1 Naming</h3>
+  <h3>Naming</h3>
 
   <p>
     C doesn't have namespaces. To prevent name collisions, all names
@@ -505,7 +471,7 @@ http://www.gnu.org/software/src-highlite -->
     <code>octaspire_map_t</code> is the hash-map type.
   </p>
 
-    <h3>3.2 UTF-8 Strings</h3>
+  <h3>UTF-8 Strings</h3>
 
   <p>
     Strings in Core have full UTF-8 support. Because ASCII strings
@@ -515,47 +481,9 @@ http://www.gnu.org/software/src-highlite -->
     Below is a short example of strings:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="comment">/****************************************************</span>
-<span class="comment"> To compile this file from the 'examples' directory:</span>
-<span class="comment"> c99 -Wall -Wextra -pedantic -I ../../include/ \</span>
-<span class="comment">     string-example.c -lm -L ../../build/      \</span>
-<span class="comment">     -loctaspire-core -o string-example</span>
-<span class="comment">****************************************************/</span>
-<span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;stdio.h&gt;</span>
-<span class="preproc">#define</span><span class="normal"> OCTASPIRE_CORE_AMALGAMATED_IMPLEMENTATION</span>
-<span class="preproc">#include</span><span class="normal"> </span><span class="string">"octaspire-core-amalgamated.c"</span>
+  .INCLUDE: release/examples/string-example.c
 
-<span class="type">int</span><span class="normal"> </span><span class="function">main</span><span class="symbol">(</span><span class="type">void</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">    </span><span class="usertype">octaspire_allocator_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">allocator </span><span class="symbol">=</span>
-<span class="normal">        </span><span class="function">octaspire_allocator_new</span><span class="symbol">(</span><span class="number">0</span><span class="symbol">);</span>
-
-<span class="normal">    </span><span class="usertype">octaspire_string_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">myStr </span><span class="symbol">=</span>
-<span class="normal">        </span><span class="function">octaspire_string_new</span><span class="symbol">(</span>
-<span class="normal">            </span><span class="string">"Hello world!"</span><span class="symbol">,</span>
-<span class="normal">            allocator</span><span class="symbol">);</span>
-
-<span class="normal">    </span><span class="function">printf</span><span class="symbol">(</span>
-<span class="normal">        </span><span class="string">"String is </span><span class="specialchar">\"</span><span class="string">%s</span><span class="specialchar">\"\n</span><span class="string">"</span><span class="symbol">,</span>
-<span class="normal">        </span><span class="function">octaspire_string_get_c_string</span><span class="symbol">(</span>
-<span class="normal">            myStr</span><span class="symbol">));</span>
-
-<span class="normal">    </span><span class="function">octaspire_string_release</span><span class="symbol">(</span><span class="normal">myStr</span><span class="symbol">);</span>
-<span class="normal">    myStr </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-
-<span class="normal">    </span><span class="function">octaspire_allocator_release</span><span class="symbol">(</span><span class="normal">allocator</span><span class="symbol">);</span>
-<span class="normal">    allocator </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-
-<span class="normal">    </span><span class="keyword">return</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-<span class="cbracket">}</span>
-
-</pre>
-
-    <h3>3.3 Vector</h3>
+  <h3>Vector</h3>
 
   <p>
     Vector is a linear container that stores its elements in continuous
@@ -563,96 +491,27 @@ http://www.gnu.org/software/src-highlite -->
     including pointers or blocks of memory.
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="comment">/***************************************************</span>
-<span class="comment"> To compile this file from the 'examples' directory:</span>
-<span class="comment"> c99 -Wall -Wextra -pedantic              \</span>
-<span class="comment">     -I ../../include/ vector-example.c   \</span>
-<span class="comment">     -lm -L ../../build/ -loctaspire-core \</span>
-<span class="comment">     -o vector-example</span>
-<span class="comment">***************************************************/</span>
-<span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;stdio.h&gt;</span>
-<span class="preproc">#define</span><span class="normal"> OCTASPIRE_CORE_AMALGAMATED_IMPLEMENTATION</span>
-<span class="preproc">#include</span><span class="normal"> </span><span class="string">"octaspire-core-amalgamated.c"</span>
+  .INCLUDE: release/examples/vector-example.c
 
-<span class="type">int</span><span class="normal"> </span><span class="function">main</span><span class="symbol">(</span><span class="type">void</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">    </span><span class="usertype">octaspire_allocator_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">allocator </span><span class="symbol">=</span>
-<span class="normal">        </span><span class="function">octaspire_allocator_new</span><span class="symbol">(</span><span class="number">0</span><span class="symbol">);</span>
-
-<span class="normal">    </span><span class="usertype">octaspire_vector_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">v </span><span class="symbol">=</span>
-<span class="normal">        </span><span class="function">octaspire_vector_new</span><span class="symbol">(</span>
-<span class="normal">            </span><span class="keyword">sizeof</span><span class="symbol">(</span><span class="normal">octaspire_string_t</span><span class="symbol">*),</span>
-<span class="normal">            true</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="symbol">(</span><span class="normal">octaspire_vector_element_callback_t</span><span class="symbol">)</span>
-<span class="normal">                octaspire_string_release</span><span class="symbol">,</span>
-<span class="normal">            allocator</span><span class="symbol">);</span>
-
-<span class="normal">    </span><span class="keyword">for</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">size_t</span><span class="normal"> i </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span><span class="normal"> i </span><span class="symbol">&lt;</span><span class="normal"> </span><span class="number">10</span><span class="symbol">;</span><span class="normal"> </span><span class="symbol">++</span><span class="normal">i</span><span class="symbol">)</span>
-<span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">        </span><span class="usertype">octaspire_string_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">s </span><span class="symbol">=</span>
-<span class="normal">            </span><span class="function">octaspire_string_new_format</span><span class="symbol">(</span>
-<span class="normal">                allocator</span><span class="symbol">,</span>
-<span class="normal">                </span><span class="string">"Hello %zu world!"</span><span class="symbol">,</span>
-<span class="normal">                i</span><span class="symbol">);</span>
-
-<span class="normal">        </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(!</span><span class="function">octaspire_vector_push_back_element</span><span class="symbol">(</span>
-<span class="normal">                v</span><span class="symbol">,</span>
-<span class="normal">                </span><span class="symbol">&amp;</span><span class="normal">s</span><span class="symbol">))</span>
-<span class="normal">        </span><span class="cbracket">{</span>
-<span class="normal">            </span><span class="function">printf</span><span class="symbol">(</span><span class="string">"Cannot insert string</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
-<span class="normal">        </span><span class="cbracket">}</span>
-<span class="normal">    </span><span class="cbracket">}</span>
-
-<span class="normal">    </span><span class="keyword">for</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">size_t</span><span class="normal"> i </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-<span class="normal">         i </span><span class="symbol">&lt;</span><span class="normal"> </span><span class="function">octaspire_vector_get_length</span><span class="symbol">(</span><span class="normal">v</span><span class="symbol">);</span>
-<span class="normal">         </span><span class="symbol">++</span><span class="normal">i</span><span class="symbol">)</span>
-<span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">        </span><span class="usertype">octaspire_string_t</span><span class="normal"> </span><span class="keyword">const</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> </span><span class="keyword">const</span><span class="normal"> s </span><span class="symbol">=</span>
-<span class="normal">            </span><span class="function">octaspire_vector_get_element_at_const</span><span class="symbol">(</span>
-<span class="normal">                v</span><span class="symbol">,</span>
-<span class="normal">                i</span><span class="symbol">);</span>
-
-<span class="normal">        </span><span class="function">printf</span><span class="symbol">(</span>
-<span class="normal">            </span><span class="string">"String %zu. is: %s</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">,</span>
-<span class="normal">            i</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="function">octaspire_string_get_c_string</span><span class="symbol">(</span>
-<span class="normal">                s</span><span class="symbol">));</span>
-<span class="normal">    </span><span class="cbracket">}</span>
-
-<span class="normal">    </span><span class="function">octaspire_vector_release</span><span class="symbol">(</span><span class="normal">v</span><span class="symbol">);</span>
-<span class="normal">    v </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-
-<span class="normal">    </span><span class="function">octaspire_allocator_release</span><span class="symbol">(</span><span class="normal">allocator</span><span class="symbol">);</span>
-<span class="normal">    allocator </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-
-<span class="normal">    </span><span class="keyword">return</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-<span class="cbracket">}</span>
-
-</pre>
-
-    <h3>3.4 List</h3>
+  <h3>List</h3>
 
   <p>
     TODO
   </p>
 
-    <h3>3.5 Queue</h3>
+  <h3>Queue</h3>
 
   <p>
     TODO
   </p>
 
-    <h3>3.6 Pair</h3>
+  <h3>Pair</h3>
 
   <p>
     TODO
   </p>
 
-    <h3>3.7 Hash map</h3>
+  <h3>Hash map</h3>
 
   <p>
     Hash map allows the retrieval of values in a constant time using
@@ -661,109 +520,21 @@ http://www.gnu.org/software/src-highlite -->
     pointers or arbitrary blocks of memory.
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="comment">/*****************************************************</span>
-<span class="comment"> To compile this file from the 'examples' directory:</span>
-<span class="comment"> c99 -Wall -Wextra -pedantic -I ../../include/ \</span>
-<span class="comment">     hash-map-example.c -lm -L ../../build/    \</span>
-<span class="comment">     -loctaspire-core -o hash-map-example</span>
-<span class="comment"> ****************************************************/</span>
-<span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;stdio.h&gt;</span>
-<span class="preproc">#define</span><span class="normal"> OCTASPIRE_CORE_AMALGAMATED_IMPLEMENTATION</span>
-<span class="preproc">#include</span><span class="normal"> </span><span class="string">"octaspire-core-amalgamated.c"</span>
+  .INCLUDE: release/examples/hash-map-example.c
 
-<span class="type">int</span><span class="normal"> </span><span class="function">main</span><span class="symbol">(</span><span class="type">void</span><span class="symbol">)</span>
-<span class="cbracket">{</span>
-<span class="normal">    </span><span class="usertype">octaspire_allocator_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">allocator </span><span class="symbol">=</span>
-<span class="normal">        </span><span class="function">octaspire_allocator_new</span><span class="symbol">(</span><span class="number">0</span><span class="symbol">);</span>
-
-<span class="normal">    octaspire_map_t </span><span class="symbol">*</span><span class="normal"> h </span><span class="symbol">=</span>
-<span class="normal">        </span><span class="function">octaspire_map_new_with_octaspire_string_keys</span><span class="symbol">(</span>
-<span class="normal">            </span><span class="keyword">sizeof</span><span class="symbol">(</span><span class="type">float</span><span class="symbol">),</span>
-<span class="normal">            false</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="symbol">(</span><span class="normal">octaspire_map_element_callback_t</span><span class="symbol">)</span><span class="number">0</span><span class="symbol">,</span>
-<span class="normal">            allocator</span><span class="symbol">);</span>
-
-
-<span class="normal">    </span><span class="keyword">for</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">size_t</span><span class="normal"> i </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span><span class="normal"> i </span><span class="symbol">&lt;</span><span class="normal"> </span><span class="number">10</span><span class="symbol">;</span><span class="normal"> </span><span class="symbol">++</span><span class="normal">i</span><span class="symbol">)</span>
-<span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">        </span><span class="usertype">octaspire_string_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">s </span><span class="symbol">=</span>
-<span class="normal">            </span><span class="function">octaspire_string_new_format</span><span class="symbol">(</span>
-<span class="normal">                allocator</span><span class="symbol">,</span>
-<span class="normal">                </span><span class="string">"Item %zu!"</span><span class="symbol">,</span>
-<span class="normal">                i</span><span class="symbol">);</span>
-
-<span class="normal">        </span><span class="type">float</span><span class="normal"> </span><span class="keyword">const</span><span class="normal"> value </span><span class="symbol">=</span><span class="normal"> i </span><span class="symbol">*</span><span class="normal"> </span><span class="number">3.14</span><span class="symbol">;</span>
-
-<span class="normal">        </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(!</span><span class="function">octaspire_map_put</span><span class="symbol">(</span>
-<span class="normal">            h</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="function">octaspire_string_get_hash</span><span class="symbol">(</span>
-<span class="normal">                s</span><span class="symbol">),</span>
-<span class="normal">            </span><span class="symbol">&amp;</span><span class="normal">s</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="symbol">&amp;</span><span class="normal">value</span><span class="symbol">))</span>
-<span class="normal">        </span><span class="cbracket">{</span>
-<span class="normal">            </span><span class="function">printf</span><span class="symbol">(</span>
-<span class="normal">                </span><span class="string">"Cannot insert element</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
-<span class="normal">        </span><span class="cbracket">}</span>
-<span class="normal">    </span><span class="cbracket">}</span>
-
-<span class="normal">    </span><span class="keyword">for</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">size_t</span><span class="normal"> i </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-<span class="normal">         i </span><span class="symbol">&lt;</span><span class="normal"> </span><span class="function">octaspire_map_get_number_of_elements</span><span class="symbol">(</span><span class="normal">h</span><span class="symbol">);</span>
-<span class="normal">         </span><span class="symbol">++</span><span class="normal">i</span><span class="symbol">)</span>
-<span class="normal">    </span><span class="cbracket">{</span>
-<span class="normal">        </span><span class="usertype">octaspire_string_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">s </span><span class="symbol">=</span>
-<span class="normal">            </span><span class="function">octaspire_string_new_format</span><span class="symbol">(</span>
-<span class="normal">                allocator</span><span class="symbol">,</span>
-<span class="normal">                </span><span class="string">"Item %zu!"</span><span class="symbol">,</span>
-<span class="normal">                i</span><span class="symbol">);</span>
-
-<span class="normal">        octaspire_map_element_t</span>
-<span class="normal">            </span><span class="keyword">const</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> </span><span class="keyword">const</span><span class="normal"> element </span><span class="symbol">=</span>
-<span class="normal">            </span><span class="function">octaspire_map_get_const</span><span class="symbol">(</span>
-<span class="normal">                h</span><span class="symbol">,</span>
-<span class="normal">                </span><span class="function">octaspire_string_get_hash</span><span class="symbol">(</span><span class="normal">s</span><span class="symbol">),</span>
-<span class="normal">                </span><span class="symbol">&amp;</span><span class="normal">s</span><span class="symbol">);</span>
-
-<span class="normal">        </span><span class="type">float</span><span class="normal"> </span><span class="keyword">const</span><span class="normal"> value </span><span class="symbol">=</span><span class="normal"> </span><span class="symbol">*(</span><span class="type">float</span><span class="normal"> </span><span class="keyword">const</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> </span><span class="keyword">const</span><span class="symbol">)</span>
-<span class="normal">            </span><span class="function">octaspire_map_element_get_value</span><span class="symbol">(</span>
-<span class="normal">                element</span><span class="symbol">);</span>
-
-<span class="normal">        </span><span class="function">printf</span><span class="symbol">(</span>
-<span class="normal">            </span><span class="string">"%s -&gt; %f</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">,</span>
-<span class="normal">            </span><span class="function">octaspire_string_get_c_string</span><span class="symbol">(</span><span class="normal">s</span><span class="symbol">),</span>
-<span class="normal">            value</span><span class="symbol">);</span>
-
-<span class="normal">        </span><span class="function">octaspire_string_release</span><span class="symbol">(</span><span class="normal">s</span><span class="symbol">);</span>
-<span class="normal">        s </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-<span class="normal">    </span><span class="cbracket">}</span>
-
-<span class="normal">    </span><span class="function">octaspire_map_release</span><span class="symbol">(</span><span class="normal">h</span><span class="symbol">);</span>
-<span class="normal">    h </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-
-<span class="normal">    </span><span class="function">octaspire_allocator_release</span><span class="symbol">(</span><span class="normal">allocator</span><span class="symbol">);</span>
-<span class="normal">    allocator </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-
-<span class="normal">    </span><span class="keyword">return</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
-<span class="cbracket">}</span>
-
-</pre>
-
-    <h3>3.8 Input streams from memory and files</h3>
+  <h3>Input streams from memory and files</h3>
 
   <p>
     TODO
   </p>
 
-    <h3>3.9 Lower level helpers</h3>
+  <h3>Lower level helpers</h3>
 
   <p>
     TODO
   </p>
 
-  <h2><a id="4"></a>4. Using the development repository</h2>
+  <h2>Using the development repository</h2>
 
   <p>
   The amalgamated source release can be used without Make or other build tools;
@@ -792,31 +563,7 @@ http://www.gnu.org/software/src-highlite -->
     targets available in the Makefile:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">git clone https</span><span class="symbol">:</span><span class="normal">//github</span><span class="symbol">.</span><span class="normal">com/octaspire/core</span><span class="symbol">.</span><span class="normal">git</span>
-<span class="normal">cd core</span>
-<span class="normal">make submodules-init</span>
-<span class="normal">make</span>
-<span class="normal">make </span><span class="keyword">test</span>
-<span class="normal">make codestyle</span>
-<span class="normal">make cppcheck</span>
-<span class="normal">make valgrind</span>
-<span class="normal">make coverage</span>
-<span class="normal">make coverage-show</span>
-
-<span class="normal">make amalgamation</span>
-
-<span class="normal">make clean</span>
-
-<span class="normal">rm release/octaspire-core-amalgamated</span><span class="symbol">.</span><span class="normal">c</span>
-<span class="normal">make release/octaspire-core-amalgamated</span><span class="symbol">.</span><span class="normal">c</span>
-
-<span class="normal">rm release/documentation/core-manual</span><span class="symbol">.</span><span class="normal">html</span>
-<span class="normal">make release/documentation/core-manual</span><span class="symbol">.</span><span class="normal">html</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/usingMake.sh
 
   <p>
     Running <code>make</code> should run <code>make submodules-init</code>
@@ -851,113 +598,55 @@ http://www.gnu.org/software/src-highlite -->
     the documentation.
   </p>
 
-    <h3>4.1 Raspberry Pi, Debian and Ubuntu</h3>
+  <h3>Raspberry Pi, Debian and Ubuntu</h3>
 
   <p>
     To build Core from the regular source distribution in <i>Raspberry Pi
     (Raspbian)</i>, <i>Debian</i> or <i>Ubuntu (16.04 LTS)</i> system:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">sudo apt-get install git</span>
-<span class="normal">git clone https</span><span class="symbol">:</span><span class="normal">//github</span><span class="symbol">.</span><span class="normal">com/octaspire/core</span><span class="symbol">.</span><span class="normal">git</span>
-<span class="normal">cd core</span>
-<span class="normal">make submodules-init</span>
-<span class="normal">make</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/buildDevInDebianLike.sh
 
-    <h3>4.2 Arch Linux</h3>
+  <h3>Arch Linux</h3>
 
   <p>
     To build on <i>Arch Linux (Arch Linux ARM)</i> system:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">sudo pacman -S git gcc make</span>
-<span class="normal">git clone https</span><span class="symbol">:</span><span class="normal">//github</span><span class="symbol">.</span><span class="normal">com/octaspire/core</span><span class="symbol">.</span><span class="normal">git</span>
-<span class="normal">cd core</span>
-<span class="normal">make submodules-init</span>
-<span class="normal">make</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/buildDevOnArchLinux.sh
 
-    <h3>4.3 Haiku</h3>
+  <h3>Haiku</h3>
 
   <p>
     To build on <i>Haiku (Version Walter (Revision hrev51127) x86_gcc2)</i>:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">pkgman install gcc_x86</span>
-<span class="normal">git clone https</span><span class="symbol">:</span><span class="normal">//github</span><span class="symbol">.</span><span class="normal">com/octaspire/core</span><span class="symbol">.</span><span class="normal">git</span>
-<span class="normal">cd core</span>
-<span class="normal">make submodules-init</span>
-<span class="variable">CC</span><span class="symbol">=</span><span class="normal">gcc-x</span><span class="number">86</span><span class="normal"> make</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/buildDevOnHaiku.sh
 
-    <h3>4.4 FreeBSD</h3>
+  <h3>FreeBSD</h3>
 
   <p>
     To build on <i>FreeBSD (FreeBSD-11.0-RELEASE-arm-armv6-RPI2)</i> system:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">sudo pkg install git</span>
-<span class="normal">git clone https</span><span class="symbol">:</span><span class="normal">//github</span><span class="symbol">.</span><span class="normal">com/octaspire/core</span><span class="symbol">.</span><span class="normal">git</span>
-<span class="normal">cd core</span>
-<span class="normal">make submodules-init</span>
-<span class="normal">make</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/buildDevOnFreeBSD.sh
 
-    <h3>4.5 NetBSD</h3>
+  <h3>NetBSD</h3>
 
   <p>
     To build on <i>NetBSD (NetBSD-7.1-i386)</i> system:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">sudo pkgin install git</span>
-<span class="normal">git clone git</span><span class="symbol">:</span><span class="normal">//github</span><span class="symbol">.</span><span class="normal">com/octaspire/core</span>
-<span class="normal">cd core</span>
-<span class="normal">perl -pi -e </span><span class="string">'s/https/git/'</span><span class="normal"> </span><span class="symbol">.</span><span class="normal">gitmodules</span>
-<span class="normal">make submodules-init</span>
-<span class="normal">make</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/buildDevOnNetBSD.sh
 
-    <h3>4.6 MINIX 3</h3>
+  <h3>MINIX 3</h3>
 
   <p>
     To build from the regular source distribution on
     <i>MINIX 3 (minix_R3.3.0-588a35b)</i> system:
   </p>
 
-<!-- Generator: GNU source-highlight 3.1.8
-by Lorenzo Bettini
-http://www.lorenzobettini.it
-http://www.gnu.org/software/src-highlite -->
-<pre><span class="normal">su root</span>
-<span class="normal">pkgin install clang binutils git-base</span>
-<span class="keyword">exit</span>
-<span class="normal">git clone git</span><span class="symbol">:</span><span class="normal">//github</span><span class="symbol">.</span><span class="normal">com/octaspire/core</span>
-<span class="normal">cd core</span>
-<span class="normal">perl -pi -e </span><span class="string">'s/https/git/'</span><span class="normal"> </span><span class="symbol">.</span><span class="normal">gitmodules</span>
-<span class="normal">make submodules-init</span>
-<span class="normal">make</span>
-</pre>
+  .INCLUDE: dev/doc/book/examples/sh/buildDevOnMINIX3.sh
 
   <div class="footer">
     <p>
