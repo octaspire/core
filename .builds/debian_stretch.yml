@@ -1,0 +1,34 @@
+image: debian/stretch
+packages:
+    - build-essential
+    - valgrind
+    - cppcheck
+    - vera++
+sources:
+    - https://git.sr.ht/~octaspire/core
+tasks:
+    - setup: |
+        cd core
+        make submodules-init
+    - build-devel: |
+        cd core
+        make all
+    - test-devel: |
+        cd core
+        ./octaspire-core-unit-test-runner --write-test-files
+        make test
+    - valgrind-devel: |
+        cd core
+        make valgrind
+    - build-release: |
+        cd core/release
+        sh how-to-build/linux.sh
+    - test-release: |
+        cd core/release
+        ./octaspire-core-unit-test-runner --write-test-files
+    - cppcheck: |
+        cd core
+        make cppcheck
+    - codestyle: |
+        cd core
+        make codestyle

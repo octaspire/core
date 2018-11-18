@@ -146,6 +146,10 @@ bool octaspire_string_is_equal_to_c_string(
     octaspire_string_t const * const self,
     char const * const str);
 
+size_t octaspire_string_levenshtein_distance(
+    octaspire_string_t const * const self,
+    octaspire_string_t const * const other);
+
 int octaspire_string_compare(
     octaspire_string_t const * const self,
     octaspire_string_t const * const other);

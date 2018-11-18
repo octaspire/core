@@ -49,59 +49,59 @@ octaspire-core-unit-test-runner: $(TESTOBJS) $(EXTDIR)jenkins_one_at_a_time.o
 
 $(TESTDR)test.o: $(TESTDR)test.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_helpers.o: $(TESTDR)test_helpers.c $(SRCDIR)octaspire_helpers.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_input.o: $(TESTDR)test_input.c $(SRCDIR)octaspire_input.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_list.o: $(TESTDR)test_list.c $(SRCDIR)octaspire_list.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_map.o: $(TESTDR)test_map.c $(SRCDIR)octaspire_map.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_memory.o: $(TESTDR)test_memory.c $(SRCDIR)octaspire_memory.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_pair.o: $(TESTDR)test_pair.c $(SRCDIR)octaspire_pair.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_queue.o: $(TESTDR)test_queue.c $(SRCDIR)octaspire_queue.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_stdio.o: $(TESTDR)test_stdio.c $(SRCDIR)octaspire_stdio.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_string.o: $(TESTDR)test_string.c $(SRCDIR)octaspire_string.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_utf8.o: $(TESTDR)test_utf8.c $(SRCDIR)octaspire_utf8.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_vector.o: $(TESTDR)test_vector.c $(SRCDIR)octaspire_vector.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(TESTDR)test_semver.o: $(TESTDR)test_semver.c $(SRCDIR)octaspire_semver.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/include -I dev $< -o $@
 
 $(EXTDIR)jenkins_one_at_a_time.o: $(EXTDIR)jenkins_one_at_a_time.c
 	$(info CC  $<)
-	@$(CC) $(CFLAGS) -c -I dev/external $< -o $@ $(LDFLAGS)
+	@$(CC) $(CFLAGS) -c -I dev/external $< -o $@
 
 
 
@@ -290,4 +290,5 @@ patch:
 push:
 	@git push origin-gitlab
 	@git push origin-bitbucket
+	@git push origin-sr
 	@git push origin-github

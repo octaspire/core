@@ -129,6 +129,19 @@ size_t octaspire_helpers_min_size_t(size_t const a, size_t const b)
     return b;
 }
 
+size_t octaspire_helpers_min3_size_t(
+    size_t const a,
+    size_t const b,
+    size_t const c)
+{
+    if (a < b)
+    {
+        return octaspire_helpers_min_size_t(a, c);
+    }
+
+    return octaspire_helpers_min_size_t(b, c);
+}
+
 size_t octaspire_helpers_max_size_t(size_t const a, size_t const b)
 {
     if (a > b)

@@ -959,6 +959,78 @@ bool octaspire_string_is_equal_to_c_string(
     return memcmp(octaspire_vector_get_element_at(self->octets,  0), str, len) == 0;
 }
 
+size_t octaspire_string_private_levenshtein_distance_indicator_func(
+    octaspire_string_t const * const self,
+    size_t             const         i,
+    octaspire_string_t const * const other,
+    size_t             const         j)
+{
+    octaspire_helpers_verify_true(i > 0);
+    octaspire_helpers_verify_true(j > 0);
+
+    size_t const a = octaspire_string_get_ucs_character_at_index(self, i - 1);
+    size_t const b = octaspire_string_get_ucs_character_at_index(other, j - 1);
+
+    return (a == b) ? 0 : 1;
+}
+
+size_t octaspire_string_private_levenshtein_distance_helper(
+    octaspire_string_t const * const self,
+    size_t             const         i,
+    octaspire_string_t const * const other,
+    size_t             const         j)
+{
+    if (!i)
+    {
+        return j;
+    }
+
+    if (!j)
+    {
+        return i;
+    }
+
+    size_t const a = octaspire_string_private_levenshtein_distance_helper(
+        self,
+        i - 1,
+        other,
+        j) + 1;
+
+    size_t const b = octaspire_string_private_levenshtein_distance_helper(
+        self,
+        i,
+        other,
+        j - 1) + 1;
+
+    size_t const c = octaspire_string_private_levenshtein_distance_helper(
+        self,
+        i - 1,
+        other,
+        j - 1) + octaspire_string_private_levenshtein_distance_indicator_func(
+            self,
+            i,
+            other,
+            j);
+
+    return octaspire_helpers_min3_size_t(a, b, c);
+}
+
+size_t octaspire_string_levenshtein_distance(
+    octaspire_string_t const * const self,
+    octaspire_string_t const * const other)
+{
+    size_t const selfLen = octaspire_string_get_length_in_ucs_characters(self);
+
+    size_t const otherLen =
+        octaspire_string_get_length_in_ucs_characters(other);
+
+    return octaspire_string_private_levenshtein_distance_helper(
+        self,
+        selfLen,
+        other,
+        otherLen);
+}
+
 int octaspire_string_compare(
     octaspire_string_t const * const self,
     octaspire_string_t const * const other)

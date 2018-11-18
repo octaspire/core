@@ -1,0 +1,22 @@
+image: freebsd
+packages:
+    - devel/gmake
+sources:
+    - https://git.sr.ht/~octaspire/core
+tasks:
+    - setup: |
+        cd core
+        gmake submodules-init
+    - build-devel: |
+        cd core
+        gmake all
+    - test-devel: |
+        cd core
+        ./octaspire-core-unit-test-runner --write-test-files
+        gmake test
+    - build-release: |
+        cd core/release
+        sh how-to-build/FreeBSD.sh
+    - test-release: |
+        cd core/release
+        ./octaspire-core-unit-test-runner --write-test-files
