@@ -137,7 +137,7 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "112"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "113"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_STR "Octaspire Core version " \
@@ -9460,8 +9460,7 @@ size_t octaspire_semver_get_num_build_metadata_identifiers(
 
 size_t octaspire_semver_get_length(octaspire_semver_t const * const self)
 {
-    return
-        3 +
+    return 3 +
         octaspire_semver_get_num_pre_release_identifiers(self) +
         octaspire_semver_get_num_build_metadata_identifiers(self);
 }

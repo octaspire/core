@@ -1093,8 +1093,7 @@ size_t octaspire_semver_get_num_build_metadata_identifiers(
 
 size_t octaspire_semver_get_length(octaspire_semver_t const * const self)
 {
-    return
-        3 +
+    return 3 +
         octaspire_semver_get_num_pre_release_identifiers(self) +
         octaspire_semver_get_num_build_metadata_identifiers(self);
 }
