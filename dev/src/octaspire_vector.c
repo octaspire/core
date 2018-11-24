@@ -633,6 +633,21 @@ bool octaspire_vector_push_back_char(
         octaspire_vector_get_length(self));
 }
 
+bool octaspire_vector_push_back_int(
+    octaspire_vector_t *self,
+    int const element)
+{
+    if (self->elementSize != sizeof(element))
+    {
+        return false;
+    }
+
+    return octaspire_vector_insert_element_at(
+        self,
+        &element,
+        octaspire_vector_get_length(self));
+}
+
 void octaspire_vector_for_each(
     octaspire_vector_t *self,
     octaspire_vector_element_callback_t callback)

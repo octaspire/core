@@ -2419,6 +2419,156 @@ TEST octaspire_string_compare_with_string_abc_and_abca_test(void)
     PASS();
 }
 
+TEST octaspire_string_levenshtein_distance_called_with_abc_and_empty_string_test(void)
+{
+    octaspire_string_t *str1 =
+        octaspire_string_new(
+            "abc",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+
+    octaspire_string_t *str2 =
+        octaspire_string_new(
+            "",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str2);
+
+    size_t const result =
+        octaspire_string_levenshtein_distance(str1, str2);
+
+    ASSERT_EQ(3, result);
+
+    octaspire_string_release(str1);
+    str1 = 0;
+
+    octaspire_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_string_levenshtein_distance_called_with_two_empty_strings_test(void)
+{
+    octaspire_string_t *str1 =
+        octaspire_string_new(
+            "",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+
+    octaspire_string_t *str2 =
+        octaspire_string_new(
+            "",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str2);
+
+    size_t const result =
+        octaspire_string_levenshtein_distance(str1, str2);
+
+    ASSERT_EQ(0, result);
+
+    octaspire_string_release(str1);
+    str1 = 0;
+
+    octaspire_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_string_levenshtein_distance_called_with_empty_string_and_abc_test(void)
+{
+    octaspire_string_t *str1 =
+        octaspire_string_new(
+            "",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+
+    octaspire_string_t *str2 =
+        octaspire_string_new(
+            "abc",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str2);
+
+    size_t const result =
+        octaspire_string_levenshtein_distance(str1, str2);
+
+    ASSERT_EQ(3, result);
+
+    octaspire_string_release(str1);
+    str1 = 0;
+
+    octaspire_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_string_levenshtein_distance_called_with_abcdefghijklmnopqrstuvwxyz_and_abc_test(void)
+{
+    octaspire_string_t *str1 =
+        octaspire_string_new(
+            "abcdefghijklmnopqrstuvwxyz",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+
+    octaspire_string_t *str2 =
+        octaspire_string_new(
+            "abc",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str2);
+
+    size_t const result =
+        octaspire_string_levenshtein_distance(str1, str2);
+
+    ASSERT_EQ(23, result);
+
+    octaspire_string_release(str1);
+    str1 = 0;
+
+    octaspire_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_string_levenshtein_distance_called_with_a_and_b_test(void)
+{
+    octaspire_string_t *str1 =
+        octaspire_string_new(
+            "a",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+
+    octaspire_string_t *str2 =
+        octaspire_string_new(
+            "b",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str2);
+
+    size_t const result =
+        octaspire_string_levenshtein_distance(str1, str2);
+
+    ASSERT_EQ(1, result);
+
+    octaspire_string_release(str1);
+    str1 = 0;
+
+    octaspire_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
 TEST octaspire_string_levenshtein_distance_called_with_kitten_and_sitting_test(void)
 {
     octaspire_string_t *str1 =
@@ -2499,6 +2649,66 @@ TEST octaspire_string_levenshtein_distance_called_with_jfpaasdasd2d_and_askdfsfe
         octaspire_string_levenshtein_distance(str1, str2);
 
     ASSERT_EQ(11, result);
+
+    octaspire_string_release(str1);
+    str1 = 0;
+
+    octaspire_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_string_levenshtein_distance_called_with_rosettacode_and_raisethysword_test(void)
+{
+    octaspire_string_t *str1 =
+        octaspire_string_new(
+            "rosettacode",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+
+    octaspire_string_t *str2 =
+        octaspire_string_new(
+            "raisethysword",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str2);
+
+    size_t const result =
+        octaspire_string_levenshtein_distance(str1, str2);
+
+    ASSERT_EQ(8, result);
+
+    octaspire_string_release(str1);
+    str1 = 0;
+
+    octaspire_string_release(str2);
+    str2 = 0;
+
+    PASS();
+}
+
+TEST octaspire_string_levenshtein_distance_called_with_two_longer_strings_test(void)
+{
+    octaspire_string_t *str1 =
+        octaspire_string_new(
+            "CTAGGCTCGGACCAATCACCTAGGCCTCGGACCAACACCAACTACTCAAGAAGGGGTG",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str1);
+
+    octaspire_string_t *str2 =
+        octaspire_string_new(
+            "GACTTACTGGGACAAGTCTTGGACACATGGCAAACCAGTCCCGAACCAACAGCACATG",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str2);
+
+    size_t const result =
+        octaspire_string_levenshtein_distance(str1, str2);
+
+    ASSERT_EQ(32, result);
 
     octaspire_string_release(str1);
     str1 = 0;
@@ -2698,9 +2908,16 @@ GREATEST_SUITE(octaspire_string_suite)
     RUN_TEST(octaspire_string_compare_with_string_abb_and_abc_test);
     RUN_TEST(octaspire_string_compare_with_string_abc_and_abca_test);
 
+    RUN_TEST(octaspire_string_levenshtein_distance_called_with_abc_and_empty_string_test);
+    RUN_TEST(octaspire_string_levenshtein_distance_called_with_two_empty_strings_test);
+    RUN_TEST(octaspire_string_levenshtein_distance_called_with_empty_string_and_abc_test);
+    RUN_TEST(octaspire_string_levenshtein_distance_called_with_abcdefghijklmnopqrstuvwxyz_and_abc_test);
+    RUN_TEST(octaspire_string_levenshtein_distance_called_with_a_and_b_test);
     RUN_TEST(octaspire_string_levenshtein_distance_called_with_kitten_and_sitting_test);
     RUN_TEST(octaspire_string_levenshtein_distance_called_with_flaw_and_lawn_test);
     RUN_TEST(octaspire_string_levenshtein_distance_called_with_jfpaasdasd2d_and_askdfsferrr4_test);
+    RUN_TEST(octaspire_string_levenshtein_distance_called_with_rosettacode_and_raisethysword_test);
+    RUN_TEST(octaspire_string_levenshtein_distance_called_with_two_longer_strings_test);
 
     RUN_TEST(octaspire_string_is_index_valid_test);
 

@@ -129,6 +129,16 @@ size_t octaspire_helpers_min_size_t(size_t const a, size_t const b)
     return b;
 }
 
+int octaspire_helpers_min_int(int const a, int const b)
+{
+    if (a < b)
+    {
+        return a;
+    }
+
+    return b;
+}
+
 size_t octaspire_helpers_min3_size_t(
     size_t const a,
     size_t const b,
@@ -140,6 +150,19 @@ size_t octaspire_helpers_min3_size_t(
     }
 
     return octaspire_helpers_min_size_t(b, c);
+}
+
+int octaspire_helpers_min3_int(
+    int const a,
+    int const b,
+    int const c)
+{
+    if (a < b)
+    {
+        return octaspire_helpers_min_int(a, c);
+    }
+
+    return octaspire_helpers_min_int(b, c);
 }
 
 size_t octaspire_helpers_max_size_t(size_t const a, size_t const b)

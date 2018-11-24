@@ -120,6 +120,10 @@ bool octaspire_vector_push_back_char(
     octaspire_vector_t *self,
     char const element);
 
+bool octaspire_vector_push_back_int(
+    octaspire_vector_t *self,
+    int const element);
+
 void octaspire_vector_for_each(
     octaspire_vector_t *self,
     octaspire_vector_element_callback_t callback);

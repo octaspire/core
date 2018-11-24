@@ -50,11 +50,17 @@ uint32_t octaspire_helpers_calculate_hash_for_memory_buffer_argument(
 size_t octaspire_helpers_character_digit_to_number(uint32_t const c);
 
 size_t octaspire_helpers_min_size_t(size_t const a, size_t const b);
+int octaspire_helpers_min_int(int const a, int const b);
 
 size_t octaspire_helpers_min3_size_t(
     size_t const a,
     size_t const b,
     size_t const c);
+
+int octaspire_helpers_min3_int(
+    int const a,
+    int const b,
+    int const c);
 
 size_t octaspire_helpers_max_size_t(size_t const a, size_t const b);
 

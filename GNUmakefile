@@ -11,7 +11,7 @@ RELDIR=release/
 RELDOCDIR=$(RELDIR)documentation/
 AMALGAMATION=$(RELDIR)octaspire-core-amalgamated.c
 UNAME=$(shell uname -s)
-CFLAGS=-std=c99 -Wall -Wextra -pedantic -g -O2
+CFLAGS=-std=c99 -Wall -Wextra -pedantic -g -O0
 LDFLAGS=-lm
 
 DOCEXAMPLES += $(wildcard $(DEVDOCDIR)book/examples/sh/*.sh)

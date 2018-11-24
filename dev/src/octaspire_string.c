@@ -959,60 +959,33 @@ bool octaspire_string_is_equal_to_c_string(
     return memcmp(octaspire_vector_get_element_at(self->octets,  0), str, len) == 0;
 }
 
-size_t octaspire_string_private_levenshtein_distance_indicator_func(
-    octaspire_string_t const * const self,
-    size_t             const         i,
-    octaspire_string_t const * const other,
-    size_t             const         j)
+static int octaspire_string_levenshtein_distance_helper_get_slot(
+    octaspire_vector_t const * const vectors,
+    size_t                     const i,
+    size_t                     const j)
 {
-    octaspire_helpers_verify_true(i > 0);
-    octaspire_helpers_verify_true(j > 0);
+    octaspire_vector_t const * const row = octaspire_vector_get_element_at_const(
+        vectors,
+        i);
 
-    size_t const a = octaspire_string_get_ucs_character_at_index(self, i - 1);
-    size_t const b = octaspire_string_get_ucs_character_at_index(other, j - 1);
+    int const * const result =
+        octaspire_vector_get_element_at_const(row, j);
 
-    return (a == b) ? 0 : 1;
+    octaspire_helpers_verify_not_null(result);
+    return *result;
 }
 
-size_t octaspire_string_private_levenshtein_distance_helper(
-    octaspire_string_t const * const self,
-    size_t             const         i,
-    octaspire_string_t const * const other,
-    size_t             const         j)
+static bool octaspire_string_levenshtein_distance_helper_set_slot(
+    octaspire_vector_t * const vectors,
+    size_t               const i,
+    size_t               const j,
+    int                  const slot)
 {
-    if (!i)
-    {
-        return j;
-    }
+    octaspire_vector_t * const row = octaspire_vector_get_element_at(
+        vectors,
+        i);
 
-    if (!j)
-    {
-        return i;
-    }
-
-    size_t const a = octaspire_string_private_levenshtein_distance_helper(
-        self,
-        i - 1,
-        other,
-        j) + 1;
-
-    size_t const b = octaspire_string_private_levenshtein_distance_helper(
-        self,
-        i,
-        other,
-        j - 1) + 1;
-
-    size_t const c = octaspire_string_private_levenshtein_distance_helper(
-        self,
-        i - 1,
-        other,
-        j - 1) + octaspire_string_private_levenshtein_distance_indicator_func(
-            self,
-            i,
-            other,
-            j);
-
-    return octaspire_helpers_min3_size_t(a, b, c);
+    return octaspire_vector_replace_element_at(row, j, &slot);
 }
 
 size_t octaspire_string_levenshtein_distance(
@@ -1024,11 +997,94 @@ size_t octaspire_string_levenshtein_distance(
     size_t const otherLen =
         octaspire_string_get_length_in_ucs_characters(other);
 
-    return octaspire_string_private_levenshtein_distance_helper(
-        self,
+    octaspire_vector_t * vectors = octaspire_vector_new(
+        sizeof(octaspire_vector_t *),
+        true,
+        (octaspire_vector_element_callback_t)octaspire_vector_release,
+        self->allocator);
+
+    // Create vector of vectors
+
+    for (size_t i = 0; i < selfLen+1; ++i)
+    {
+        octaspire_vector_t * row = octaspire_vector_new(
+            sizeof(int),
+            false,
+            0,
+            self->allocator);
+
+        octaspire_vector_push_back_element(vectors, &row);
+
+        if (i == 0)
+        {
+            octaspire_vector_push_back_int(row, i);
+
+            for (size_t j = 1; j < otherLen+1; ++j)
+            {
+                octaspire_vector_push_back_int(row, j);
+            }
+        }
+        else
+        {
+            octaspire_vector_push_back_int(row, i);
+
+            for (size_t j = 1; j < otherLen+1; ++j)
+            {
+                octaspire_vector_push_back_int(row, 0);
+            }
+        }
+    }
+
+    // Main loop.
+
+    for (size_t j = 1; j < otherLen+1; ++j)
+    {
+        for (size_t i = 1; i < selfLen+1; ++i)
+        {
+            if (octaspire_string_get_ucs_character_at_index(self, i-1) ==
+                octaspire_string_get_ucs_character_at_index(other, j-1))
+            {
+                octaspire_string_levenshtein_distance_helper_set_slot(
+                    vectors,
+                    i,
+                    j,
+                    octaspire_string_levenshtein_distance_helper_get_slot(
+                        vectors,
+                        i - 1,
+                        j - 1));
+            }
+            else
+            {
+                octaspire_string_levenshtein_distance_helper_set_slot(
+                    vectors,
+                    i,
+                    j,
+                    octaspire_helpers_min3_int(
+                        octaspire_string_levenshtein_distance_helper_get_slot(
+                            vectors,
+                            i - 1,
+                            j) + 1,      // deletion
+                        octaspire_string_levenshtein_distance_helper_get_slot(
+                            vectors,
+                            i,
+                            j - 1) + 1,  // insertion
+                        octaspire_string_levenshtein_distance_helper_get_slot(
+                            vectors,
+                            i - 1,
+                            j - 1) + 1)); // substitution
+            }
+        }
+    }
+
+    int result = octaspire_string_levenshtein_distance_helper_get_slot(
+        vectors,
         selfLen,
-        other,
         otherLen);
+
+    octaspire_vector_release(vectors);
+    vectors = 0;
+
+    return result;
 }
 
 int octaspire_string_compare(
