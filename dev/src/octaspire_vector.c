@@ -144,6 +144,16 @@ octaspire_vector_t *octaspire_vector_new(
         allocator);
 }
 
+octaspire_vector_t *octaspire_vector_new_for_octaspire_string_elements(
+    octaspire_allocator_t *allocator)
+{
+    return octaspire_vector_new(
+        sizeof(octaspire_string_t*),
+        true,
+        (octaspire_vector_element_callback_t)octaspire_string_release,
+        allocator);
+}
+
 octaspire_vector_t *octaspire_vector_new_with_preallocated_elements(
     size_t const elementSize,
     bool const elementIsPointer,

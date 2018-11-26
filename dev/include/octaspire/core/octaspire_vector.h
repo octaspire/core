@@ -38,6 +38,9 @@ octaspire_vector_t *octaspire_vector_new(
     octaspire_vector_element_callback_t elementReleaseCallback,
     octaspire_allocator_t *allocator);
 
+octaspire_vector_t *octaspire_vector_new_for_octaspire_string_elements(
+    octaspire_allocator_t *allocator);
+
 octaspire_vector_t *octaspire_vector_new_with_preallocated_elements(
     size_t const elementSize,
     bool const elementIsPointer,

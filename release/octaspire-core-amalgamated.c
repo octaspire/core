@@ -137,7 +137,7 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "114"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "115"
 #define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_STR "Octaspire Core version " \
@@ -369,6 +369,9 @@ octaspire_vector_t *octaspire_vector_new(
     size_t const elementSize,
     bool const elementIsPointer,
     octaspire_vector_element_callback_t elementReleaseCallback,
+    octaspire_allocator_t *allocator);
+
+octaspire_vector_t *octaspire_vector_new_for_octaspire_string_elements(
     octaspire_allocator_t *allocator);
 
 octaspire_vector_t *octaspire_vector_new_with_preallocated_elements(
@@ -3224,6 +3227,16 @@ octaspire_vector_t *octaspire_vector_new(
         elementIsPointer,
         OCTASPIRE_VECTOR_INITIAL_SIZE,
         elementReleaseCallback,
+        allocator);
+}
+
+octaspire_vector_t *octaspire_vector_new_for_octaspire_string_elements(
+    octaspire_allocator_t *allocator)
+{
+    return octaspire_vector_new(
+        sizeof(octaspire_string_t*),
+        true,
+        (octaspire_vector_element_callback_t)octaspire_string_release,
         allocator);
 }
 
@@ -14567,6 +14580,58 @@ TEST octaspire_vector_new_failure_test(void)
     PASS();
 }
 
+TEST octaspire_vector_new_for_octaspire_string_elements_test(void)
+{
+    octaspire_vector_t *vec =
+        octaspire_vector_new_for_octaspire_string_elements(
+            octaspireContainerVectorTestAllocator);
+
+    ASSERT(vec);
+
+    ASSERT(vec->elements);
+    ASSERT_EQ(sizeof(octaspire_string_t*),             vec->elementSize);
+    ASSERT_EQ(0,                                       vec->numElements);
+    ASSERT_EQ(OCTASPIRE_VECTOR_INITIAL_SIZE,           vec->numAllocated);
+
+    ASSERT_EQ(
+        (octaspire_vector_element_callback_t)octaspire_string_release,
+        vec->elementReleaseCallback);
+
+    ASSERT_EQ(octaspireContainerVectorTestAllocator,   vec->allocator);
+
+    octaspire_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
+
+TEST octaspire_vector_new_for_octaspire_string_elements_failure_test(void)
+{
+    octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged(
+        octaspireContainerVectorTestAllocator,
+        1,
+        0);
+
+    ASSERT_EQ(1,
+              octaspire_allocator_get_number_of_future_allocations_to_be_rigged(
+                  octaspireContainerVectorTestAllocator));
+
+    octaspire_vector_t *vec =
+        octaspire_vector_new_for_octaspire_string_elements(
+            octaspireContainerVectorTestAllocator);
+
+    ASSERT_FALSE(vec);
+
+    ASSERT_EQ(0,
+              octaspire_allocator_get_number_of_future_allocations_to_be_rigged(
+                  octaspireContainerVectorTestAllocator));
+
+    octaspire_vector_release(vec);
+    vec = 0;
+
+    PASS();
+}
+
 TEST octaspire_vector_new_with_preallocated_elements_test(void)
 {
     size_t const numPreAllocated = 100;
@@ -17249,6 +17314,8 @@ GREATEST_SUITE(octaspire_vector_suite)
     RUN_TEST(octaspire_vector_private_compact_failure_test);
     RUN_TEST(octaspire_vector_new_test);
     RUN_TEST(octaspire_vector_new_failure_test);
+    RUN_TEST(octaspire_vector_new_for_octaspire_string_elements_test);
+    RUN_TEST(octaspire_vector_new_for_octaspire_string_elements_failure_test);
     RUN_TEST(octaspire_vector_new_with_preallocated_elements_test);
     RUN_TEST(octaspire_vector_new_with_preallocated_elements_allocation_failure_on_first_allocation_test);
     RUN_TEST(octaspire_vector_new_with_preallocated_elements_allocation_failure_on_second_allocation_test);
