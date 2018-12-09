@@ -48,6 +48,7 @@ typedef unsigned long long uintmax_t;
 #define false 0
 
 #define CHAR_BIT 8
+#define INT_MAX 2147483647
 #define INT32_MAX 2147483647
 #define UINTMAX_MAX 0xFFFFFFFF
 #define va_copy(x,y) (x) = (y)
@@ -58,6 +59,11 @@ typedef unsigned long long uintmax_t;
 void exit(int32_t const status)
 {
     exits(status == 0 ? "" : "error");
+}
+
+int isnan(double const x)
+{
+    return x != x;
 }
 
 #else
@@ -79,6 +85,7 @@ void exit(int32_t const status)
 
 #endif
 
+#undef OCTASPIRE_CORE_CONFIG_TEST_RES_PATH
 #define OCTASPIRE_CORE_CONFIG_TEST_RES_PATH ""
 
 #ifdef OCTASPIRE_CORE_AMALGAMATED_UNIT_TEST_IMPLEMENTATION
