@@ -5,7 +5,6 @@ INCDIR=dev/include/octaspire/core/
 SRCDIR=dev/src/
 TESTDR=dev/test/
 EXTDIR=dev/external/
-DOTDIR=$(EXTDIR)octaspire_dotfiles/
 DEVDOCDIR=dev/doc/
 RELDIR=release/
 RELDOCDIR=$(RELDIR)documentation/
@@ -109,11 +108,8 @@ $(EXTDIR)jenkins_one_at_a_time.o: $(EXTDIR)jenkins_one_at_a_time.c
 ####### Release part: build using amalgamation ################################
 ###############################################################################
 
-$(RELDIR)octaspire-core-unit-test-runner: $(DOTDIR)LICENSE $(AMALGAMATION)
+$(RELDIR)octaspire-core-unit-test-runner: $(AMALGAMATION)
 	@sh $(ETCDIR)build_amalgamation.sh
-
-$(DOTDIR)LICENSE:
-	@make submodules-init --silent
 
 submodules-init:
 	@echo "Initializing submodules..."
