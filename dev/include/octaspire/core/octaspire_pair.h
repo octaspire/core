@@ -34,9 +34,9 @@ size_t octaspire_pair_t_get_sizeof(void);
 
 octaspire_pair_t *octaspire_pair_new(
     size_t const firstElementSize,
-    bool firstElementIsPointer,
+    bool const firstElementIsPointer,
     size_t const secondElementSize,
-    bool secondElementIsPointer,
+    bool const secondElementIsPointer,
     octaspire_pair_element_callback_t firstElementReleaseCallback,
     octaspire_pair_element_callback_t secondElementReleaseCallback,
     octaspire_allocator_t *allocator);

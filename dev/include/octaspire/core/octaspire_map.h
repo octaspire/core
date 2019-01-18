@@ -131,7 +131,7 @@ size_t octaspire_map_get_number_of_elements(
     octaspire_map_t const * const self);
 
 octaspire_map_element_t *octaspire_map_get_at_index(
-    octaspire_map_t *self,
+    octaspire_map_t * const self,
     ptrdiff_t const possiblyNegativeIndex);
 
 

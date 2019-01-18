@@ -70,7 +70,14 @@ TEST octaspire_stdio_fread_test(void)
 
     ASSERT(stdio);
 
+#ifdef _WIN32
+    FILE *f = 0;
+    errno_t const err =
+        fopen_s(&f, OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
+    ASSERT(!err);
+#else
     FILE *f = fopen(OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
+#endif
 
     ASSERT(f);
 
@@ -98,7 +105,14 @@ TEST octaspire_stdio_fread_rigging_and_failure_test(void)
 
     ASSERT(stdio);
 
+#ifdef _WIN32
+    FILE *f = 0;
+    errno_t const err =
+        fopen_s(&f, OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
+    ASSERT(!err);
+#else
     FILE *f = fopen(OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
+#endif
 
     ASSERT(f);
 

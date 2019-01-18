@@ -19,7 +19,7 @@ void map_example()
             "Item %zu!",
             i);
 
-        float const value = i * 3.14;
+        float const value = i * 3.14f;
 
         if (!octaspire_map_put(h, octaspire_string_get_hash(s), &s, &value))
         {

@@ -35,12 +35,25 @@ char *octaspire_helpers_path_to_buffer(
     octaspire_stdio_t *stdio)
 {
     *octetsAllocated = 0;
+
+#ifdef _WIN32
+    FILE *f = 0;
+    errno_t const err = fopen(&f, path, "rb");
+
+    if (err)
+    {
+        return 0;
+    }
+
+    octaspire_helpers_verify_not_null(f);
+#else
     FILE *f = fopen(path, "rb");
 
     if (!f)
     {
         return 0;
     }
+#endif
 
     fseek(f, 0, SEEK_END);
 

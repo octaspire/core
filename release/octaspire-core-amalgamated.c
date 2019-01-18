@@ -144,8 +144,8 @@ limitations under the License.
 #define OCTASPIRE_CORE_CONFIG_H
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
-#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "116"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "1"
+#define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "117"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_STR "Octaspire Core version " \
     OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "." \
@@ -1072,9 +1072,9 @@ size_t octaspire_pair_t_get_sizeof(void);
 
 octaspire_pair_t *octaspire_pair_new(
     size_t const firstElementSize,
-    bool firstElementIsPointer,
+    bool const firstElementIsPointer,
     size_t const secondElementSize,
-    bool secondElementIsPointer,
+    bool const secondElementIsPointer,
     octaspire_pair_element_callback_t firstElementReleaseCallback,
     octaspire_pair_element_callback_t secondElementReleaseCallback,
     octaspire_allocator_t *allocator);
@@ -1405,7 +1405,7 @@ size_t octaspire_map_get_number_of_elements(
     octaspire_map_t const * const self);
 
 octaspire_map_element_t *octaspire_map_get_at_index(
-    octaspire_map_t *self,
+    octaspire_map_t * const self,
     ptrdiff_t const possiblyNegativeIndex);
 
 
@@ -2092,12 +2092,25 @@ char *octaspire_helpers_path_to_buffer(
     octaspire_stdio_t *stdio)
 {
     *octetsAllocated = 0;
+
+#ifdef _WIN32
+    FILE *f = 0;
+    errno_t const err = fopen(&f, path, "rb");
+
+    if (err)
+    {
+        return 0;
+    }
+
+    octaspire_helpers_verify_not_null(f);
+#else
     FILE *f = fopen(path, "rb");
 
     if (!f)
     {
         return 0;
     }
+#endif
 
     fseek(f, 0, SEEK_END);
 
@@ -12466,7 +12479,12 @@ TEST octaspire_utf8_decode_character_from_buffer_a_test(void)
 
 TEST octaspire_utf8_decode_character_the_copyright_sign_test(void)
 {
+#ifdef _WIN32
+    char const *text = u8"©";
+#else
     char const *text = "©";
+#endif
+
     uint32_t result = 0;
     int numoctets = 0;
 
@@ -12482,7 +12500,12 @@ TEST octaspire_utf8_decode_character_the_copyright_sign_test(void)
 
 TEST octaspire_utf8_decode_character_not_equal_sign_test(void)
 {
+#ifdef _WIN32
+    char const *text = u8"≠";
+#else
     char const *text = "≠";
+#endif
+
     uint32_t result = 0;
     int numoctets = 0;
 
@@ -12498,7 +12521,12 @@ TEST octaspire_utf8_decode_character_not_equal_sign_test(void)
 
 TEST octaspire_utf8_decode_character_linear_b_syllable_b008_a_test(void)
 {
+#ifdef _WIN32
+    char const *text = u8"𐀀";
+#else
     char const *text = "𐀀";
+#endif
+
     uint32_t result = 0;
     int numoctets = 0;
 
@@ -12514,7 +12542,12 @@ TEST octaspire_utf8_decode_character_linear_b_syllable_b008_a_test(void)
 
 TEST octaspire_utf8_decode_a_short_string_test(void)
 {
+#ifdef _WIN32
+    char const *text = u8"A≢Α.한국어日本語𣎴";
+#else
     char const *text = "A≢Α.한국어日本語𣎴";
+#endif
+
     uint32_t result = 0;
     int numoctets = 0;
 
@@ -13413,7 +13446,14 @@ TEST octaspire_stdio_fread_test(void)
 
     ASSERT(stdio);
 
+#ifdef _WIN32
+    FILE *f = 0;
+    errno_t const err =
+        fopen_s(&f, OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
+    ASSERT(!err);
+#else
     FILE *f = fopen(OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
+#endif
 
     ASSERT(f);
 
@@ -13441,7 +13481,14 @@ TEST octaspire_stdio_fread_rigging_and_failure_test(void)
 
     ASSERT(stdio);
 
+#ifdef _WIN32
+    FILE *f = 0;
+    errno_t const err =
+        fopen_s(&f, OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
+    ASSERT(!err);
+#else
     FILE *f = fopen(OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
+#endif
 
     ASSERT(f);
 
@@ -19085,7 +19132,12 @@ TEST octaspire_string_new_with_simple_ascii_string_test(void)
 
 TEST octaspire_string_new_with_some_multioctet_ucs_characters_test(void)
 {
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
     char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19158,7 +19210,12 @@ TEST octaspire_string_new_with_simple_ascii_string_with_error_test(void)
 
 TEST octaspire_string_new_from_buffer_with_some_multioctet_ucs_characters_test(void)
 {
-    char const * const input               = "©Hello World! © ≠𐀀How are you?";
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
+    char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     size_t const       lengthInOctets      = strlen(input);
     octaspire_string_t *str =
         octaspire_string_new_from_buffer(input, lengthInOctets, octaspireContainerUtf8StringTestAllocator);
@@ -19192,7 +19249,12 @@ TEST octaspire_string_new_from_buffer_with_some_multioctet_ucs_characters_test(v
 
 TEST octaspire_string_new_from_buffer_allocation_failure_on_first_allocation_test(void)
 {
-    char const * const input               = "©Hello World! © ≠𐀀How are you?";
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
+    char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     size_t const       lengthInOctets      = strlen(input);
 
     octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 1, 0);
@@ -19213,7 +19275,12 @@ TEST octaspire_string_new_from_buffer_allocation_failure_on_first_allocation_tes
 
 TEST octaspire_string_new_from_buffer_allocation_failure_on_second_allocation_test(void)
 {
-    char const * const input               = "©Hello World! © ≠𐀀How are you?";
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
+    char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     size_t const       lengthInOctets      = strlen(input);
 
     octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 2, 0x01);
@@ -19234,7 +19301,12 @@ TEST octaspire_string_new_from_buffer_allocation_failure_on_second_allocation_te
 
 TEST octaspire_string_new_from_buffer_allocation_failure_on_third_allocation_test(void)
 {
-    char const * const input               = "©Hello World! © ≠𐀀How are you?";
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
+    char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     size_t const       lengthInOctets      = strlen(input);
 
     octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 3, 0x03);
@@ -19255,7 +19327,12 @@ TEST octaspire_string_new_from_buffer_allocation_failure_on_third_allocation_tes
 
 TEST octaspire_string_new_from_buffer_allocation_failure_on_sixth_2_allocation_test(void)
 {
-    char const * const input               = "©Hello World! © ≠𐀀How are you?";
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
+    char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     size_t const       lengthInOctets      = strlen(input);
 
     octaspire_allocator_set_number_and_type_of_future_allocations_to_be_rigged(octaspireContainerUtf8StringTestAllocator, 6, 0x1F);
@@ -19311,7 +19388,13 @@ TEST octaspire_string_new_format_with_string_test(void)
 TEST octaspire_string_new_format_with_size_t_test(void)
 {
     size_t const value = 62039;
+
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you? My age is %zu. What's yours?";
+#else
     char const * const input = "©Hello World! © ≠𐀀How are you? My age is %zu. What's yours?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new_format(octaspireContainerUtf8StringTestAllocator, input, value);
 
@@ -19380,8 +19463,19 @@ TEST octaspire_string_new_format_with_doubles_test(void)
 TEST octaspire_string_new_format_with_string_and_size_t_test(void)
 {
     size_t const value = 62039;
+
+#ifdef _WIN32
+    char const * const name  = u8"©Hello";
+
+    char const * const input =
+        u8"©Hello World! © ≠𐀀How are you? My name is \"%s\" and my age is %zu. What's yours?";
+#else
     char const * const name  = "©Hello";
-    char const * const input = "©Hello World! © ≠𐀀How are you? My name is \"%s\" and my age is %zu. What's yours?";
+
+    char const * const input =
+        "©Hello World! © ≠𐀀How are you? My name is \"%s\" and my age is %zu. What's yours?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new_format(octaspireContainerUtf8StringTestAllocator, input, name, value);
 
@@ -19476,7 +19570,12 @@ TEST octaspire_string_new_format_with_empty_format_string_test(void)
 
 TEST octaspire_string_new_copy_test(void)
 {
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
     char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19538,7 +19637,12 @@ TEST octaspire_string_new_copy_test(void)
 
 TEST octaspire_string_new_copy_failure_test(void)
 {
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
     char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19578,7 +19682,12 @@ TEST octaspire_string_new_copy_failure_test(void)
 
 TEST octaspire_string_get_length_in_ucs_characters_test(void)
 {
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
     char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19613,7 +19722,12 @@ TEST octaspire_string_get_length_in_ucs_characters_called_with_empty_string_test
 
 TEST octaspire_string_get_length_in_octets_test(void)
 {
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
     char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19647,7 +19761,12 @@ TEST octaspire_string_get_length_in_octets_called_with_empty_string_test(void)
 
 TEST octaspire_string_get_ucs_character_at_index_test(void)
 {
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
     char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19717,8 +19836,13 @@ TEST octaspire_string_get_ucs_character_at_index_test(void)
 
 TEST octaspire_string_get_c_string_test(void)
 {
+#ifdef _WIN32
+    char const * const input    = u8"Hello World! ©";
+    char const * const expected = "Hello World! \xc2\xa9";
+#else
     char const * const input    = "Hello World! ©";
     char const * const expected = "Hello World! \xc2\xa9";
+#endif
 
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
@@ -19858,7 +19982,12 @@ TEST octaspire_string_reset_error_status_called_when_there_is_no_error_test(void
 
 TEST octaspire_string_concatenate_c_string_called_with_null_and_empty_string_arguments_test(void)
 {
+#ifdef _WIN32
+    char const * const input = u8"©Hello World! © ≠𐀀How are you?";
+#else
     char const * const input = "©Hello World! © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19888,8 +20017,14 @@ TEST octaspire_string_concatenate_c_string_called_with_null_and_empty_string_arg
 
 TEST octaspire_string_concatenate_c_string_test(void)
 {
+#ifdef _WIN32
+    char const * const input  = u8"©Hello World!";
+    char const * const input2 = u8" © ≠𐀀How are you?";
+#else
     char const * const input  = "©Hello World!";
     char const * const input2 = " © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19914,10 +20049,12 @@ TEST octaspire_string_concatenate_c_string_test(void)
     PASS();
 }
 
+#ifndef _WIN32
 TEST octaspire_string_concatenate_c_string_with_decode_error_test(void)
 {
     char const * const input  = "©Hello World!";
     char const * const input2 = " © ≠𐀀How are you?\xC0\xB3";
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -19941,11 +20078,18 @@ TEST octaspire_string_concatenate_c_string_with_decode_error_test(void)
 
     PASS();
 }
+#endif
 
 TEST octaspire_string_concatenate_c_string_allocation_failure_one_test(void)
 {
+#ifdef _WIN32
+    char const * const input  = u8"©Hello World!";
+    char const * const input2 = u8" © ≠𐀀How are you?";
+#else
     char const * const input  = "©Hello World!";
     char const * const input2 = " © ≠𐀀How are you?";
+#endif
+
     octaspire_string_t *str =
         octaspire_string_new(input, octaspireContainerUtf8StringTestAllocator);
 
@@ -20764,17 +20908,31 @@ TEST octaspire_string_remove_character_at_test(void)
 
 TEST octaspire_string_remove_character_at_called_on_string_with_two_os_with_diaeresis_test(void)
 {
+    char const * const expected =
+#ifdef _WIN32
+        u8"öö";
+#else
+        "öö";
+#endif
+
+    char const * const expected2 =
+#ifdef _WIN32
+        u8"ö";
+#else
+        "ö";
+#endif
+
     octaspire_string_t *str = octaspire_string_new(
-            "öö",
-            octaspireContainerUtf8StringTestAllocator);
+        expected,
+        octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(str);
     ASSERT_EQ(2, octaspire_string_get_length_in_ucs_characters(str));
-    ASSERT_STR_EQ("öö", octaspire_string_get_c_string(str));
+    ASSERT_STR_EQ(expected, octaspire_string_get_c_string(str));
 
     ASSERT(octaspire_string_remove_character_at(str, 1));
     ASSERT_EQ(1, octaspire_string_get_length_in_ucs_characters(str));
-    ASSERT_STR_EQ("ö", octaspire_string_get_c_string(str));
+    ASSERT_STR_EQ(expected2, octaspire_string_get_c_string(str));
 
     ASSERT(octaspire_string_remove_character_at(str, 0));
     ASSERT_EQ(0, octaspire_string_get_length_in_ucs_characters(str));
@@ -21070,8 +21228,15 @@ TEST octaspire_string_overwrite_with_string_at_first_test(void)
             "",
             octaspireContainerUtf8StringTestAllocator);
 
+    char const * const expected =
+#ifdef _WIN32
+        u8"abö";
+#else
+        "abö";
+#endif
+
     octaspire_string_t *strAddition =
-        octaspire_string_new("abö",octaspireContainerUtf8StringTestAllocator);
+        octaspire_string_new(expected,octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
@@ -21079,7 +21244,7 @@ TEST octaspire_string_overwrite_with_string_at_first_test(void)
     ASSERT_EQ(3, octaspire_string_get_length_in_ucs_characters(strTarget));
     ASSERT_EQ(4, octaspire_string_get_length_in_octets(strTarget));
     ASSERT_STR_EQ(
-        "abö",
+        expected,
         octaspire_string_get_c_string(strTarget));
 
     octaspire_string_release(strAddition);
@@ -21092,8 +21257,16 @@ TEST octaspire_string_overwrite_with_string_at_first_test(void)
     ASSERT(octaspire_string_overwrite_with_string_at(strTarget, strAddition, 1));
     ASSERT_EQ(3, octaspire_string_get_length_in_ucs_characters(strTarget));
     ASSERT_EQ(4, octaspire_string_get_length_in_octets(strTarget));
+
+    char const * const expected2 =
+#ifdef _WIN32
+        u8"aqö";
+#else
+        "aqö";
+#endif
+
     ASSERT_STR_EQ(
-        "aqö",
+        expected2,
         octaspire_string_get_c_string(strTarget));
 
     octaspire_string_release(strAddition);
@@ -21112,15 +21285,28 @@ TEST octaspire_string_overwrite_with_string_at_second_test(void)
             octaspireContainerUtf8StringTestAllocator);
 
     octaspire_string_t *strAddition =
-        octaspire_string_new("ö",octaspireContainerUtf8StringTestAllocator);
+        octaspire_string_new(
+#ifdef _WIN32
+            u8"ö",
+#else
+            "ö",
+#endif
+            octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
 
     ASSERT(octaspire_string_overwrite_with_string_at(strTarget, strAddition, 1));
     ASSERT_EQ(3, octaspire_string_get_length_in_ucs_characters(strTarget));
     ASSERT_EQ(4, octaspire_string_get_length_in_octets(strTarget));
+
+#ifdef _WIN32
+    char const * const expected = u8"aöc";
+#else
+    char const * const expected = "aöc";
+#endif
+
     ASSERT_STR_EQ(
-        "aöc",
+        expected,
         octaspire_string_get_c_string(strTarget));
 
     octaspire_string_release(strAddition);
@@ -21140,7 +21326,11 @@ TEST octaspire_string_overwrite_with_string_at_called_with_negative_index_test(v
 
     octaspire_string_t *strAddition =
         octaspire_string_new(
+#ifdef _WIN32
+            u8"ö",
+#else
             "ö",
+#endif
             octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
@@ -21152,8 +21342,15 @@ TEST octaspire_string_overwrite_with_string_at_called_with_negative_index_test(v
 
     ASSERT_EQ(3, octaspire_string_get_length_in_ucs_characters(strTarget));
     ASSERT_EQ(4, octaspire_string_get_length_in_octets(strTarget));
+
+#ifdef _WIN32
+    char const * const expected = u8"aöc";
+#else
+    char const * const expected = "aöc";
+#endif
+
     ASSERT_STR_EQ(
-        "aöc",
+        expected,
         octaspire_string_get_c_string(strTarget));
 
     octaspire_string_release(strAddition);
@@ -21854,7 +22051,9 @@ GREATEST_SUITE(octaspire_string_suite)
     RUN_TEST(octaspire_string_reset_error_status_called_when_there_is_no_error_test);
     RUN_TEST(octaspire_string_concatenate_c_string_called_with_null_and_empty_string_arguments_test);
     RUN_TEST(octaspire_string_concatenate_c_string_test);
+#ifndef _WIN32
     RUN_TEST(octaspire_string_concatenate_c_string_with_decode_error_test);
+#endif
     RUN_TEST(octaspire_string_concatenate_c_string_allocation_failure_one_test);
     RUN_TEST(octaspire_string_concatenate_c_string_allocation_failure_two_test);
     RUN_TEST(octaspire_string_c_strings_end_always_in_null_byte_test);
@@ -25930,7 +26129,17 @@ void octaspire_core_amalgamated_write_test_file(
     unsigned char const * const buffer,
     size_t const bufferSize)
 {
+#ifdef _WIN32
+    FILE *stream = 0;
+    errno_t const err = fopen_s(&stream, name, "wb");
+
+    if(err)
+    {
+        abort();
+    }
+#else
     FILE *stream = fopen(name, "wb");
+#endif
 
     if (!stream)
     {
