@@ -2171,11 +2171,7 @@ TEST octaspire_string_overwrite_with_string_at_second_test(void)
 
     octaspire_string_t *strAddition =
         octaspire_string_new(
-#ifdef _MSC_VER
-            u8"ö",
-#else
             "ö",
-#endif
             octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);

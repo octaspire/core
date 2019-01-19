@@ -145,7 +145,7 @@ limitations under the License.
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
 #define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "117"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "3"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "4"
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_STR "Octaspire Core version " \
     OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "." \
@@ -21201,11 +21201,7 @@ TEST octaspire_string_overwrite_with_string_at_second_test(void)
 
     octaspire_string_t *strAddition =
         octaspire_string_new(
-#ifdef _MSC_VER
-            u8"ö",
-#else
             "ö",
-#endif
             octaspireContainerUtf8StringTestAllocator);
 
     ASSERT(strTarget && strAddition);
