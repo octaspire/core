@@ -145,7 +145,7 @@ limitations under the License.
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "0"
 #define OCTASPIRE_CORE_CONFIG_VERSION_MINOR "117"
-#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "0"
+#define OCTASPIRE_CORE_CONFIG_VERSION_PATCH "1"
 
 #define OCTASPIRE_CORE_CONFIG_VERSION_STR "Octaspire Core version " \
     OCTASPIRE_CORE_CONFIG_VERSION_MAJOR "." \
@@ -2095,7 +2095,7 @@ char *octaspire_helpers_path_to_buffer(
 
 #ifdef _WIN32
     FILE *f = 0;
-    errno_t const err = fopen(&f, path, "rb");
+    errno_t const err = fopen_s(&f, path, "rb");
 
     if (err)
     {

@@ -38,7 +38,7 @@ char *octaspire_helpers_path_to_buffer(
 
 #ifdef _WIN32
     FILE *f = 0;
-    errno_t const err = fopen(&f, path, "rb");
+    errno_t const err = fopen_s(&f, path, "rb");
 
     if (err)
     {
