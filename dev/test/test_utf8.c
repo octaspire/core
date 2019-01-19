@@ -666,11 +666,7 @@ TEST octaspire_utf8_decode_character_from_buffer_a_test(void)
 
 TEST octaspire_utf8_decode_character_the_copyright_sign_test(void)
 {
-#ifdef _MSC_VER
-    char const *text = u8"©";
-#else
     char const *text = "©";
-#endif
 
     uint32_t result = 0;
     int numoctets = 0;
@@ -687,11 +683,7 @@ TEST octaspire_utf8_decode_character_the_copyright_sign_test(void)
 
 TEST octaspire_utf8_decode_character_not_equal_sign_test(void)
 {
-#ifdef _MSC_VER
-    char const *text = u8"≠";
-#else
     char const *text = "≠";
-#endif
 
     uint32_t result = 0;
     int numoctets = 0;
@@ -708,11 +700,7 @@ TEST octaspire_utf8_decode_character_not_equal_sign_test(void)
 
 TEST octaspire_utf8_decode_character_linear_b_syllable_b008_a_test(void)
 {
-#ifdef _MSC_VER
-    char const *text = u8"𐀀";
-#else
     char const *text = "𐀀";
-#endif
 
     uint32_t result = 0;
     int numoctets = 0;
@@ -729,11 +717,7 @@ TEST octaspire_utf8_decode_character_linear_b_syllable_b008_a_test(void)
 
 TEST octaspire_utf8_decode_a_short_string_test(void)
 {
-#ifdef _MSC_VER
-    char const *text = u8"A≢Α.한국어日本語𣎴";
-#else
     char const *text = "A≢Α.한국어日本語𣎴";
-#endif
 
     uint32_t result = 0;
     int numoctets = 0;
