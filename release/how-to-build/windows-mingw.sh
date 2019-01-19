@@ -37,11 +37,11 @@ if [ "$2" = "--coverage" ]; then COVERAGE=$2; fi
 EXAMPLE_NAME="stand alone unit test runner"
 EXAMPLE_ERROR_HINT="Install $CC compiler?"
 EXAMPLE_SUCCESS_RUN="octaspire-core-unit-test-runner.exe"
-echoAndRun "$CC" -O2 -std=c99 -Wall -Wextra -DOCTASPIRE_CORE_AMALGAMATED_UNIT_TEST_IMPLEMENTATION $COVERAGE -I . octaspire-core-amalgamated.c -lm -o octaspire-core-unit-test-runner
+echoAndRun "$CC" -O2 -std=gnu99 -Wall -Wextra -DOCTASPIRE_CORE_AMALGAMATED_UNIT_TEST_IMPLEMENTATION $COVERAGE -I . octaspire-core-amalgamated.c -lm -o octaspire-core-unit-test-runner
 
 
 
 EXAMPLE_NAME="example"
 EXAMPLE_ERROR_HINT="Install $CC compiler?"
 EXAMPLE_SUCCESS_RUN="example.exe"
-echoAndRun "$CC" -O2 -std=c99 -Wall -Wextra -I . examples/example.c -lm -lKernel32 -o example
+echoAndRun "$CC" -O2 -std=gnu99 -Wall -Wextra -I . examples/example.c -lm -lKernel32 -o example

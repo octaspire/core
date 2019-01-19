@@ -3,7 +3,7 @@ void octaspire_core_amalgamated_write_test_file(
     unsigned char const * const buffer,
     size_t const bufferSize)
 {
-#ifdef _WIN32
+#ifdef _MSC_VER
     FILE *stream = 0;
     errno_t const err = fopen_s(&stream, name, "wb");
 

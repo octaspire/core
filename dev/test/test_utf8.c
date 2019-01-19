@@ -1,6 +1,6 @@
 /******************************************************************************
 Octaspire Core - Containers and other utility libraries in standard C99
-Copyright 2017 www.octaspire.com
+Copyright 2017 - 2019 www.octaspire.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -666,7 +666,7 @@ TEST octaspire_utf8_decode_character_from_buffer_a_test(void)
 
 TEST octaspire_utf8_decode_character_the_copyright_sign_test(void)
 {
-#ifdef _WIN32
+#ifdef _MSC_VER
     char const *text = u8"©";
 #else
     char const *text = "©";
@@ -687,7 +687,7 @@ TEST octaspire_utf8_decode_character_the_copyright_sign_test(void)
 
 TEST octaspire_utf8_decode_character_not_equal_sign_test(void)
 {
-#ifdef _WIN32
+#ifdef _MSC_VER
     char const *text = u8"≠";
 #else
     char const *text = "≠";
@@ -708,7 +708,7 @@ TEST octaspire_utf8_decode_character_not_equal_sign_test(void)
 
 TEST octaspire_utf8_decode_character_linear_b_syllable_b008_a_test(void)
 {
-#ifdef _WIN32
+#ifdef _MSC_VER
     char const *text = u8"𐀀";
 #else
     char const *text = "𐀀";
@@ -729,7 +729,7 @@ TEST octaspire_utf8_decode_character_linear_b_syllable_b008_a_test(void)
 
 TEST octaspire_utf8_decode_a_short_string_test(void)
 {
-#ifdef _WIN32
+#ifdef _MSC_VER
     char const *text = u8"A≢Α.한국어日本語𣎴";
 #else
     char const *text = "A≢Α.한국어日本語𣎴";

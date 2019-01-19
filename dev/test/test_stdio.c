@@ -1,6 +1,6 @@
 /******************************************************************************
 Octaspire Core - Containers and other utility libraries in standard C99
-Copyright 2017 www.octaspire.com
+Copyright 2017 - 2019 www.octaspire.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ TEST octaspire_stdio_fread_test(void)
 
     ASSERT(stdio);
 
-#ifdef _WIN32
+#ifdef _MSC_VER
     FILE *f = 0;
     errno_t const err =
         fopen_s(&f, OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");
@@ -105,7 +105,7 @@ TEST octaspire_stdio_fread_rigging_and_failure_test(void)
 
     ASSERT(stdio);
 
-#ifdef _WIN32
+#ifdef _MSC_VER
     FILE *f = 0;
     errno_t const err =
         fopen_s(&f, OCTASPIRE_CORE_CONFIG_TEST_RES_PATH "octaspire_stdio_fread_test", "rb");

@@ -1,6 +1,6 @@
 /******************************************************************************
 Octaspire Core - Containers and other utility libraries in standard C99
-Copyright 2017 www.octaspire.com
+Copyright 2017 - 2019 www.octaspire.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

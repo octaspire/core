@@ -1,6 +1,6 @@
 /******************************************************************************
 Octaspire Core - Containers and other utility libraries in standard C99
-Copyright 2017 www.octaspire.com
+Copyright 2017 - 2019 www.octaspire.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ char *octaspire_helpers_path_to_buffer(
 {
     *octetsAllocated = 0;
 
-#ifdef _WIN32
+#ifdef _MSC_VER
     FILE *f = 0;
     errno_t const err = fopen_s(&f, path, "rb");
 
