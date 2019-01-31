@@ -31,7 +31,21 @@ TESTOBJS := $(TESTDR)test.o              \
             $(TESTDR)test_vector.o       \
             $(TESTDR)test_semver.o
 
-.PHONY: development submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage major minor patch push
+UNAME := $(shell uname)
+MACHINE := $(shell uname -m)
+OS := "Unknown"
+
+MAKE=make
+
+
+# TODO Detect more platforms and show message about using the amalgamation on other platforms
+ifeq ($(UNAME), OpenBSD)
+    OS := "OpenBSD"
+    MAKE=gmake
+endif
+
+
+.PHONY: development submodules-init submodules-pull clean codestyle cppcheck valgrind test coverage major minor patch push tag
 
 
 all: development
@@ -120,7 +134,7 @@ submodules-init:
 submodules-pull:
 	@echo "Pulling submodules..."
 	@git submodule update --recursive --remote
-	@make -s TAGS
+	@$(MAKE) -s TAGS
 	@echo "Done."
 
 $(AMALGAMATION): $(ETCDIR)amalgamation_head.c                \
@@ -270,21 +284,34 @@ TAGS: $(SRCDIR)*.c $(INCDIR)*.h
 
 major:
 	@sh dev/etc/bump-version.sh major
-	@make -s TAGS
-	@echo "Done."
+	@rm -f release/octaspire-core-amalgamated.c      # This ensures that the version number is updated
+	@$(MAKE) -s release/octaspire-core-amalgamated.c # also in the amalgamation.
+	@$(MAKE) -s TAGS
+	@echo "OK  Done."
 
 minor:
 	@sh dev/etc/bump-version.sh minor
-	@make -s TAGS
-	@echo "Done."
+	@rm -f release/octaspire-core-amalgamated.c      # This ensures that the version number is updated
+	@$(MAKE) -s release/octaspire-core-amalgamated.c # also in the amalgamation.
+	@$(MAKE) -s TAGS
+	@echo "OK  Done."
 
 patch:
 	@sh dev/etc/bump-version.sh patch
-	@make -s TAGS
-	@echo "Done."
+	@rm -f release/octaspire-core-amalgamated.c      # This ensures that the version number is updated
+	@$(MAKE) -s release/octaspire-core-amalgamated.c # also in the amalgamation.
+	@$(MAKE) -s TAGS
+	@echo "OK  Done."
+
+tag:
+	@sh dev/etc/tag-version.sh
 
 push:
 	@git push origin-gitlab
+	@git push origin-gitlab --tags
 	@git push origin-bitbucket
+	@git push origin-bitbucket --tags
 	@git push origin-sr
+	@git push origin-sr --tags
+	@git push origin-github --tags
 	@git push origin-github
