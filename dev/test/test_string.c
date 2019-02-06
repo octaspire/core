@@ -2784,6 +2784,72 @@ TEST octaspire_string_levenshtein_distance_called_with_two_longer_strings_test(v
     PASS();
 }
 
+TEST octaspire_string_starts_with_c_string_test(void)
+{
+    octaspire_string_t *str =
+        octaspire_string_new(
+            "abcdefghij",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str);
+    ASSERT(octaspire_string_starts_with_c_string(str, "a"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "ab"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "abc"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "abcd"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "abcde"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "abcdef"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "abcdefg"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "abcdefgh"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "abcdefghi"));
+    ASSERT(octaspire_string_starts_with_c_string(str, "abcdefghij"));
+
+    ASSERT_FALSE(octaspire_string_starts_with_c_string(str, "abcdefghijk"));
+    ASSERT_FALSE(octaspire_string_starts_with_c_string(str, "abcdefghix"));
+    ASSERT_FALSE(octaspire_string_starts_with_c_string(str, "abcdefghxj"));
+    ASSERT_FALSE(octaspire_string_starts_with_c_string(str, "abcdefgxij"));
+    ASSERT_FALSE(octaspire_string_starts_with_c_string(str, "b"));
+
+    ASSERT(octaspire_string_starts_with_c_string(str, ""));
+
+    octaspire_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
+TEST octaspire_string_ends_with_c_string_test(void)
+{
+    octaspire_string_t *str =
+        octaspire_string_new(
+            "abcdefghij",
+            octaspireContainerUtf8StringTestAllocator);
+
+    ASSERT(str);
+    ASSERT(octaspire_string_ends_with_c_string(str, "j"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "ij"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "hij"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "ghij"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "fghij"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "efghij"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "defghij"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "cdefghij"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "bcdefghij"));
+    ASSERT(octaspire_string_ends_with_c_string(str, "abcdefghij"));
+
+    ASSERT_FALSE(octaspire_string_ends_with_c_string(str, "abcdefghijk"));
+    ASSERT_FALSE(octaspire_string_ends_with_c_string(str, "abcdefghix"));
+    ASSERT_FALSE(octaspire_string_ends_with_c_string(str, "abcdefghxj"));
+    ASSERT_FALSE(octaspire_string_ends_with_c_string(str, "abcdefgxij"));
+    ASSERT_FALSE(octaspire_string_ends_with_c_string(str, "i"));
+
+    ASSERT(octaspire_string_ends_with_c_string(str, ""));
+
+    octaspire_string_release(str);
+    str = 0;
+
+    PASS();
+}
+
 TEST octaspire_string_is_index_valid_test(void)
 {
     octaspire_string_t *str1 =
@@ -2985,6 +3051,9 @@ GREATEST_SUITE(octaspire_string_suite)
     RUN_TEST(octaspire_string_levenshtein_distance_called_with_jfpaasdasd2d_and_askdfsferrr4_test);
     RUN_TEST(octaspire_string_levenshtein_distance_called_with_rosettacode_and_raisethysword_test);
     RUN_TEST(octaspire_string_levenshtein_distance_called_with_two_longer_strings_test);
+
+    RUN_TEST(octaspire_string_starts_with_c_string_test);
+    RUN_TEST(octaspire_string_ends_with_c_string_test);
 
     RUN_TEST(octaspire_string_is_index_valid_test);
 

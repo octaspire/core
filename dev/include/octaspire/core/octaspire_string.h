@@ -162,9 +162,17 @@ bool octaspire_string_starts_with(
     octaspire_string_t const * const self,
     octaspire_string_t const * const other);
 
+bool octaspire_string_starts_with_c_string(
+    octaspire_string_t const * const self,
+    char const * const str);
+
 bool octaspire_string_ends_with(
     octaspire_string_t const * const self,
     octaspire_string_t const * const other);
+
+bool octaspire_string_ends_with_c_string(
+    octaspire_string_t const * const self,
+    char const * const str);
 
 uint32_t octaspire_string_get_hash(
     octaspire_string_t const * const self);

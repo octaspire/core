@@ -1148,6 +1148,23 @@ bool octaspire_string_starts_with(
     return true;
 }
 
+bool octaspire_string_starts_with_c_string(
+    octaspire_string_t const * const self,
+    char const * const str)
+{
+    assert(self && str);
+
+    octaspire_string_t * other = octaspire_string_new(str, self->allocator);
+    octaspire_helpers_verify_not_null(other);
+
+    bool const result = octaspire_string_starts_with(self, other);
+
+    octaspire_string_release(other);
+    other = 0;
+
+    return result;
+}
+
 bool octaspire_string_ends_with(
     octaspire_string_t const * const self,
     octaspire_string_t const * const other)
@@ -1178,6 +1195,23 @@ bool octaspire_string_ends_with(
     }
 
     return true;
+}
+
+bool octaspire_string_ends_with_c_string(
+    octaspire_string_t const * const self,
+    char const * const str)
+{
+    assert(self && str);
+
+    octaspire_string_t * other = octaspire_string_new(str, self->allocator);
+    octaspire_helpers_verify_not_null(other);
+
+    bool const result = octaspire_string_ends_with(self, other);
+
+    octaspire_string_release(other);
+    other = 0;
+
+    return result;
 }
 
 uint32_t octaspire_string_get_hash(
